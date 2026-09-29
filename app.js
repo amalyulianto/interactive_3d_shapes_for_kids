@@ -103,7 +103,14 @@ const sound = new SoundFX();
 function toggleAudio() {
   sound.enabled = !sound.enabled;
   const btn = document.getElementById('soundToggle');
-  btn.textContent = sound.enabled ? '🔊' : '🔇';
+  if (btn) btn.textContent = sound.enabled ? '🔊' : '🔇';
+  const btnTop = document.getElementById('btnSoundToggle');
+  if (btnTop) btnTop.textContent = sound.enabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
+  document.activeElement?.blur();
+  if (window.innerWidth > 768) {
+    const header = document.querySelector('.main-header');
+    if (header) header.classList.add('collapsed');
+  }
 }
 
 // Procedural High-Res Texture Builder
@@ -663,9 +670,80 @@ const SHAPES_DATA = [
     },
     createExplodedGroup(offset, mat) {
       const group = new THREE.Group();
-      const prism = new THREE.Mesh(new THREE.CylinderGeometry(1.5 + offset * 0.5, 1.5 + offset * 0.5, 2.6 + offset, 3), mat);
-      prism.rotation.z = Math.PI / 2;
-      group.add(prism);
+      const off = offset * 1.5;
+      const r = 1.5;
+      const h = 2.6;
+      const halfH = h / 2;
+
+      function makeTriangle(p0, p1, p2) {
+        const geom = new THREE.BufferGeometry();
+        const pos = new Float32Array([
+          p0[0], p0[1], p0[2],
+          p1[0], p1[1], p1[2],
+          p2[0], p2[1], p2[2]
+        ]);
+        geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geom.computeVertexNormals();
+        return new THREE.Mesh(geom, mat);
+      }
+
+      // Vertices around Y axis for 3 corners
+      const v = [];
+      for (let i = 0; i < 3; i++) {
+        const ang = (i * 2 * Math.PI) / 3;
+        v.push([r * Math.sin(ang), r * Math.cos(ang)]);
+      }
+
+      // 1. Top Triangle Face (moves up +Y)
+      const topMesh = makeTriangle(
+        [v[0][0], halfH, v[0][1]],
+        [v[1][0], halfH, v[1][1]],
+        [v[2][0], halfH, v[2][1]]
+      );
+      topMesh.position.y = off;
+      group.add(topMesh);
+
+      // 2. Bottom Triangle Face (moves down -Y)
+      const btmMesh = makeTriangle(
+        [v[0][0], -halfH, v[0][1]],
+        [v[2][0], -halfH, v[2][1]],
+        [v[1][0], -halfH, v[1][1]]
+      );
+      btmMesh.position.y = -off;
+      group.add(btmMesh);
+
+      // 3. Three Rectangular Side Faces
+      const edges = [
+        [v[0], v[1]],
+        [v[1], v[2]],
+        [v[2], v[0]]
+      ];
+
+      edges.forEach(([pA, pB]) => {
+        const geom = new THREE.BufferGeometry();
+        const pos = new Float32Array([
+          pA[0], -halfH, pA[1],
+          pB[0], -halfH, pB[1],
+          pB[0],  halfH, pB[1],
+
+          pA[0], -halfH, pA[1],
+          pB[0],  halfH, pB[1],
+          pA[0],  halfH, pA[1]
+        ]);
+        geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geom.computeVertexNormals();
+
+        const sideMesh = new THREE.Mesh(geom, mat);
+        const midX = (pA[0] + pB[0]) / 2;
+        const midZ = (pA[1] + pB[1]) / 2;
+        const len = Math.hypot(midX, midZ);
+        const nx = midX / len;
+        const nz = midZ / len;
+
+        sideMesh.position.set(nx * off, 0, nz * off);
+        group.add(sideMesh);
+      });
+
       return group;
     },
     createRealMesh() {
@@ -687,11 +765,11 @@ const SHAPES_DATA = [
       const r = 1.5, h = 1.3;
       const coords = [];
       for (let i = 0; i < 3; i++) {
-        const ang = (i * 2 * Math.PI) / 3 - Math.PI / 2;
-        const x = r * Math.cos(ang);
-        const z = r * Math.sin(ang);
-        coords.push([h, x, z]);
-        coords.push([-h, x, z]);
+        const ang = (i * 2 * Math.PI) / 3;
+        const x = r * Math.sin(ang);
+        const z = r * Math.cos(ang);
+        coords.push([x, h, z]);
+        coords.push([x, -h, z]);
       }
       return coords;
     }
@@ -715,9 +793,57 @@ const SHAPES_DATA = [
     },
     createExplodedGroup(offset, mat) {
       const group = new THREE.Group();
-      const pyr = new THREE.Mesh(new THREE.ConeGeometry(1.8 + offset * 0.5, 2.4 + offset, 4), mat);
-      pyr.rotation.y = Math.PI / 4;
-      group.add(pyr);
+      const off = offset * 1.5;
+      const d = 1.273; // half-width of base
+      const h = 1.2;   // half-height (apex at +h, base at -h)
+
+      function makeTriangle(p0, p1, p2) {
+        const geom = new THREE.BufferGeometry();
+        const pos = new Float32Array([
+          p0[0], p0[1], p0[2],
+          p1[0], p1[1], p1[2],
+          p2[0], p2[1], p2[2]
+        ]);
+        geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geom.computeVertexNormals();
+        return new THREE.Mesh(geom, mat);
+      }
+
+      // 1. Square Base (moves down along -Y)
+      const baseGeom = new THREE.PlaneGeometry(d * 2, d * 2);
+      const baseMesh = new THREE.Mesh(baseGeom, mat);
+      baseMesh.rotation.x = Math.PI / 2;
+      baseMesh.position.set(0, -h - off, 0);
+      group.add(baseMesh);
+
+      // 2. Four Triangular Faces
+      const apex = [0, h, 0];
+      const c = [
+        [-d, -h,  d], // Front-Left
+        [ d, -h,  d], // Front-Right
+        [ d, -h, -d], // Back-Right
+        [-d, -h, -d]  // Back-Left
+      ];
+
+      // Normal vector calculation for slanted faces
+      const totalH = h * 2;
+      const slantLen = Math.hypot(d, totalH);
+      const ny = d / slantLen;
+      const nz = totalH / slantLen;
+
+      const faces = [
+        { pA: c[0], pB: c[1], n: [0, ny, nz] },    // Front
+        { pA: c[1], pB: c[2], n: [nz, ny, 0] },    // Right
+        { pA: c[2], pB: c[3], n: [0, ny, -nz] },   // Back
+        { pA: c[3], pB: c[0], n: [-nz, ny, 0] }    // Left
+      ];
+
+      faces.forEach(({ pA, pB, n }) => {
+        const tri = makeTriangle(pA, pB, apex);
+        tri.position.set(n[0] * off, n[1] * off, n[2] * off);
+        group.add(tri);
+      });
+
       return group;
     },
     createRealMesh() {
@@ -853,8 +979,38 @@ const SHAPES_DATA = [
     },
     createExplodedGroup(offset, mat) {
       const group = new THREE.Group();
-      const p = new THREE.Mesh(new THREE.CylinderGeometry(1.4 + offset * 0.5, 1.4 + offset * 0.5, 3.0 + offset, 6), mat);
-      group.add(p);
+      const off = offset * 1.5;
+      const r = 1.4;
+      const h = 3.0;
+      const halfH = h / 2;
+
+      // 1. Top Hexagon Cap (moves up +Y)
+      const topCap = new THREE.Mesh(new THREE.CircleGeometry(r, 6), mat);
+      topCap.rotation.x = -Math.PI / 2;
+      topCap.position.set(0, halfH + off, 0);
+      group.add(topCap);
+
+      // 2. Bottom Hexagon Cap (moves down -Y)
+      const btmCap = new THREE.Mesh(new THREE.CircleGeometry(r, 6), mat);
+      btmCap.rotation.x = Math.PI / 2;
+      btmCap.position.set(0, -halfH - off, 0);
+      group.add(btmCap);
+
+      // 3. Six Rectangular Side Walls
+      const d = r * Math.cos(Math.PI / 6);
+      const sideW = 2 * r * Math.sin(Math.PI / 6);
+
+      for (let i = 0; i < 6; i++) {
+        const phi = (i * 2 * Math.PI) / 6 + Math.PI / 6;
+        const nx = Math.cos(phi);
+        const nz = Math.sin(phi);
+
+        const wall = new THREE.Mesh(new THREE.PlaneGeometry(sideW, h), mat);
+        wall.position.set(nx * (d + off), 0, nz * (d + off));
+        wall.rotation.y = -phi + Math.PI / 2;
+        group.add(wall);
+      }
+
       return group;
     },
     createRealMesh() {
@@ -890,10 +1046,10 @@ const SHAPES_DATA = [
       const coords = [];
       for (let i = 0; i < 6; i++) {
         const ang = (i * 2 * Math.PI) / 6;
-        const x = r * Math.cos(ang);
-        const z = r * Math.sin(ang);
+        const x = r * Math.sin(ang);
+        const z = r * Math.cos(ang);
         coords.push([x, h, z]);
-        coords.push([-h, x, z]);
+        coords.push([x, -h, z]);
       }
       return coords;
     }
@@ -917,8 +1073,45 @@ const SHAPES_DATA = [
     },
     createExplodedGroup(offset, mat) {
       const group = new THREE.Group();
-      const oct = new THREE.Mesh(new THREE.OctahedronGeometry(1.8 + offset), mat);
-      group.add(oct);
+      const off = offset * 1.5;
+      const r = 1.8;
+
+      function makeTriangle(p0, p1, p2) {
+        const geom = new THREE.BufferGeometry();
+        const pos = new Float32Array([
+          p0[0], p0[1], p0[2],
+          p1[0], p1[1], p1[2],
+          p2[0], p2[1], p2[2]
+        ]);
+        geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geom.computeVertexNormals();
+        return new THREE.Mesh(geom, mat);
+      }
+
+      // 8 octants: (+-1, +-1, +-1)
+      const signs = [
+        [1, 1, 1], [-1, 1, 1], [-1, 1, -1], [1, 1, -1],
+        [1, -1, 1], [-1, -1, 1], [-1, -1, -1], [1, -1, -1]
+      ];
+
+      const invSqrt3 = 1 / Math.sqrt(3);
+
+      signs.forEach(([sx, sy, sz]) => {
+        const p1 = [sx * r, 0, 0];
+        const p2 = [0, sy * r, 0];
+        const p3 = [0, 0, sz * r];
+
+        // Ensure proper winding order
+        const tri = sy > 0 ? makeTriangle(p1, p2, p3) : makeTriangle(p1, p3, p2);
+
+        const nx = sx * invSqrt3;
+        const ny = sy * invSqrt3;
+        const nz = sz * invSqrt3;
+
+        tri.position.set(nx * off, ny * off, nz * off);
+        group.add(tri);
+      });
+
       return group;
     },
     createRealMesh() {
@@ -1018,6 +1211,7 @@ function initThree() {
   scene.add(shapeGroup);
 
   window.addEventListener('resize', onWindowResize);
+  window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 150));
 
   function animate() {
     requestAnimationFrame(animate);
@@ -1320,6 +1514,12 @@ function setCustomColor(hex, el) {
 // Explorer Mode vs Quiz Mode
 function switchMode(mode) {
   sound.playPop();
+  document.activeElement?.blur();
+  if (window.innerWidth > 768) {
+    const header = document.querySelector('.main-header');
+    if (header) header.classList.add('collapsed');
+  }
+
   const isExplorer = mode === 'explorer';
   document.getElementById('explorerView').classList.toggle('active', isExplorer);
   document.getElementById('quizView').classList.toggle('active', !isExplorer);
@@ -1533,6 +1733,9 @@ function renderQuizQuestion() {
   const feedback = document.getElementById('quizFeedback');
   feedback.className = 'quiz-feedback hidden';
 
+  const nextBtn = document.getElementById('btnNextQuestion');
+  if (nextBtn) nextBtn.classList.add('hidden');
+
   q.options.forEach((optText, optIdx) => {
     const btn = document.createElement('button');
     btn.className = 'quiz-opt-btn';
@@ -1557,7 +1760,7 @@ function handleQuizAnswer(selectedIdx, clickedBtn) {
     currentScore += 20;
     document.getElementById('liveScore').textContent = currentScore;
     feedback.className = 'quiz-feedback correct';
-    feedback.textContent = '🌟 AWESOME! That is correct!';
+    feedback.textContent = `🌟 AWESOME! That is correct! ${q.hint ? '💡 ' + q.hint : ''}`;
 
     if (typeof confetti === 'function') {
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.65 } });
@@ -1570,14 +1773,24 @@ function handleQuizAnswer(selectedIdx, clickedBtn) {
     feedback.textContent = `💡 Correct answer: "${q.options[q.answer]}". ${q.hint}`;
   }
 
-  setTimeout(() => {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < quiz.questions.length) {
-      renderQuizQuestion();
-    } else {
-      finishQuiz();
-    }
-  }, 1800);
+  // Show Next Question button instead of auto-advancing
+  const nextBtn = document.getElementById('btnNextQuestion');
+  if (nextBtn) {
+    const isLast = currentQuestionIndex === quiz.questions.length - 1;
+    nextBtn.textContent = isLast ? 'See Final Results 🏆' : 'Next Question ➡️';
+    nextBtn.classList.remove('hidden');
+  }
+}
+
+function onNextQuizQuestion() {
+  sound.playPop();
+  const quiz = QUIZ_LEVELS[currentQuizLevel];
+  currentQuestionIndex++;
+  if (currentQuestionIndex < quiz.questions.length) {
+    renderQuizQuestion();
+  } else {
+    finishQuiz();
+  }
 }
 
 function finishQuiz() {
@@ -1626,4 +1839,22 @@ window.addEventListener('DOMContentLoaded', () => {
   initThree();
   renderShapeShelf();
   selectShape(0);
+
+  const mainHeader = document.querySelector('.main-header');
+  if (mainHeader) {
+    mainHeader.querySelectorAll('button, a').forEach(el => {
+      el.addEventListener('click', () => {
+        el.blur();
+        if (window.innerWidth > 768) {
+          mainHeader.classList.add('collapsed');
+        }
+      });
+    });
+
+    mainHeader.addEventListener('mouseleave', () => {
+      if (window.innerWidth > 768) {
+        mainHeader.classList.remove('collapsed');
+      }
+    });
+  }
 });
