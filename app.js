@@ -873,6 +873,122 @@ const SHAPES_DATA = [
     }
   },
   {
+    id: 'triangular_pyramid',
+    name: 'Triangular Pyramid (Tetrahedron)',
+    icon: '🔺',
+    subtitle: 'Has 4 triangular faces meeting at 4 corner vertices',
+    color: 0xEC4899,
+    faces: 4,
+    facesDesc: '4 Flat Triangles (1 Base + 3 Sides)',
+    edges: 6,
+    edgesDesc: '6 Straight Edges',
+    vertices: 4,
+    verticesDesc: '4 Corner Vertices',
+    examples: ['🍵 Pyramid Tea Bag', '🔺 Pyraminx Puzzle', '⛺ Tripod Tent', '🎲 4-Sided Die'],
+    tip: 'A triangular pyramid is called a tetrahedron! Every single one of its 4 faces is an equilateral triangle!',
+    createGeom() {
+      return new THREE.ConeGeometry(1.8, 2.4, 3);
+    },
+    createExplodedGroup(offset, mat) {
+      const group = new THREE.Group();
+      const off = offset * 1.5;
+      const r = 1.8;
+      const h = 1.2;
+      const apex = [0, h, 0];
+
+      const c = [];
+      for (let i = 0; i < 3; i++) {
+        const ang = (i * 2 * Math.PI) / 3;
+        c.push([r * Math.sin(ang), -h, r * Math.cos(ang)]);
+      }
+
+      function makeTriangle(p0, p1, p2) {
+        const geom = new THREE.BufferGeometry();
+        const pos = new Float32Array([
+          p0[0], p0[1], p0[2],
+          p1[0], p1[1], p1[2],
+          p2[0], p2[1], p2[2]
+        ]);
+        geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geom.computeVertexNormals();
+        return new THREE.Mesh(geom, mat);
+      }
+
+      // 1. Triangular Base Face (moves down -Y)
+      const baseMesh = makeTriangle(c[0], c[2], c[1]);
+      baseMesh.position.y = -off;
+      group.add(baseMesh);
+
+      // 2. Three Slanted Triangular Side Faces
+      for (let i = 0; i < 3; i++) {
+        const pA = c[i];
+        const pB = c[(i + 1) % 3];
+        const tri = makeTriangle(pA, pB, apex);
+
+        const midX = (pA[0] + pB[0]) / 2;
+        const midZ = (pA[2] + pB[2]) / 2;
+        const totalH = h * 2;
+        const radLen = Math.hypot(midX, midZ);
+        const slantLen = Math.hypot(radLen, totalH);
+
+        const ny = radLen / slantLen;
+        const nRadial = totalH / slantLen;
+        const nx = (midX / radLen) * nRadial;
+        const nz = (midZ / radLen) * nRadial;
+
+        tri.position.set(nx * off, ny * off, nz * off);
+        group.add(tri);
+      }
+
+      return group;
+    },
+    createRealMesh() {
+      const group = new THREE.Group();
+      // Pyramid Tea Bag
+      const bagMat = new THREE.MeshStandardMaterial({
+        color: 0xFEF3C7,
+        roughness: 0.6,
+        transparent: true,
+        opacity: 0.9
+      });
+      const bag = new THREE.Mesh(new THREE.ConeGeometry(1.8, 2.4, 3), bagMat);
+      group.add(bag);
+
+      // Tea leaves core inside
+      const teaMat = new THREE.MeshStandardMaterial({ color: 0x451A03, roughness: 0.9 });
+      const teaCore = new THREE.Mesh(new THREE.ConeGeometry(1.2, 1.4, 3), teaMat);
+      teaCore.position.y = -0.4;
+      group.add(teaCore);
+
+      // String from apex
+      const stringGeom = new THREE.CylinderGeometry(0.02, 0.02, 1.4, 8);
+      const stringMat = new THREE.MeshBasicMaterial({ color: 0xE2E8F0 });
+      const string = new THREE.Mesh(stringGeom, stringMat);
+      string.position.set(0.2, 1.8, 0.2);
+      string.rotation.z = -0.4;
+      group.add(string);
+
+      // Paper tag
+      const tagGeom = new THREE.BoxGeometry(0.35, 0.45, 0.02);
+      const tagMat = new THREE.MeshStandardMaterial({ color: 0xDC2626 });
+      const tag = new THREE.Mesh(tagGeom, tagMat);
+      tag.position.set(0.5, 2.3, 0.3);
+      tag.rotation.z = -0.3;
+      group.add(tag);
+
+      return group;
+    },
+    getVerticesCoords() {
+      const r = 1.8, h = 1.2;
+      const coords = [[0, h, 0]];
+      for (let i = 0; i < 3; i++) {
+        const ang = (i * 2 * Math.PI) / 3;
+        coords.push([r * Math.sin(ang), -h, r * Math.cos(ang)]);
+      }
+      return coords;
+    }
+  },
+  {
     id: 'torus',
     name: 'Torus (Donut)',
     icon: '🍩',
@@ -1511,7 +1627,7 @@ function setCustomColor(hex, el) {
   selectShape(currentShapeIndex);
 }
 
-// Explorer Mode vs Quiz Mode
+// Explorer Mode vs Sorter Mode vs Quiz Mode
 function switchMode(mode) {
   sound.playPop();
   document.activeElement?.blur();
@@ -1521,11 +1637,24 @@ function switchMode(mode) {
   }
 
   const isExplorer = mode === 'explorer';
-  document.getElementById('explorerView').classList.toggle('active', isExplorer);
-  document.getElementById('quizView').classList.toggle('active', !isExplorer);
+  const isSorter = mode === 'sorter';
+  const isQuiz = mode === 'quiz';
 
-  document.getElementById('tabExplorer').classList.toggle('active', isExplorer);
-  document.getElementById('tabQuiz').classList.toggle('active', !isExplorer);
+  const explorerView = document.getElementById('explorerView');
+  const sorterView = document.getElementById('sorterView');
+  const quizView = document.getElementById('quizView');
+
+  if (explorerView) explorerView.classList.toggle('active', isExplorer);
+  if (sorterView) sorterView.classList.toggle('active', isSorter);
+  if (quizView) quizView.classList.toggle('active', isQuiz);
+
+  const tabExplorer = document.getElementById('tabExplorer');
+  const tabSorter = document.getElementById('tabSorter');
+  const tabQuiz = document.getElementById('tabQuiz');
+
+  if (tabExplorer) tabExplorer.classList.toggle('active', isExplorer);
+  if (tabSorter) tabSorter.classList.toggle('active', isSorter);
+  if (tabQuiz) tabQuiz.classList.toggle('active', isQuiz);
 
   if (isExplorer) {
     setTimeout(onWindowResize, 60);
@@ -1832,6 +1961,334 @@ function returnToQuizSelect() {
   document.getElementById('quizEndCard').classList.add('hidden');
   document.getElementById('quizActiveCard').classList.add('hidden');
   document.getElementById('quizLevelSelect').classList.remove('hidden');
+}
+
+// ================= SHAPE SORTER LAB GAME ENGINE =================
+const SORTER_GAMES = {
+  1: {
+    id: 1,
+    title: 'Game 1: Can It Roll or Stack?',
+    instructions: 'Sort shapes into their movement baskets: Roll, Stack & Slide, or Both!',
+    bins: [
+      { id: 'roll', label: 'Can Roll Only', sub: 'Curved Surface', color: '#3B82F6', icon: '🌀' },
+      { id: 'both', label: 'Can Roll & Stack', sub: 'Curved + Flat', color: '#10B981', icon: '🔄' },
+      { id: 'stack', label: 'Can Stack & Slide Only', sub: 'Flat Faces', color: '#8B5CF6', icon: '🧱' }
+    ],
+    items: [
+      { id: 'sphere', name: 'Sphere', icon: '⚽', bin: 'roll', hint: 'A sphere has only 1 curved surface—it rolls in any direction!' },
+      { id: 'cylinder', name: 'Cylinder', icon: '🥫', bin: 'both', hint: 'Rolls on its curved side, and stacks on its flat circular ends!' },
+      { id: 'cube', name: 'Cube', icon: '🎲', bin: 'stack', hint: 'With 6 flat square faces, cubes stack perfectly without rolling!' },
+      { id: 'cone', name: 'Cone', icon: '🍦', bin: 'both', hint: 'Rolls in circles on its side, and stands on its flat circular base!' },
+      { id: 'cuboid', name: 'Rectangular Prism', icon: '🧱', bin: 'stack', hint: 'Flat rectangle faces make great stacks like bricks!' },
+      { id: 'torus', name: 'Torus (Donut)', icon: '🍩', bin: 'roll', hint: 'Continuous curved ring rolls easily like a tire!' },
+      { id: 'tri_prism', name: 'Triangular Prism', icon: '⛺', bin: 'stack', hint: 'Flat triangles and rectangles slide and stack!' },
+      { id: 'hemisphere', name: 'Hemisphere', icon: '🥣', bin: 'both', hint: 'Rolls on its rounded dome, slides on its flat circular base!' },
+      { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'stack', hint: '4 flat triangular faces slide and stack firmly!' },
+      { id: 'octahedron', name: 'Octahedron', icon: '💎', bin: 'stack', hint: 'All 8 flat triangular facets can slide or rest flat!' },
+      { id: 'drum', name: 'Snare Drum', icon: '🥁', bin: 'both', hint: 'Rolls on its round side and stacks on flat drum heads!' },
+      { id: 'juice', name: 'Juice Carton', icon: '🧃', bin: 'stack', hint: 'Flat rectangular box faces stack neatly on grocery shelves!' },
+      { id: 'bball', name: 'Basketball', icon: '🏀', bin: 'roll', hint: 'A spherical ball rolls freely in every direction!' },
+      { id: 'pencil', name: 'Wooden Pencil', icon: '✏️', bin: 'both', hint: 'Flat ends can stack, hexagonal body can roll or slide!' }
+    ]
+  },
+  2: {
+    id: 2,
+    title: 'Game 2: Face Shape Matcher',
+    instructions: 'Look at the flat faces of each 3D shape and sort them by face geometry!',
+    bins: [
+      { id: 'circle', label: 'Has Circular Faces', sub: 'Circle Bases', color: '#06B6D4', icon: '⚪' },
+      { id: 'triangle', label: 'Has Triangular Faces', sub: 'Triangle Facets', color: '#F59E0B', icon: '🔺' },
+      { id: 'rect_square', label: 'Has Square / Rectangle Faces', sub: '4-Sided Faces', color: '#4F46E5', icon: '🔲' }
+    ],
+    items: [
+      { id: 'cylinder', name: 'Cylinder', icon: '🥫', bin: 'circle', hint: 'Its 2 flat bases are perfect circles!' },
+      { id: 'square_pyr', name: 'Square Pyramid', icon: '🏛️', bin: 'triangle', hint: 'Has 4 triangular faces that slope to the top apex!' },
+      { id: 'cube', name: 'Cube', icon: '🎲', bin: 'rect_square', hint: 'Every single face is an identical flat square!' },
+      { id: 'cone', name: 'Cone', icon: '🍦', bin: 'circle', hint: 'Has 1 flat circular base at the bottom!' },
+      { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'triangle', hint: 'All 4 faces are flat triangles!' },
+      { id: 'cuboid', name: 'Rectangular Prism', icon: '🧃', bin: 'rect_square', hint: 'Has 6 flat rectangular faces!' },
+      { id: 'octahedron', name: 'Octahedron', icon: '💎', bin: 'triangle', hint: 'All 8 faces are equilateral triangles!' },
+      { id: 'hemisphere', name: 'Hemisphere', icon: '🥣', bin: 'circle', hint: 'Its flat base is a circle!' },
+      { id: 'tent', name: 'Camping Tent', icon: '⛺', bin: 'triangle', hint: 'Its entrance and back doors are triangular faces!' },
+      { id: 'cereal', name: 'Cereal Box', icon: '🥣', bin: 'rect_square', hint: 'All 6 sides are flat rectangles!' },
+      { id: 'drum', name: 'Snare Drum', icon: '🥁', bin: 'circle', hint: 'Top and bottom drum skins are flat circles!' },
+      { id: 'teabag', name: 'Pyramid Tea Bag', icon: '🍵', bin: 'triangle', hint: 'Has 4 triangular mesh sides!' },
+      { id: 'traffic_cone', name: 'Traffic Cone', icon: '🚧', bin: 'circle', hint: 'Its bottom opening base is a circle!' },
+      { id: 'block', name: 'Toy Building Block', icon: '🧱', bin: 'rect_square', hint: 'Flat square and rectangle faces!' }
+    ]
+  },
+  3: {
+    id: 3,
+    title: 'Game 3: Pointy vs. Smooth',
+    instructions: 'Does the shape have sharp corner vertices, or is it completely smooth (0 vertices)?',
+    bins: [
+      { id: 'pointy', label: 'Has Sharp Vertices', sub: 'Pointy Corners', color: '#EC4899', icon: '✨' },
+      { id: 'smooth', label: '0 Vertices (Smooth)', sub: 'Zero Sharp Corners', color: '#0EA5E9', icon: '🌊' }
+    ],
+    items: [
+      { id: 'cube', name: 'Cube', icon: '🎲', bin: 'pointy', hint: 'Has 8 sharp corner vertices!' },
+      { id: 'sphere', name: 'Sphere', icon: '⚽', bin: 'smooth', hint: 'Completely round and smooth, zero corners!' },
+      { id: 'cone', name: 'Cone', icon: '🎉', bin: 'pointy', hint: 'The pointy tip at the top is a vertex!' },
+      { id: 'cylinder', name: 'Cylinder', icon: '🥫', bin: 'smooth', hint: 'Has 2 curved edges, but zero sharp corners!' },
+      { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'pointy', hint: 'Has 4 sharp corner vertices!' },
+      { id: 'torus', name: 'Torus (Donut)', icon: '🍩', bin: 'smooth', hint: 'Completely smooth ring with zero corners!' },
+      { id: 'square_pyr', name: 'Square Pyramid', icon: '🏛️', bin: 'pointy', hint: '4 base corners + 1 apex = 5 vertices!' },
+      { id: 'hemisphere', name: 'Hemisphere', icon: '🥣', bin: 'smooth', hint: '1 circular edge, but zero corner points!' },
+      { id: 'tri_prism', name: 'Triangular Prism', icon: '⛺', bin: 'pointy', hint: 'Has 6 sharp corner vertices (3 at each end)!' },
+      { id: 'hex_prism', name: 'Hexagonal Prism', icon: '✏️', bin: 'pointy', hint: 'Has 12 corner vertices (6 top + 6 bottom)!' },
+      { id: 'octahedron', name: 'Octahedron', icon: '💎', bin: 'pointy', hint: 'Has 6 sharp corner vertices!' },
+      { id: 'globe', name: 'Earth Globe', icon: '🌍', bin: 'smooth', hint: 'Completely spherical with zero sharp corners!' },
+      { id: 'lifebuoy', name: 'Swim Lifebuoy', icon: '🛟', bin: 'smooth', hint: 'Torus ring shape with zero vertices!' },
+      { id: 'orange', name: 'Fresh Orange', icon: '🍊', bin: 'smooth', hint: 'Round sphere fruit with zero corners!' }
+    ]
+  },
+  4: {
+    id: 4,
+    title: 'Game 4: Real-World Sorter',
+    instructions: 'Match everyday real-world items into their 3D solid shape baskets!',
+    bins: [
+      { id: 'cube', label: 'Cube Basket', sub: 'Dice, Boxes', color: '#6366F1', icon: '🎲' },
+      { id: 'sphere', label: 'Sphere Basket', sub: 'Balls, Fruit', color: '#10B981', icon: '⚽' },
+      { id: 'cylinder', label: 'Cylinder Basket', sub: 'Cans, Rolls', color: '#F59E0B', icon: '🥫' },
+      { id: 'cone', label: 'Cone Basket', sub: 'Hats, Funnels', color: '#EC4899', icon: '🍦' }
+    ],
+    items: [
+      { id: 'dice', name: 'Playing Dice', icon: '🎲', bin: 'cube', hint: 'Dice have 6 square faces—a true cube!' },
+      { id: 'bball', name: 'Basketball', icon: '🏀', bin: 'sphere', hint: 'A basketball is completely round in all directions!' },
+      { id: 'soda', name: 'Soda Can', icon: '🥤', bin: 'cylinder', hint: 'Two circular ends with a curved body!' },
+      { id: 'icecream', name: 'Waffle Cone', icon: '🍦', bin: 'cone', hint: 'Pointy tip with a circular opening!' },
+      { id: 'orange', name: 'Fresh Orange', icon: '🍊', bin: 'sphere', hint: 'Round like a sphere!' },
+      { id: 'partyhat', name: 'Party Hat', icon: '🎉', bin: 'cone', hint: 'A classic pointy cone!' },
+      { id: 'rubiks', name: 'Rubik\'s Cube', icon: '🧩', bin: 'cube', hint: 'A 3x3 puzzle cube!' },
+      { id: 'soupcan', name: 'Canned Soup', icon: '🥫', bin: 'cylinder', hint: 'A sturdy cylinder can!' },
+      { id: 'giftbox', name: 'Gift Box', icon: '🎁', bin: 'cube', hint: 'A square package box is a cube!' },
+      { id: 'soccer', name: 'Soccer Ball', icon: '⚽', bin: 'sphere', hint: 'Spherical ball that rolls in any direction!' },
+      { id: 'drum', name: 'Snare Drum', icon: '🥁', bin: 'cylinder', hint: 'Round drum body with circular top and bottom!' },
+      { id: 'traffic_cone', name: 'Traffic Cone', icon: '🚧', bin: 'cone', hint: 'Pointy safety cone!' },
+      { id: 'icecube', name: 'Ice Cube', icon: '🧊', bin: 'cube', hint: 'Square frozen ice cube!' },
+      { id: 'globe', name: 'Earth Globe', icon: '🌍', bin: 'sphere', hint: 'Spherical planetary globe!' },
+      { id: 'battery', name: 'AA Battery', icon: '🔋', bin: 'cylinder', hint: 'Cylindrical metal battery cell!' },
+      { id: 'megaphone', name: 'Megaphone Funnel', icon: '📢', bin: 'cone', hint: 'Conical sound cone!' }
+    ]
+  }
+};
+
+let currentSorterGameId = 1;
+let currentSorterScore = 0;
+let sorterRemainingItems = [];
+let sorterSortedItems = {};
+let sorterSelectedItem = null;
+let draggedItemId = null;
+
+function startSorterGame(gameId) {
+  sound.playPop();
+  currentSorterGameId = gameId;
+  const game = SORTER_GAMES[gameId];
+  if (!game) return;
+
+  currentSorterScore = 0;
+  sorterSelectedItem = null;
+  draggedItemId = null;
+  sorterSortedItems = {};
+  game.bins.forEach(b => {
+    sorterSortedItems[b.id] = [];
+  });
+
+  // Shuffle items
+  sorterRemainingItems = [...game.items].sort(() => Math.random() - 0.5);
+
+  document.getElementById('sorterLevelSelect').classList.add('hidden');
+  document.getElementById('sorterEndScreen').classList.add('hidden');
+  document.getElementById('sorterActiveScreen').classList.remove('hidden');
+
+  document.getElementById('sorterGameTitle').textContent = game.title;
+  document.getElementById('sorterInstructions').innerHTML = `💡 ${game.instructions} <br><small>Drag an item into a basket, or <strong>tap an item</strong> then <strong>tap a basket</strong>!</small>`;
+  document.getElementById('sorterScore').textContent = currentSorterScore;
+  document.getElementById('sorterTotalCount').textContent = game.items.length;
+  document.getElementById('sorterSortedCount').textContent = '0';
+
+  const feedback = document.getElementById('sorterFeedback');
+  if (feedback) feedback.className = 'quiz-feedback hidden';
+
+  renderSorterBoard();
+}
+
+function renderSorterBoard() {
+  const game = SORTER_GAMES[currentSorterGameId];
+  const binsContainer = document.getElementById('sorterBinsContainer');
+  const poolContainer = document.getElementById('sorterPool');
+
+  // 1. Render Bins
+  binsContainer.innerHTML = '';
+  binsContainer.className = `sorter-bins-container bins-${game.bins.length}`;
+
+  game.bins.forEach(bin => {
+    const binEl = document.createElement('div');
+    binEl.className = 'sorter-bin';
+    binEl.id = `bin-${bin.id}`;
+    binEl.style.setProperty('--bin-accent', bin.color);
+
+    binEl.innerHTML = `
+      <div class="bin-header" style="background: ${bin.color}15; border-color: ${bin.color}40;">
+        <span class="bin-icon">${bin.icon}</span>
+        <div class="bin-titles">
+          <h4>${bin.label}</h4>
+          <span class="bin-subtitle">${bin.sub}</span>
+        </div>
+        <span class="bin-count" id="bincount-${bin.id}">${sorterSortedItems[bin.id].length}</span>
+      </div>
+      <div class="bin-drop-zone" id="dropzone-${bin.id}">
+        ${sorterSortedItems[bin.id].map(item => `
+          <div class="sorted-chip" title="${item.name}">
+            <span class="chip-emoji">${item.icon}</span>
+            <span class="chip-name-sub">${item.name}</span>
+          </div>
+        `).join('')}
+        ${sorterSortedItems[bin.id].length === 0 ? `<div class="drop-placeholder">Drop Objects Here</div>` : ''}
+      </div>
+    `;
+
+    // Drag-and-drop listeners for desktop
+    binEl.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      binEl.classList.add('drag-over');
+    });
+    binEl.addEventListener('dragleave', () => {
+      binEl.classList.remove('drag-over');
+    });
+    binEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      binEl.classList.remove('drag-over');
+      const itemId = e.dataTransfer.getData('text/plain') || draggedItemId;
+      if (itemId) attemptDropItem(itemId, bin.id);
+    });
+
+    // Tap-to-place listener for mobile & click
+    binEl.addEventListener('click', () => {
+      if (sorterSelectedItem) {
+        attemptDropItem(sorterSelectedItem.id, bin.id);
+      }
+    });
+
+    binsContainer.appendChild(binEl);
+  });
+
+  // 2. Render Unsorted Items Pool (Visual-First Object Tokens)
+  poolContainer.innerHTML = '';
+  if (sorterRemainingItems.length === 0) {
+    poolContainer.innerHTML = `<div class="pool-empty-msg">🎉 All items sorted! Fantastic work!</div>`;
+  } else {
+    sorterRemainingItems.forEach(item => {
+      const card = document.createElement('div');
+      const isSelected = sorterSelectedItem && sorterSelectedItem.id === item.id;
+      card.className = `sorter-item-card ${isSelected ? 'selected' : ''}`;
+      card.draggable = true;
+
+      card.innerHTML = `
+        <div class="item-visual-frame">
+          <span class="item-visual">${item.icon}</span>
+        </div>
+        <span class="item-name">${item.name}</span>
+      `;
+
+      card.addEventListener('dragstart', (e) => {
+        draggedItemId = item.id;
+        e.dataTransfer.setData('text/plain', item.id);
+        card.classList.add('dragging');
+      });
+
+      card.addEventListener('dragend', () => {
+        draggedItemId = null;
+        card.classList.remove('dragging');
+      });
+
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sound.playPop();
+        if (sorterSelectedItem && sorterSelectedItem.id === item.id) {
+          sorterSelectedItem = null;
+        } else {
+          sorterSelectedItem = item;
+        }
+        renderSorterBoard();
+      });
+
+      poolContainer.appendChild(card);
+    });
+  }
+
+  // Update counts
+  const totalCount = game.items.length;
+  const sortedCount = totalCount - sorterRemainingItems.length;
+  document.getElementById('sorterSortedCount').textContent = sortedCount;
+  document.getElementById('sorterScore').textContent = currentSorterScore;
+}
+
+function attemptDropItem(itemId, targetBinId) {
+  const game = SORTER_GAMES[currentSorterGameId];
+  const itemIndex = sorterRemainingItems.findIndex(it => it.id === itemId);
+  if (itemIndex === -1) return;
+
+  const item = sorterRemainingItems[itemIndex];
+  const feedback = document.getElementById('sorterFeedback');
+
+  if (item.bin === targetBinId) {
+    // CORRECT DROP!
+    sound.playCorrect();
+    currentSorterScore += 15;
+    sorterSortedItems[targetBinId].push(item);
+    sorterRemainingItems.splice(itemIndex, 1);
+    sorterSelectedItem = null;
+    draggedItemId = null;
+
+    feedback.className = 'quiz-feedback correct';
+    feedback.innerHTML = `🌟 <strong>Correct!</strong> ${item.icon} <strong>${item.name}</strong> fits here! <small>${item.hint}</small>`;
+
+    if (typeof confetti === 'function') {
+      confetti({ particleCount: 35, spread: 50, origin: { y: 0.7 } });
+    }
+
+    renderSorterBoard();
+
+    // Check completion
+    if (sorterRemainingItems.length === 0) {
+      setTimeout(finishSorterGame, 1000);
+    }
+  } else {
+    // WRONG DROP!
+    sound.playWrong();
+    feedback.className = 'quiz-feedback wrong';
+    feedback.innerHTML = `💡 Not quite! <strong>${item.icon} ${item.name}</strong> doesn't belong in this basket. Hint: ${item.hint}`;
+
+    const binEl = document.getElementById(`bin-${targetBinId}`);
+    if (binEl) {
+      binEl.classList.add('shake');
+      setTimeout(() => binEl.classList.remove('shake'), 500);
+    }
+  }
+}
+
+function finishSorterGame() {
+  sound.playFanfare();
+  document.getElementById('sorterActiveScreen').classList.add('hidden');
+  document.getElementById('sorterEndScreen').classList.remove('hidden');
+
+  document.getElementById('sorterFinalScore').textContent = currentSorterScore;
+
+  if (typeof confetti === 'function') {
+    confetti({ particleCount: 120, spread: 90, origin: { y: 0.5 } });
+  }
+}
+
+function retryCurrentSorter() {
+  startSorterGame(currentSorterGameId);
+}
+
+function returnToSorterSelect() {
+  sound.playPop();
+  document.getElementById('sorterEndScreen').classList.add('hidden');
+  document.getElementById('sorterActiveScreen').classList.add('hidden');
+  document.getElementById('sorterLevelSelect').classList.remove('hidden');
 }
 
 // Window Onload

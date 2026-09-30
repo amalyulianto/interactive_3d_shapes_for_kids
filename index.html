@@ -30,6 +30,9 @@
         <button id="tabExplorer" class="tab-btn active" onclick="switchMode('explorer')">
           <span class="tab-icon">🎮</span> 3D Explorer
         </button>
+        <button id="tabSorter" class="tab-btn" onclick="switchMode('sorter')">
+          <span class="tab-icon">🗂️</span> Sorting Lab
+        </button>
         <button id="tabQuiz" class="tab-btn" onclick="switchMode('quiz')">
           <span class="tab-icon">🏆</span> Shape Quizzes
         </button>
@@ -317,6 +320,112 @@
             </button>
             <button class="secondary-big-btn" onclick="returnToQuizSelect()">
               Pick Another Quiz 📋
+            </button>
+            <button class="secondary-big-btn" onclick="switchMode('explorer')">
+              Back to 3D Explorer 🎮
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MODE 3: SHAPE SORTER LAB -->
+    <section id="sorterView" class="view-panel">
+      <div class="sorter-container">
+        
+        <!-- Sorter Game Selection Screen -->
+        <div id="sorterLevelSelect" class="quiz-card text-center">
+          <div class="quiz-hero-icon">🗂️ 🧺 ✨</div>
+          <h2>Shape Sorter Lab</h2>
+          <p>Choose a sorting game below! Drag or tap the objects to classify them into the correct baskets.</p>
+          
+          <div class="quiz-selection-grid">
+            <div class="quiz-level-card" onclick="startSorterGame(1)">
+              <div class="level-icon">🎳</div>
+              <h3>Game 1: Can It Roll or Stack?</h3>
+              <p>Sort shapes by motion: Rolling (curved) vs. Stacking & Sliding (flat) vs. Both.</p>
+              <span class="level-badge">Grade 2 Essential • Motion</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startSorterGame(2)">
+              <div class="level-icon">🔺</div>
+              <h3>Game 2: Face Shape Matcher</h3>
+              <p>Sort shapes by the shape of their flat faces (Triangles, Squares/Rectangles, Circles).</p>
+              <span class="level-badge">Face Geometry • 3 Baskets</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startSorterGame(3)">
+              <div class="level-icon">📌</div>
+              <h3>Game 3: Pointy vs. Smooth</h3>
+              <p>Identify which solids have sharp corner vertices and which have zero vertices.</p>
+              <span class="level-badge">Vertex Detective • 2 Baskets</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startSorterGame(4)">
+              <div class="level-icon">🥫</div>
+              <h3>Game 4: Real-World Sorter</h3>
+              <p>Match everyday things (dice, soda can, party hat, basketball) to their 3D shape baskets.</p>
+              <span class="level-badge">Everyday Items • 4 Baskets</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Sorting Game Screen -->
+        <div id="sorterActiveScreen" class="quiz-card hidden">
+          <div class="sorter-header-bar">
+            <div class="sorter-header-left">
+              <button class="sorter-back-btn" onclick="returnToSorterSelect()" title="Back to Game List">
+                ⬅️ All Games
+              </button>
+              <h3 id="sorterGameTitle">Game 1: Can It Roll or Stack?</h3>
+            </div>
+            <div class="sorter-header-right">
+              <span class="sorter-counter">Sorted: <span id="sorterSortedCount">0</span> / <span id="sorterTotalCount">6</span></span>
+              <span class="quiz-score-badge">⭐ Score: <span id="sorterScore">0</span></span>
+            </div>
+          </div>
+
+          <div class="sorter-instruction-banner" id="sorterInstructions">
+            💡 Drag an item into a basket, or <strong>tap an item</strong> then <strong>tap a basket</strong>!
+          </div>
+
+          <!-- Drop Bins Row -->
+          <div class="sorter-bins-container" id="sorterBinsContainer">
+            <!-- Dynamically generated baskets -->
+          </div>
+
+          <!-- Unsorted Items Pool -->
+          <div class="sorter-pool-wrapper">
+            <div class="pool-header-row">
+              <h4 class="pool-title">📦 Items to Sort:</h4>
+              <span class="pool-tip-text">Tap or drag cards below:</span>
+            </div>
+            <div class="sorter-pool" id="sorterPool">
+              <!-- Dynamically generated draggable/tappable items -->
+            </div>
+          </div>
+
+          <div id="sorterFeedback" class="quiz-feedback hidden"></div>
+        </div>
+
+        <!-- Sorter Game Completion Screen -->
+        <div id="sorterEndScreen" class="quiz-card text-center hidden">
+          <div class="trophy-bounce">🎉 🏆</div>
+          <h2 id="sorterEndTitle">Outstanding Sorting!</h2>
+          <p id="sorterEndMessage">You successfully categorized all the shapes!</p>
+
+          <div class="final-score-box">
+            <div class="stars-row" id="sorterFinalStars">⭐⭐⭐⭐⭐</div>
+            <div class="score-display">Final Score: <span id="sorterFinalScore">100</span> Points</div>
+          </div>
+
+          <div class="quiz-actions-row">
+            <button class="primary-big-btn" onclick="retryCurrentSorter()">
+              Play Again 🔄
+            </button>
+            <button class="secondary-big-btn" onclick="returnToSorterSelect()">
+              Choose Another Game 🗂️
             </button>
             <button class="secondary-big-btn" onclick="switchMode('explorer')">
               Back to 3D Explorer 🎮
