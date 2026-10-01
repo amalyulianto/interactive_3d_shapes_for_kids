@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lines of Symmetry Studio - Alapakadala Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="symmetry.css">
+  <!-- Canvas Confetti for Celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="main-header" id="mainHeader">
+    <div class="brand">
+      <div class="brand-logo">🪞✨</div>
+      <div class="brand-text">
+        <h1>Lines of Symmetry Studio</h1>
+        <span class="studio-badge">By Alapakadala Studio</span>
+      </div>
+    </div>
+
+    <!-- Lesson Switcher between 3D Shapes & Symmetry -->
+    <div class="lesson-switcher">
+      <span class="lesson-label">Lesson:</span>
+      <a href="index.html" class="lesson-chip link" title="Go to Lesson 1: 3D Shapes">📐 3D Shapes</a>
+      <span class="lesson-chip active" title="Current Lesson">🪞 Symmetry</span>
+    </div>
+
+    <div class="nav-controls">
+      <nav class="mode-tabs">
+        <button id="tabFold" class="tab-btn active" onclick="switchSymmetryMode('fold')">
+          <span class="tab-icon">📄</span> Fold & Reveal
+        </button>
+        <button id="tabDetective" class="tab-btn" onclick="switchSymmetryMode('detective')">
+          <span class="tab-icon">🕵️‍♂️</span> Line Detective
+        </button>
+        <button id="tabPainter" class="tab-btn" onclick="switchSymmetryMode('painter')">
+          <span class="tab-icon">🎨</span> Mirror Painter
+        </button>
+        <button id="tabQuiz" class="tab-btn" onclick="switchSymmetryMode('quiz')">
+          <span class="tab-icon">🏆</span> Symmetry Quiz
+        </button>
+      </nav>
+      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Main App Shell -->
+  <main class="app-container">
+
+    <!-- ACTIVITY 1: FOLD & REVEAL MAGIC MIRROR -->
+    <section id="foldView" class="view-panel active">
+      <!-- Shape/Object Selector Shelf -->
+      <div class="shelf-wrapper">
+        <div class="shelf-scroll" id="foldItemsShelf">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <div class="activity-stage-grid">
+        <!-- Folding Paper Canvas -->
+        <div class="fold-canvas-card">
+          <div class="stage-top-hud">
+            <div class="line-orientation-picker">
+              <span class="hud-label">Test Line:</span>
+              <button class="hud-chip active" id="btnLineVert" onclick="setFoldLineOrientation('vertical')">↕ Vertical</button>
+              <button class="hud-chip" id="btnLineHoriz" onclick="setFoldLineOrientation('horizontal')">↔ Horizontal</button>
+              <button class="hud-chip" id="btnLineDiag" onclick="setFoldLineOrientation('diagonal')">⤢ Diagonal</button>
+            </div>
+            <button class="secondary-sm-btn" onclick="resetFoldState()">🔄 Reset Paper</button>
+          </div>
+
+          <!-- Interactive Paper Stage -->
+          <div class="paper-viewport" id="paperViewport">
+            <div class="paper-sheet" id="paperSheet">
+              <!-- Left/Static Half -->
+              <div class="paper-half left-half" id="leftHalfContainer">
+                <svg id="svgLeftHalf" viewBox="0 0 200 400" preserveAspectRatio="none"></svg>
+              </div>
+              <!-- Folding Mirror Line -->
+              <div class="symmetry-mirror-line" id="mirrorLine">
+                <span class="line-badge" id="mirrorLineBadge">Line of Symmetry</span>
+              </div>
+              <!-- Right/Folding Half (Rotates in 3D) -->
+              <div class="paper-half right-half" id="rightHalfContainer">
+                <svg id="svgRightHalf" viewBox="200 0 200 400" preserveAspectRatio="none"></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Folding Controls Bar -->
+          <div class="fold-controls-bar">
+            <div class="fold-slider-block">
+              <div class="fold-slider-label-row">
+                <span>📄 <strong>Paper Fold Slider:</strong></span>
+                <span id="foldDegreeText" class="fold-percent-text">0% (Flat Open)</span>
+              </div>
+              <input type="range" id="foldSlider" min="0" max="100" value="0" oninput="onFoldSliderChange(this.value)">
+            </div>
+            <button class="primary-action-btn" id="btnAutoFold" onclick="triggerAutoFold()">
+              Fold & Test 🪞
+            </button>
+          </div>
+
+          <!-- Overlap Match Feedback Banner -->
+          <div id="foldResultBanner" class="match-feedback-banner hidden">
+            <!-- Dynamic feedback -->
+          </div>
+        </div>
+
+        <!-- Educational Sidebar Card -->
+        <aside class="sidebar-details-card">
+          <div class="details-header">
+            <span class="details-icon" id="foldItemIcon">🦋</span>
+            <div>
+              <h2 id="foldItemName">Butterfly</h2>
+              <span class="details-badge" id="foldItemSymmetryBadge">Symmetrical</span>
+            </div>
+          </div>
+
+          <div class="fact-box">
+            <h4>💡 Symmetry Rule:</h4>
+            <p id="foldItemRule">If you fold a butterfly down the center vertical line, the left and right wings match up perfectly!</p>
+          </div>
+
+          <div class="stats-card-group">
+            <div class="mini-stat-card">
+              <span class="stat-title">Symmetrical?</span>
+              <span class="stat-value" id="statIsSymmetric">YES ✅</span>
+            </div>
+            <div class="mini-stat-card">
+              <span class="stat-title">Valid Symmetry Lines</span>
+              <span class="stat-value" id="statLineCount">1 Line (Vertical)</span>
+            </div>
+          </div>
+
+          <div class="fun-kid-tip">
+            <span class="tip-icon">✨</span>
+            <span class="tip-text" id="foldItemFunTip">
+              Nature loves symmetry! Human faces, butterflies, and starfish are all symmetrical!
+            </span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ACTIVITY 2: LINE DETECTIVE (COUNTING SYMMETRY LINES) -->
+    <section id="detectiveView" class="view-panel">
+      <!-- 2D Shape Shelf -->
+      <div class="shelf-wrapper">
+        <div class="shelf-scroll" id="detectiveShapesShelf">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <div class="activity-stage-grid">
+        <div class="fold-canvas-card">
+          <div class="stage-top-hud">
+            <div class="detective-status-hud">
+              <span class="hud-label">Shape: <strong id="detectiveShapeName">Square</strong></span>
+              <span class="hud-counter-badge" id="detectiveFoundBadge">Lines Found: 0 / 4</span>
+            </div>
+            <button class="secondary-sm-btn" onclick="resetDetectiveLines()">🔄 Reset Lines</button>
+          </div>
+
+          <!-- 2D Detective Canvas -->
+          <div class="detective-canvas-box" id="detectiveCanvasBox">
+            <svg id="detectiveSvg" viewBox="0 0 400 400" class="detective-svg">
+              <!-- Shape Geometry and Lines injected here -->
+            </svg>
+          </div>
+
+          <!-- Detective Action Bar -->
+          <div class="detective-actions-row">
+            <div class="detective-tap-banner">
+              <span class="tap-banner-icon">👆</span>
+              <span class="actions-hint"><strong>Tap any dashed guideline or glowing circle on the shape</strong> to test if both sides fold into matching twins!</span>
+            </div>
+            <div class="detective-btn-group" id="detectiveButtonsGroup" style="display:none;"></div>
+          </div>
+
+          <div id="detectiveFeedback" class="match-feedback-banner hidden"></div>
+        </div>
+
+        <!-- Shape Detective Guide Sidebar -->
+        <aside class="sidebar-details-card">
+          <div class="details-header">
+            <span class="details-icon" id="detectiveIcon">🟦</span>
+            <div>
+              <h2 id="detectiveTitle">Square</h2>
+              <span class="details-badge" id="detectiveTotalLinesBadge">4 Lines of Symmetry</span>
+            </div>
+          </div>
+
+          <div class="fact-box">
+            <h4>🔍 Detective Clue:</h4>
+            <p id="detectiveClueText">A square has 4 lines of symmetry: 1 vertical, 1 horizontal, and 2 diagonals from corner to corner!</p>
+          </div>
+
+          <div class="lines-list-box">
+            <h4>📋 Confirmed Lines:</h4>
+            <ul id="confirmedLinesList" class="confirmed-lines-list">
+              <!-- Injected dynamically -->
+            </ul>
+          </div>
+
+          <div class="fun-kid-tip">
+            <span class="tip-icon">⭐</span>
+            <span class="tip-text" id="detectiveTipText">
+              Regular shapes with equal sides always have the same number of symmetry lines as their sides!
+            </span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ACTIVITY 3: MIRROR PAINTER (COMPLETE THE HALF) -->
+    <section id="painterView" class="view-panel">
+      <div class="painter-wrapper">
+        <div class="painter-top-controls">
+          <div class="painter-mode-switches">
+            <button class="hud-chip active" id="btnModeGuided" onclick="setPainterMode('guided')">🧩 Guided Puzzle</button>
+            <button class="hud-chip" id="btnModeFree" onclick="setPainterMode('free')">✨ Free-Draw Magic</button>
+          </div>
+
+          <!-- Guided Pattern Selector -->
+          <div class="guided-selector" id="guidedSelectorRow">
+            <span class="hud-label">Choose Picture:</span>
+            <div class="pattern-chips" id="patternChipsList">
+              <!-- Dynamically generated pattern buttons -->
+            </div>
+          </div>
+
+          <div class="painter-actions">
+            <button class="secondary-sm-btn" onclick="clearPainterGrid()">🧹 Clear Grid</button>
+            <button class="primary-sm-btn" id="btnCheckPainter" onclick="checkPainterSymmetry()">Check Match ✨</button>
+          </div>
+        </div>
+
+        <!-- Prominent Mode Clarification Banner -->
+        <div class="painter-mode-banner" id="painterModeBanner">
+          <span class="mode-badge-pill" id="painterModeBadge">🧩 Guided Puzzle Mode</span>
+          <span class="mode-instruction-text" id="painterModeBannerText">Look at the left side and tap the matching squares on the right side!</span>
+        </div>
+
+        <!-- Free-Draw Simple Inspirations Shelf -->
+        <div class="free-draw-inspirations hidden" id="freeDrawInspirationsRow">
+          <span class="hud-label">💡 Easy Ideas to Draw:</span>
+          <div class="inspiration-chips" id="inspirationChipsList">
+            <!-- Dynamically generated inspirations -->
+          </div>
+        </div>
+
+        <div class="painter-main-layout">
+          <!-- Pixel Paint Grid -->
+          <div class="painter-grid-card">
+            <div class="painter-grid-header">
+              <span class="grid-side-title">Left Side (Original)</span>
+              <span class="grid-center-mirror-tag">🪞 Mirror Line</span>
+              <span class="grid-side-title">Right Side (Your Turn to Mirror!)</span>
+            </div>
+
+            <div class="paint-grid-container" id="paintGridContainer">
+              <!-- 12 x 12 Interactive Grid generated in JS -->
+            </div>
+
+            <!-- Color Palette Bar -->
+            <div class="painter-palette-bar">
+              <span class="palette-title">Color Palette:</span>
+              <div class="palette-swatches" id="painterSwatches">
+                <!-- Color dots -->
+              </div>
+              <button class="eraser-btn" id="btnEraser" onclick="selectPainterColor('eraser')">
+                🧽 Eraser
+              </button>
+            </div>
+
+            <div id="painterFeedback" class="match-feedback-banner hidden"></div>
+          </div>
+
+          <!-- Mirror Painter Instructions -->
+          <aside class="sidebar-details-card">
+            <div class="details-header">
+              <span class="details-icon">🎨</span>
+              <div>
+                <h2>Mirror Painter</h2>
+                <span class="details-badge" id="painterSidebarBadge">Guided Puzzle</span>
+              </div>
+            </div>
+
+            <div class="fact-box">
+              <h4>🎯 How to Play:</h4>
+              <p id="painterInstructionText">
+                Look at the colored squares on the left side of the glowing mirror line. 
+                Tap the exact matching distance on the right side to create a perfectly symmetrical artwork!
+              </p>
+            </div>
+
+            <div class="stats-card-group">
+              <div class="mini-stat-card">
+                <span class="stat-title">Pattern</span>
+                <span class="stat-value" id="currentPatternName">Mini Heart</span>
+              </div>
+              <div class="mini-stat-card">
+                <span class="stat-title">Accuracy</span>
+                <span class="stat-value" id="painterAccuracyText">In Progress</span>
+              </div>
+            </div>
+
+            <div class="fun-kid-tip">
+              <span class="tip-icon">💡</span>
+              <span class="tip-text">
+                Notice how squares closer to the mirror line must be copied close to the mirror line on the other side!
+              </span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVITY 4: SYMMETRY CHALLENGE QUIZ -->
+    <section id="quizView" class="view-panel">
+      <div class="quiz-container">
+        
+        <!-- Quiz Level Selector Screen -->
+        <div id="symmQuizLevelSelect" class="quiz-card">
+          <div class="quiz-select-header">
+            <h2>🏆 Choose Your Symmetry Challenge</h2>
+            <p class="subtitle">Pick a quiz level to test your knowledge!</p>
+          </div>
+          <div class="symm-quiz-levels-grid" id="symmQuizLevelsGrid">
+            <!-- Dynamically populated 4 quiz cards -->
+          </div>
+        </div>
+
+        <!-- Active Quiz Question Screen -->
+        <div id="symmQuizCard" class="quiz-card hidden">
+          <div class="quiz-header-status">
+            <div class="quiz-level-indicator">
+              <button class="quiz-back-pill" onclick="returnToSymmQuizSelect()" title="Back to Quiz Levels">⬅ Levels</button>
+              <span id="symmQuizLevelName">Level 1: Symmetry Basics</span>
+            </div>
+            <div class="quiz-header-right">
+              <span class="quiz-progress-text">Question <span id="symmQuestionNum">1</span> / 5</span>
+              <span class="quiz-score-badge">⭐ Score: <span id="symmScore">0</span></span>
+            </div>
+          </div>
+
+          <div class="quiz-progress-bar">
+            <div id="symmProgressFill" class="progress-fill" style="width: 20%;"></div>
+          </div>
+
+          <div class="quiz-question-body">
+            <div class="question-illustration" id="symmQuestionVisual">🦋</div>
+            <h3 id="symmQuestionText">Does this butterfly have a vertical line of symmetry?</h3>
+          </div>
+
+          <!-- Immediate Feedback Banner (Prominent directly above options) -->
+          <div id="symmFeedback" class="quiz-feedback hidden"></div>
+
+          <div class="quiz-options-grid" id="symmQuizOptions">
+            <!-- Options dynamically added -->
+          </div>
+
+          <div class="quiz-nav-row">
+            <button id="btnSymmNextQuestion" class="btn-next-question hidden" onclick="onNextSymmQuestion()">
+              Next Question ➡️
+            </button>
+          </div>
+        </div>
+
+        <!-- Quiz Completion Screen -->
+        <div id="symmEndCard" class="quiz-card text-center hidden">
+          <div class="trophy-bounce">🏆 ✨</div>
+          <h2 id="symmEndTitle">Symmetry Champion!</h2>
+          <p id="symmEndMessage">You mastered all questions on lines of symmetry!</p>
+
+          <div class="final-score-box">
+            <div class="stars-row" id="symmFinalStars">⭐⭐⭐⭐⭐</div>
+            <div class="score-display">Score: <span id="symmFinalScore">100</span> / 100</div>
+          </div>
+
+          <div class="quiz-actions-row">
+            <button class="primary-big-btn" onclick="retrySymmQuiz()">
+              Play This Quiz Again 🔄
+            </button>
+            <button class="secondary-big-btn" onclick="returnToSymmQuizSelect()">
+              Choose Another Quiz 🏆
+            </button>
+            <button class="secondary-big-btn" onclick="switchSymmetryMode('fold')">
+              Back to Fold & Reveal 📄
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary School Geometry Learning</p>
+    <p class="copyright">© 2026 Alapakadala Studio • Making Math Engaging & Interactive!</p>
+  </footer>
+
+  <script src="symmetry.js"></script>
+</body>
+</html>
