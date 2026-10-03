@@ -294,6 +294,11 @@ const SHAPES_DATA = [
     color: 0x6366F1,
     faces: 6,
     facesDesc: '6 Equal Square Faces',
+    flatFaces: 6,
+    curvedFaces: 0,
+    faceShapes: [
+      { name: 'Square', count: 6, shape: 'square', color: '#6366F1' }
+    ],
     edges: 12,
     edgesDesc: '12 Straight Edges',
     vertices: 8,
@@ -354,6 +359,12 @@ const SHAPES_DATA = [
     color: 0xEC4899,
     faces: 6,
     facesDesc: '6 Rectangular Faces',
+    flatFaces: 6,
+    curvedFaces: 0,
+    faceShapes: [
+      { name: 'Rectangle', count: 4, shape: 'rect', color: '#EC4899' },
+      { name: 'Square End', count: 2, shape: 'square', color: '#8B5CF6' }
+    ],
     edges: 12,
     edgesDesc: '12 Straight Edges',
     vertices: 8,
@@ -432,6 +443,12 @@ const SHAPES_DATA = [
     color: 0x10B981,
     faces: 3,
     facesDesc: '2 Flat Circles + 1 Curved',
+    flatFaces: 2,
+    curvedFaces: 1,
+    faceShapes: [
+      { name: 'Flat Circle Base', count: 2, shape: 'circle', color: '#10B981' },
+      { name: 'Curved Body Surface', count: 1, shape: 'curved_cylinder', color: '#059669' }
+    ],
     edges: 2,
     edgesDesc: '2 Curved Edges',
     vertices: 0,
@@ -500,6 +517,12 @@ const SHAPES_DATA = [
     color: 0xF59E0B,
     faces: 2,
     facesDesc: '1 Flat Circle + 1 Curved',
+    flatFaces: 1,
+    curvedFaces: 1,
+    faceShapes: [
+      { name: 'Flat Circle Base', count: 1, shape: 'circle', color: '#F59E0B' },
+      { name: 'Curved Sloped Surface', count: 1, shape: 'curved_cone', color: '#D97706' }
+    ],
     edges: 1,
     edgesDesc: '1 Curved Edge',
     vertices: 1,
@@ -565,6 +588,11 @@ const SHAPES_DATA = [
     color: 0x3B82F6,
     faces: 1,
     facesDesc: '1 Curved Surface',
+    flatFaces: 0,
+    curvedFaces: 1,
+    faceShapes: [
+      { name: 'Continuous Curved Surface', count: 1, shape: 'sphere_surf', color: '#3B82F6' }
+    ],
     edges: 0,
     edgesDesc: '0 Edges',
     vertices: 0,
@@ -611,6 +639,12 @@ const SHAPES_DATA = [
     color: 0x8B5CF6,
     faces: 5,
     facesDesc: '2 Triangles + 3 Rectangles',
+    flatFaces: 5,
+    curvedFaces: 0,
+    faceShapes: [
+      { name: 'Triangle End', count: 2, shape: 'triangle', color: '#8B5CF6' },
+      { name: 'Rectangle Side', count: 3, shape: 'rect', color: '#3B82F6' }
+    ],
     edges: 9,
     edgesDesc: '9 Straight Edges',
     vertices: 6,
@@ -734,6 +768,12 @@ const SHAPES_DATA = [
     color: 0x14B8A6,
     faces: 5,
     facesDesc: '1 Square Base + 4 Triangles',
+    flatFaces: 5,
+    curvedFaces: 0,
+    faceShapes: [
+      { name: 'Square Base', count: 1, shape: 'square', color: '#14B8A6' },
+      { name: 'Triangle Slant', count: 4, shape: 'triangle', color: '#F59E0B' }
+    ],
     edges: 8,
     edgesDesc: '8 Straight Edges',
     vertices: 5,
@@ -832,6 +872,11 @@ const SHAPES_DATA = [
     color: 0xEC4899,
     faces: 4,
     facesDesc: '4 Flat Triangles (1 Base + 3 Sides)',
+    flatFaces: 4,
+    curvedFaces: 0,
+    faceShapes: [
+      { name: 'Equilateral Triangle', count: 4, shape: 'triangle', color: '#EC4899' }
+    ],
     edges: 6,
     edgesDesc: '6 Straight Edges',
     vertices: 4,
@@ -948,6 +993,12 @@ const SHAPES_DATA = [
     color: 0xEAB308,
     faces: 8,
     facesDesc: '2 Hexagons + 6 Rectangles',
+    flatFaces: 8,
+    curvedFaces: 0,
+    faceShapes: [
+      { name: 'Hexagon Base', count: 2, shape: 'hexagon', color: '#EAB308' },
+      { name: 'Rectangle Side', count: 6, shape: 'rect', color: '#F97316' }
+    ],
     edges: 18,
     edgesDesc: '18 Straight Edges',
     vertices: 12,
@@ -1268,6 +1319,30 @@ function applyEdgeHighlight() {
   }
 }
 
+// Helper to render SVG illustrations for face shapes
+function getFaceShapeSvg(shapeType, color = '#6366F1') {
+  switch (shapeType) {
+    case 'square':
+      return `<svg viewBox="0 0 36 36" class="face-shape-svg" aria-hidden="true"><rect x="4" y="4" width="28" height="28" rx="4" fill="${color}" stroke="#1E293B" stroke-width="2.5"/></svg>`;
+    case 'rect':
+      return `<svg viewBox="0 0 44 32" class="face-shape-svg" aria-hidden="true"><rect x="3" y="5" width="38" height="22" rx="3" fill="${color}" stroke="#1E293B" stroke-width="2.5"/></svg>`;
+    case 'circle':
+      return `<svg viewBox="0 0 36 36" class="face-shape-svg" aria-hidden="true"><circle cx="18" cy="18" r="14" fill="${color}" stroke="#1E293B" stroke-width="2.5"/></svg>`;
+    case 'triangle':
+      return `<svg viewBox="0 0 36 36" class="face-shape-svg" aria-hidden="true"><polygon points="18,4 4,32 32,32" fill="${color}" stroke="#1E293B" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+    case 'hexagon':
+      return `<svg viewBox="0 0 36 36" class="face-shape-svg" aria-hidden="true"><polygon points="18,4 30,11 30,25 18,32 6,25 6,11" fill="${color}" stroke="#1E293B" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+    case 'curved_cylinder':
+      return `<svg viewBox="0 0 40 36" class="face-shape-svg" aria-hidden="true"><ellipse cx="20" cy="9" rx="13" ry="5" fill="${color}" stroke="#1E293B" stroke-width="2"/><path d="M 7,9 L 7,27 C 7,30 33,30 33,27 L 33,9" fill="${color}" stroke="#1E293B" stroke-width="2" opacity="0.85"/></svg>`;
+    case 'curved_cone':
+      return `<svg viewBox="0 0 36 36" class="face-shape-svg" aria-hidden="true"><path d="M 18,4 L 5,28 C 11,33 25,33 31,28 Z" fill="${color}" stroke="#1E293B" stroke-width="2"/></svg>`;
+    case 'sphere_surf':
+      return `<svg viewBox="0 0 36 36" class="face-shape-svg" aria-hidden="true"><circle cx="18" cy="18" r="14" fill="${color}" stroke="#1E293B" stroke-width="2.5"/><ellipse cx="18" cy="18" rx="14" ry="5" fill="none" stroke="#FFFFFF" stroke-dasharray="3,3" stroke-width="2"/></svg>`;
+    default:
+      return `<svg viewBox="0 0 36 36" class="face-shape-svg" aria-hidden="true"><rect x="4" y="4" width="28" height="28" rx="4" fill="${color}" stroke="#1E293B" stroke-width="2"/></svg>`;
+  }
+}
+
 // Update Details Card
 function updateDetailsCard(shape) {
   document.getElementById('shapeIcon').textContent = shape.icon;
@@ -1282,6 +1357,29 @@ function updateDetailsCard(shape) {
 
   document.getElementById('propVertices').textContent = shape.vertices;
   document.getElementById('propVerticesDesc').textContent = shape.verticesDesc;
+
+  const flatEl = document.getElementById('propFlatFaces');
+  if (flatEl) flatEl.textContent = shape.flatFaces !== undefined ? shape.flatFaces : shape.faces;
+
+  const curvedEl = document.getElementById('propCurvedFaces');
+  if (curvedEl) curvedEl.textContent = shape.curvedFaces !== undefined ? shape.curvedFaces : 0;
+
+  const faceShapesContainer = document.getElementById('faceShapesList');
+  if (faceShapesContainer) {
+    faceShapesContainer.innerHTML = '';
+    if (shape.faceShapes && shape.faceShapes.length > 0) {
+      shape.faceShapes.forEach(fs => {
+        const item = document.createElement('div');
+        item.className = 'face-shape-item';
+        item.innerHTML = `
+          ${getFaceShapeSvg(fs.shape, fs.color)}
+          <span class="face-shape-text">${fs.name}</span>
+          <span class="face-shape-count-badge">${fs.count}</span>
+        `;
+        faceShapesContainer.appendChild(item);
+      });
+    }
+  }
 
   const exContainer = document.getElementById('examplesList');
   exContainer.innerHTML = '';
