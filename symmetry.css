@@ -254,6 +254,8 @@ body {
 /* ================= SHELF CAROUSEL ================= */
 .shelf-wrapper {
   margin-bottom: 12px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .shelf-scroll {
@@ -261,6 +263,9 @@ body {
   gap: 10px;
   padding: 4px 2px 10px 2px;
   overflow-x: auto;
+  max-width: 100%;
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: #CBD5E1 transparent;
 }
@@ -352,6 +357,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .hud-label {
@@ -433,7 +439,7 @@ body {
 /* ================= 3D PAPER FOLD VIEWPORT ================= */
 .paper-viewport {
   flex: 1;
-  min-height: 400px;
+  min-height: 380px;
   background: radial-gradient(circle at center, #FFFFFF 0%, #F1F5F9 100%);
   border-radius: var(--radius-md);
   border: 1px solid #E2E8F0;
@@ -442,13 +448,15 @@ body {
   justify-content: center;
   perspective: 1200px; /* Crucial for 3D paper fold! */
   position: relative;
-  overflow: visible;
-  padding: 20px;
+  overflow: hidden; /* Prevent 3D flapper or line overflow outside card */
+  padding: 16px;
+  max-width: 100%;
 }
 
 .paper-sheet {
-  width: 400px;
-  height: 400px;
+  width: min(380px, 100%);
+  aspect-ratio: 1 / 1;
+  height: auto;
   position: relative;
   background: #FFFFFF;
   border-radius: var(--radius-md);
@@ -459,8 +467,8 @@ body {
 }
 
 .paper-half {
-  width: 200px;
-  height: 400px;
+  width: 50%;
+  height: 100%;
   position: relative;
   overflow: hidden;
 }
@@ -489,7 +497,7 @@ body {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 200px;
+  left: 50%;
   width: 2px;
   background: #4F46E5;
   box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
@@ -517,8 +525,8 @@ body {
 }
 
 .paper-sheet.horizontal-mode .paper-half {
-  width: 400px;
-  height: 200px;
+  width: 100%;
+  height: 50%;
 }
 
 .paper-sheet.horizontal-mode .left-half {
@@ -531,11 +539,11 @@ body {
 }
 
 .paper-sheet.horizontal-mode .symmetry-mirror-line {
-  top: 200px;
+  top: 50%;
   left: 0;
   right: 0;
   bottom: auto;
-  width: auto;
+  width: 100%;
   height: 2px;
 }
 
@@ -549,8 +557,8 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   overflow: visible;
   pointer-events: none;
 }
@@ -574,7 +582,7 @@ body {
   top: 0;
   left: 0;
   bottom: auto;
-  width: 565.68px;
+  width: 141.42%;
   height: 2px;
   transform: rotate(45deg);
   transform-origin: 0 0;
@@ -586,17 +594,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   background: #F8FAFC;
-  padding: 12px 18px;
+  padding: 10px 14px;
   border-radius: var(--radius-md);
   border: 1px solid #E2E8F0;
   flex-wrap: wrap;
+  max-width: 100%;
 }
 
 .fold-slider-block {
-  flex: 1;
-  min-width: 200px;
+  flex: 1 1 180px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -793,12 +802,14 @@ input[type="range"] {
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 20px;
+  padding: 14px;
+  max-width: 100%;
 }
 
 .detective-svg {
-  width: 320px;
-  height: 320px;
+  width: min(340px, 100%);
+  height: auto;
+  aspect-ratio: 1 / 1;
 }
 
 .detective-actions-row {
@@ -959,17 +970,55 @@ input[type="range"] {
   box-shadow: var(--shadow-sm);
   flex-wrap: wrap;
   gap: 12px;
+  max-width: 100%;
 }
 
-.painter-mode-switches, .painter-actions, .guided-selector {
+.painter-mode-switches, .painter-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
+}
+
+.guided-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  flex: 1 1 280px;
+}
+
+.guided-selector .hud-label {
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .pattern-chips {
   display: flex;
   gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+  padding: 2px 2px 4px 2px;
+}
+
+.pattern-chips::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pattern-chips::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+.pattern-chips .hud-chip {
+  flex-shrink: 0;
 }
 
 .painter-mode-banner {
@@ -1006,9 +1055,10 @@ input[type="range"] {
   gap: 10px;
   background: #FEF3C7;
   border: 1px solid #FCD34D;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: var(--radius-md);
-  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .free-draw-inspirations.hidden {
@@ -1018,10 +1068,28 @@ input[type="range"] {
 .inspiration-chips {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #FCD34D transparent;
+  padding: 2px 0 4px 0;
+}
+
+.inspiration-chips::-webkit-scrollbar {
+  height: 4px;
+}
+
+.inspiration-chips::-webkit-scrollbar-thumb {
+  background: #FCD34D;
+  border-radius: 4px;
 }
 
 .inspire-chip {
+  flex-shrink: 0;
   background: #FFFFFF;
   border: 1px solid #F59E0B;
   padding: 5px 12px;
@@ -1847,30 +1915,42 @@ input[type="range"] {
   }
 
   .paper-sheet {
-    width: 320px;
-    height: 320px;
+    width: min(320px, 100%);
   }
 
-  .paper-half {
-    width: 160px;
-    height: 320px;
+  .paper-viewport {
+    padding: 10px;
+    min-height: 320px;
   }
 
-  .symmetry-mirror-line {
-    left: 160px;
+  .detective-canvas-box {
+    padding: 10px;
+    min-height: 320px;
   }
 
-  .paper-sheet.horizontal-mode .paper-half {
-    width: 320px;
-    height: 160px;
+  .guided-selector {
+    width: 100%;
+    order: 2;
   }
 
-  .paper-sheet.horizontal-mode .symmetry-mirror-line {
-    top: 160px;
+  .painter-top-controls {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .painter-mode-switches {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .painter-actions {
+    width: 100%;
+    justify-content: center;
+    order: 3;
   }
 
   .paint-grid-container {
-    max-width: 310px;
+    max-width: min(300px, 100%);
   }
 
   .paint-color-dot {
@@ -1890,5 +1970,37 @@ input[type="range"] {
 
   .center-mirror-divider {
     padding: 10px 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .app-container {
+    padding: 6px 8px;
+  }
+
+  .fold-canvas-card, .painter-grid-card, .match-stage-container, .sidebar-details-card {
+    padding: 12px 10px;
+  }
+
+  .stage-top-hud {
+    padding: 6px 8px;
+  }
+
+  .line-orientation-picker {
+    gap: 4px;
+  }
+
+  .hud-chip {
+    padding: 5px 8px;
+    font-size: 0.76rem;
+  }
+
+  .fold-controls-bar {
+    padding: 8px 10px;
+  }
+
+  .primary-action-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
   }
 }
