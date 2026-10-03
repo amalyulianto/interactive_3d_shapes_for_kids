@@ -1,0 +1,436 @@
+/* ================= ALAPAKADALA STUDIO - ROOT LESSONS HUB ================= */
+:root {
+  --primary: #4F46E5;
+  --primary-light: #818CF8;
+  --primary-dark: #3730A3;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --info: #06B6D4;
+  --bg-gradient: linear-gradient(135deg, #EEF2FF 0%, #F8FAFC 50%, #E0E7FF 100%);
+  --card-bg: #FFFFFF;
+  --text-dark: #1E293B;
+  --text-muted: #64748B;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+  --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 6px 18px rgba(79, 70, 229, 0.08);
+  --shadow-lg: 0 16px 36px rgba(79, 70, 229, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ================= HEADER ================= */
+.hub-header {
+  position: sticky;
+  top: 0;
+  background: #FFFFFF;
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.08);
+  border-bottom: 2px solid #E0E7FF;
+  z-index: 100;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  font-size: 2rem;
+  background: #EEF2FF;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid #C7D2FE;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+}
+
+.brand-text h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #312E81;
+  line-height: 1.2;
+}
+
+.studio-badge {
+  display: inline-block;
+  background: linear-gradient(90deg, #4338CA, #7C3AED);
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.hub-grade-chip {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+/* ================= MAIN CONTAINER ================= */
+.hub-main {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* ================= HERO SECTION ================= */
+.hub-hero {
+  text-align: center;
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  padding: 36px 24px;
+  box-shadow: var(--shadow-md);
+  border: 2px solid #E0E7FF;
+  position: relative;
+  overflow: hidden;
+}
+
+.hub-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #4F46E5, #EC4899, #F59E0B, #10B981, #06B6D4);
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #EEF2FF;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 12px;
+}
+
+.hub-hero h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+.hub-hero p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 650px;
+  margin: 0 auto 20px;
+  line-height: 1.5;
+}
+
+.hero-highlights-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.highlight-pill {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+/* ================= LESSONS CARDS GRID ================= */
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+.lesson-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  border: 2px solid #E2E8F0;
+  box-shadow: var(--shadow-md);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+
+.lesson-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-light);
+}
+
+.lesson-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.lesson-number-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.lesson-card.shapes .lesson-number-badge {
+  background: #EEF2FF;
+  color: #4338CA;
+  border: 1px solid #C7D2FE;
+}
+
+.lesson-card.symmetry .lesson-number-badge {
+  background: #FDF2F8;
+  color: #BE185D;
+  border: 1px solid #FBCFE8;
+}
+
+.lesson-badge-pill {
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: #F1F5F9;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.lesson-visual-banner {
+  height: 120px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  margin-bottom: 18px;
+  gap: 12px;
+  position: relative;
+  transition: transform 0.25s ease;
+}
+
+.lesson-card:hover .lesson-visual-banner {
+  transform: scale(1.03);
+}
+
+.lesson-card.shapes .lesson-visual-banner {
+  background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+  border: 1px solid #C7D2FE;
+}
+
+.lesson-card.symmetry .lesson-visual-banner {
+  background: linear-gradient(135deg, #FDF2F8, #FCE7F3);
+  border: 1px solid #FBCFE8;
+}
+
+.lesson-title-block h3 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 6px;
+}
+
+.lesson-subtitle {
+  font-size: 0.95rem;
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.lesson-card.symmetry .lesson-subtitle {
+  color: #DB2777;
+}
+
+.lesson-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.lesson-features-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.lesson-features-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #334155;
+  font-weight: 600;
+}
+
+.feature-check {
+  color: #10B981;
+  font-weight: 800;
+}
+
+.lesson-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+  transition: all 0.2s ease;
+}
+
+.lesson-card.shapes .lesson-cta-btn {
+  background: linear-gradient(135deg, #4F46E5, #4338CA);
+}
+
+.lesson-card.shapes .lesson-cta-btn:hover {
+  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+}
+
+.lesson-card.symmetry .lesson-cta-btn {
+  background: linear-gradient(135deg, #DB2777, #BE185D);
+  box-shadow: 0 4px 12px rgba(219, 39, 119, 0.25);
+}
+
+.lesson-card.symmetry .lesson-cta-btn:hover {
+  background: linear-gradient(135deg, #EC4899, #DB2777);
+  box-shadow: 0 6px 16px rgba(219, 39, 119, 0.35);
+}
+
+/* ================= BENEFITS ROW ================= */
+.benefits-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  border: 1px solid #E2E8F0;
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.benefit-icon {
+  font-size: 2rem;
+  background: #EEF2FF;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid #C7D2FE;
+}
+
+.benefit-info h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 4px;
+}
+
+.benefit-info p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ================= FOOTER ================= */
+.hub-footer {
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  padding: 20px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: auto;
+}
+
+.hub-footer strong {
+  color: var(--text-dark);
+}
+
+.hub-footer .copyright {
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .hub-header {
+    padding: 10px 16px;
+  }
+
+  .brand-text h1 {
+    font-size: 1.1rem;
+  }
+
+  .hub-hero h2 {
+    font-size: 1.6rem;
+  }
+
+  .hub-hero p {
+    font-size: 0.95rem;
+  }
+
+  .lessons-grid {
+    grid-template-columns: 1fr;
+  }
+}

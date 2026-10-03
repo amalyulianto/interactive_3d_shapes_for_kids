@@ -142,6 +142,7 @@ function switchSymmetryMode(mode) {
     fold: document.getElementById('tabFold'),
     detective: document.getElementById('tabDetective'),
     painter: document.getElementById('tabPainter'),
+    match: document.getElementById('tabMatch'),
     quiz: document.getElementById('tabQuiz')
   };
   Object.keys(tabs).forEach(k => {
@@ -153,6 +154,7 @@ function switchSymmetryMode(mode) {
     fold: document.getElementById('foldView'),
     detective: document.getElementById('detectiveView'),
     painter: document.getElementById('painterView'),
+    match: document.getElementById('matchView'),
     quiz: document.getElementById('quizView')
   };
   Object.keys(panels).forEach(k => {
@@ -161,6 +163,8 @@ function switchSymmetryMode(mode) {
 
   if (mode === 'painter') {
     renderPainterGrid();
+  } else if (mode === 'match') {
+    initMirrorMatch();
   } else if (mode === 'quiz') {
     startSymmQuiz();
   }
@@ -170,7 +174,7 @@ function switchSymmetryMode(mode) {
 const FOLD_ITEMS = [
   {
     id: 'butterfly',
-    name: 'Butterfly',
+    name: 'Monarch Butterfly',
     icon: '🦋',
     isSymmetric: true,
     validOrientations: ['vertical'],
@@ -197,197 +201,108 @@ const FOLD_ITEMS = [
     `
   },
   {
-    id: 'heart',
-    name: 'Love Heart',
-    icon: '❤️',
+    id: 'sandwich',
+    name: 'Deli Sandwich',
+    icon: '🥪',
     isSymmetric: true,
-    validOrientations: ['vertical'],
-    rule: 'Fold right down the middle from the top dip to the bottom tip: both smooth curves overlap perfectly!',
-    validLinesText: '1 Line (Vertical ↕)',
-    funTip: 'Hearts are symmetrical vertically! But fold them horizontally and the top curves clash with the bottom point.',
+    validOrientations: ['horizontal'],
+    rule: 'Fold horizontally across the middle: the top curved bread crust lands right on top of the bottom crust!',
+    validLinesText: '1 Line (Horizontal ↔)',
+    funTip: 'A sandwich cut horizontally has top-to-bottom symmetry! Vertical fold fails because left and right edges are shaped differently.',
     svg: `
-      <path d="M 200,120 C 170,40 60,50 60,170 C 60,250 160,310 200,360 C 240,310 340,250 340,170 C 340,50 230,40 200,120 Z" fill="#F43F5E" stroke="#BE123C" stroke-width="6"/>
-      <ellipse cx="140" cy="140" rx="20" ry="12" fill="#FDA4AF" opacity="0.8" transform="rotate(-25 140 140)"/>
-      <ellipse cx="260" cy="140" rx="20" ry="12" fill="#FDA4AF" opacity="0.8" transform="rotate(25 260 140)"/>
+      <!-- Top Bread Crust (Arched) -->
+      <path d="M 80,185 Q 200,85 340,185 L 340,195 L 80,195 Z" fill="#D97706" stroke="#92400E" stroke-width="5"/>
+      <ellipse cx="140" cy="165" rx="18" ry="8" fill="#F59E0B" opacity="0.6"/>
+      <ellipse cx="230" cy="145" rx="22" ry="9" fill="#F59E0B" opacity="0.6"/>
+      <!-- Center Fillings (Symmetrical across Y=200) -->
+      <rect x="70" y="195" width="280" height="10" rx="4" fill="#10B981" stroke="#047857" stroke-width="2"/>
+      <rect x="90" y="193" width="70" height="14" rx="3" fill="#EF4444"/>
+      <rect x="230" y="193" width="70" height="14" rx="3" fill="#EF4444"/>
+      <!-- Bottom Bread Crust (Mirror of top bread) -->
+      <path d="M 80,215 Q 200,315 340,215 L 340,205 L 80,205 Z" fill="#D97706" stroke="#92400E" stroke-width="5"/>
+      <ellipse cx="140" cy="235" rx="18" ry="8" fill="#F59E0B" opacity="0.6"/>
+      <ellipse cx="230" cy="255" rx="22" ry="9" fill="#F59E0B" opacity="0.6"/>
     `
   },
   {
-    id: 'star',
-    name: '5-Point Star',
-    icon: '⭐',
+    id: 'fish',
+    name: 'Tropical Angelfish',
+    icon: '🐟',
     isSymmetric: true,
-    validOrientations: ['vertical'],
-    rule: 'Fold down from the top point through the center: the two left star arms land right on top of the right arms!',
-    validLinesText: '5 Lines of Symmetry!',
-    funTip: 'A regular 5-point star has 5 lines of symmetry—one passing through every single tip!',
+    validOrientations: ['horizontal'],
+    rule: 'Fold horizontally across the water line: the tall top dorsal fin folds right onto the matching bottom ventral fin!',
+    validLinesText: '1 Line (Horizontal ↔)',
+    funTip: 'Angelfish have horizontal mirror fins as they swim through coral reefs! Notice vertical fold fails because the tail is on the left and face is on the right.',
     svg: `
-      <polygon points="200,50 240,160 355,160 262,228 297,340 200,270 103,340 138,228 45,160 160,160" fill="#FACC15" stroke="#EAB308" stroke-width="6" stroke-linejoin="round"/>
-      <polygon points="200,110 220,180 290,180 235,220 255,290 200,245 145,290 165,220 110,180 180,180" fill="#FEF08A" opacity="0.75"/>
-    `
-  },
-  {
-    id: 'rocket',
-    name: 'Space Rocket',
-    icon: '🚀',
-    isSymmetric: true,
-    validOrientations: ['vertical'],
-    rule: 'Fold vertically along the center axis: the fuselage, window, and left and right fins match like twin twins!',
-    validLinesText: '1 Line (Vertical ↕)',
-    funTip: 'Rockets need symmetry to fly straight into space without spinning out of control!',
-    svg: `
-      <!-- Rocket Body -->
-      <path d="M 200,50 Q 260,120 260,260 L 140,260 Q 140,120 200,50 Z" fill="#F1F5F9" stroke="#334155" stroke-width="5"/>
-      <!-- Nose Cone -->
-      <path d="M 200,50 Q 235,90 240,130 L 160,130 Q 165,90 200,50 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="4"/>
-      <!-- Fins -->
-      <path d="M 140,220 L 70,300 L 140,280 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="4"/>
-      <path d="M 260,220 L 330,300 L 260,280 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="4"/>
-      <!-- Window -->
-      <circle cx="200" cy="180" r="26" fill="#38BDF8" stroke="#0284C7" stroke-width="4"/>
-      <circle cx="192" cy="172" r="6" fill="#FFFFFF"/>
-      <!-- Thruster Flame -->
-      <polygon points="170,260 200,340 230,260" fill="#F97316"/>
-      <polygon points="185,260 200,310 215,260" fill="#FDE047"/>
-    `
-  },
-  {
-    id: 'smiley',
-    name: 'Happy Face',
-    icon: '😊',
-    isSymmetric: true,
-    validOrientations: ['vertical'],
-    rule: 'The two cheerful eyes, round rosy cheeks, and smiling mouth are mirror reflections across the center!',
-    validLinesText: '1 Line (Vertical ↕)',
-    funTip: 'Human faces are naturally almost symmetrical, which helps us recognize friendly expressions!',
-    svg: `
-      <circle cx="200" cy="200" r="140" fill="#FDE047" stroke="#EAB308" stroke-width="6"/>
-      <!-- Eyes -->
-      <ellipse cx="145" cy="170" rx="14" ry="20" fill="#1E293B"/>
-      <circle cx="140" cy="162" r="5" fill="#FFFFFF"/>
-      <ellipse cx="255" cy="170" rx="14" ry="20" fill="#1E293B"/>
-      <circle cx="250" cy="162" r="5" fill="#FFFFFF"/>
-      <!-- Cheeks -->
-      <circle cx="120" cy="225" r="18" fill="#FCA5A5" opacity="0.7"/>
-      <circle cx="280" cy="225" r="18" fill="#FCA5A5" opacity="0.7"/>
-      <!-- Smile -->
-      <path d="M 135,225 Q 200,300 265,225" stroke="#1E293B" stroke-width="7" stroke-linecap="round" fill="none"/>
-    `
-  },
-  {
-    id: 'letter_a',
-    name: 'Letter A',
-    icon: '🅰️',
-    isSymmetric: true,
-    validOrientations: ['vertical'],
-    rule: 'Fold right down the peak of the letter A: the slanted legs and middle crossbar align completely!',
-    validLinesText: '1 Line (Vertical ↕)',
-    funTip: 'Many capital letters have symmetry: A, M, T, V, W, Y are vertical; B, C, D, E, K are horizontal; H, I, O, X have both!',
-    svg: `
-      <path d="M 200,60 L 90,340 L 140,340 L 165,270 L 235,270 L 260,340 L 310,340 Z" fill="#6366F1" stroke="#4338CA" stroke-width="5"/>
-      <polygon points="200,140 178,225 222,225" fill="#FFFFFF" stroke="#4338CA" stroke-width="4"/>
-    `
-  },
-  {
-    id: 'letter_m',
-    name: 'Letter M',
-    icon: 'Ⓜ️',
-    isSymmetric: true,
-    validOrientations: ['vertical'],
-    rule: 'Fold vertically down the center valley: the outer poles and inner diagonal peaks match up!',
-    validLinesText: '1 Line (Vertical ↕)',
-    funTip: 'The letter M is symmetrical, but its neighbor letter N is NOT symmetrical across a line fold!',
-    svg: `
-      <path d="M 90,340 L 90,80 L 140,80 L 200,230 L 260,80 L 310,80 L 310,340 L 265,340 L 265,160 L 215,280 L 185,280 L 135,160 L 135,340 Z" fill="#10B981" stroke="#047857" stroke-width="5"/>
-    `
-  },
-  {
-    id: 'leaf',
-    name: 'Oak Leaf',
-    icon: '🍃',
-    isSymmetric: false,
-    validOrientations: [],
-    rule: 'Notice how the leaf curves slightly, and the lobes and veins on the left are shaped differently from the right!',
-    validLinesText: '0 Lines (Not Symmetrical)',
-    funTip: 'Most natural leaves have tiny uneven curves and alternating side-veins that make them asymmetrical!',
-    svg: `
-      <!-- Asymmetrical Leaf Contour -->
-      <path d="M 200,50 C 130,80 90,140 120,200 C 70,230 80,310 160,330 L 200,370 L 205,370 C 230,340 300,320 290,260 C 330,190 280,120 200,50 Z" fill="#84CC16" stroke="#4D7C0F" stroke-width="5"/>
-      <!-- Main curved stem -->
-      <path d="M 200,50 Q 185,210 200,370" stroke="#4D7C0F" stroke-width="5" fill="none"/>
-      <!-- Asymmetrical Veins -->
-      <path d="M 190,130 Q 140,110 120,125" stroke="#4D7C0F" stroke-width="3" fill="none"/>
-      <path d="M 195,180 Q 250,150 280,170" stroke="#4D7C0F" stroke-width="3" fill="none"/>
-      <path d="M 188,230 Q 120,220 95,250" stroke="#4D7C0F" stroke-width="3" fill="none"/>
-      <path d="M 196,280 Q 250,260 275,290" stroke="#4D7C0F" stroke-width="3" fill="none"/>
-    `
-  },
-  {
-    id: 'letter_f',
-    name: 'Letter F',
-    icon: '🔤',
-    isSymmetric: false,
-    validOrientations: [],
-    rule: 'The letter F has horizontal bars only reaching out to the right side! If folded, the left side has empty air!',
-    validLinesText: '0 Lines (Not Symmetrical)',
-    funTip: 'Letter F has no lines of symmetry! Neither vertical nor horizontal fold will make it match up.',
-    svg: `
-      <path d="M 110,340 L 110,70 L 290,70 L 290,125 L 175,125 L 175,190 L 260,190 L 260,245 L 175,245 L 175,340 Z" fill="#F97316" stroke="#C2410C" stroke-width="5"/>
-    `
-  },
-  {
-    id: 'scalene_tri',
-    name: 'Scalene Triangle',
-    icon: '📐',
-    isSymmetric: false,
-    validOrientations: [],
-    rule: 'All three sides and angles have different lengths! Folding along any line leaves corners hanging out unevenly.',
-    validLinesText: '0 Lines (Not Symmetrical)',
-    funTip: 'Only Equilateral triangles (3 lines) and Isosceles triangles (1 line) have symmetry! Scalene triangles have 0.',
-    svg: `
-      <polygon points="100,330 330,310 150,80" fill="#06B6D4" stroke="#0E7490" stroke-width="6" stroke-linejoin="round"/>
-      <circle cx="100" cy="330" r="7" fill="#0E7490"/>
-      <circle cx="330" cy="310" r="7" fill="#0E7490"/>
-      <circle cx="150" cy="80" r="7" fill="#0E7490"/>
-    `
-  },
-  {
-    id: 'letter_h',
-    name: 'Letter H',
-    icon: '🏨',
-    isSymmetric: true,
-    validOrientations: ['vertical', 'horizontal'],
-    rule: 'Letter H is a symmetry champion! It folds vertically down the center crossbar, AND horizontally across the middle!',
-    validLinesText: '2 Lines (Vertical ↕ & Horizontal ↔)',
-    funTip: 'Letter H, I, O, and X all have both vertical and horizontal lines of symmetry!',
-    svg: `
-      <path d="M 110,70 L 110,330 L 165,330 L 165,225 L 235,225 L 235,330 L 290,330 L 290,70 L 235,70 L 235,175 L 165,175 L 165,70 Z" fill="#6366F1" stroke="#3730A3" stroke-width="5"/>
+      <!-- Top Dorsal Fin -->
+      <path d="M 140,135 Q 185,50 250,135 Z" fill="#FACC15" stroke="#EAB308" stroke-width="4"/>
+      <!-- Bottom Ventral Fin (Exact Mirror across Y=200) -->
+      <path d="M 140,265 Q 185,350 250,265 Z" fill="#FACC15" stroke="#EAB308" stroke-width="4"/>
+      <!-- Tail Fin -->
+      <polygon points="100,200 45,120 45,280" fill="#F97316" stroke="#C2410C" stroke-width="4"/>
+      <!-- Main Body -->
+      <ellipse cx="200" cy="200" rx="115" ry="70" fill="#06B6D4" stroke="#0891B2" stroke-width="5"/>
+      <!-- Body Stripes (Mirror across Y=200) -->
+      <path d="M 160,135 L 160,265" stroke="#0891B2" stroke-width="6"/>
+      <path d="M 215,135 L 215,265" stroke="#0891B2" stroke-width="6"/>
+      <!-- Eyes Top and Bottom -->
+      <circle cx="270" cy="180" r="10" fill="#FFFFFF" stroke="#0E7490" stroke-width="3"/>
+      <circle cx="272" cy="180" r="5" fill="#1E293B"/>
+      <circle cx="270" cy="220" r="10" fill="#FFFFFF" stroke="#0E7490" stroke-width="3"/>
+      <circle cx="272" cy="220" r="5" fill="#1E293B"/>
+      <!-- Mouth -->
+      <ellipse cx="315" cy="200" rx="10" ry="14" fill="#F43F5E"/>
     `
   },
   {
     id: 'diamond',
-    name: 'Diamond (Rhombus)',
+    name: 'Diamond Gem',
     icon: '💎',
     isSymmetric: true,
     validOrientations: ['vertical', 'horizontal', 'diagonal'],
-    rule: 'A diamond has 4 lines of symmetry: vertical, horizontal, AND corner-to-corner diagonal folds match up!',
+    rule: 'Test the DIAGONAL fold! Watch opposite corners kiss! This diamond folds diagonally, vertically, AND horizontally!',
     validLinesText: '4 Lines (↕, ↔, ⤢, ⤡)',
-    funTip: 'Try the diagonal fold on the diamond: watch the opposite corners kiss!',
+    funTip: 'A diamond has 4 lines of symmetry: vertical, horizontal, and both corner diagonals!',
     svg: `
+      <!-- Diamond Outer Rhombus -->
       <polygon points="200,60 340,200 200,340 60,200" fill="#38BDF8" stroke="#0284C7" stroke-width="6"/>
-      <polygon points="200,110 290,200 200,290 110,200" fill="#E0F2FE" opacity="0.7"/>
+      <!-- Inner Facet Medallion -->
+      <polygon points="200,110 290,200 200,290 110,200" fill="#BAE6FD" stroke="#0284C7" stroke-width="3"/>
+      <!-- Facet Lines -->
+      <line x1="200" y1="60" x2="200" y2="110" stroke="#0284C7" stroke-width="3"/>
+      <line x1="340" y1="200" x2="290" y2="200" stroke="#0284C7" stroke-width="3"/>
+      <line x1="200" y1="340" x2="200" y2="290" stroke="#0284C7" stroke-width="3"/>
+      <line x1="60" y1="200" x2="110" y2="200" stroke="#0284C7" stroke-width="3"/>
+      <circle cx="200" cy="200" r="28" fill="#FFFFFF" opacity="0.8"/>
     `
   },
   {
-    id: 'letter_e',
-    name: 'Letter E',
-    icon: '🇪',
+    id: 'skateboard',
+    name: 'Skateboard Deck',
+    icon: '🛹',
     isSymmetric: true,
-    validOrientations: ['horizontal'],
-    rule: 'Letter E has a HORIZONTAL line of symmetry! Fold top to bottom across the middle bar and both halves match!',
-    validLinesText: '1 Line (Horizontal ↔)',
-    funTip: 'Letter E does NOT have vertical symmetry (the open side has nothing on the left), but it DOES have horizontal symmetry!',
+    validOrientations: ['vertical', 'horizontal'],
+    rule: 'Fold vertically (nose onto tail) OR horizontally (top rail onto bottom rail): both directions match perfectly!',
+    validLinesText: '2 Lines (Vertical ↕ & Horizontal ↔)',
+    funTip: 'Twin-tip skateboards have both vertical and horizontal symmetry so skaters can ride regular or switch!',
     svg: `
-      <path d="M 120,70 L 120,330 L 280,330 L 280,275 L 180,275 L 180,225 L 260,225 L 260,175 L 180,175 L 180,125 L 280,125 L 280,70 Z" fill="#F59E0B" stroke="#B45309" stroke-width="5"/>
+      <!-- Deck Board -->
+      <rect x="60" y="145" width="280" height="110" rx="55" fill="#8B5CF6" stroke="#5B21B6" stroke-width="6"/>
+      <!-- Grip Tape Center Inlay -->
+      <rect x="90" y="160" width="220" height="80" rx="35" fill="#1E293B"/>
+      <!-- Center Flame Emblem -->
+      <circle cx="200" cy="200" r="22" fill="#F59E0B" stroke="#D97706" stroke-width="3"/>
+      <polygon points="200,185 208,205 200,198 192,205" fill="#EF4444"/>
+      <!-- Left Truck Bolts -->
+      <circle cx="120" cy="180" r="4" fill="#F1F5F9"/>
+      <circle cx="120" cy="220" r="4" fill="#F1F5F9"/>
+      <circle cx="140" cy="180" r="4" fill="#F1F5F9"/>
+      <circle cx="140" cy="220" r="4" fill="#F1F5F9"/>
+      <!-- Right Truck Bolts (Exact Mirror) -->
+      <circle cx="260" cy="180" r="4" fill="#F1F5F9"/>
+      <circle cx="260" cy="220" r="4" fill="#F1F5F9"/>
+      <circle cx="280" cy="180" r="4" fill="#F1F5F9"/>
+      <circle cx="280" cy="220" r="4" fill="#F1F5F9"/>
     `
   },
   {
@@ -396,10 +311,11 @@ const FOLD_ITEMS = [
     icon: '🌸',
     isSymmetric: true,
     validOrientations: ['vertical', 'horizontal', 'diagonal'],
-    rule: 'This flower has 8 round petals placed evenly all around! It folds vertically, horizontally, and diagonally!',
+    rule: 'This 8-petal blossom has radial symmetry: it folds vertically, horizontally, AND diagonally!',
     validLinesText: 'Multiple Lines (↕, ↔, ⤢)',
-    funTip: 'Flowers in nature often display radial symmetry with many lines of symmetry!',
+    funTip: 'Nature often creates radial blossoms with 4 or 8 symmetry lines!',
     svg: `
+      <!-- 8 Petals spaced evenly -->
       <circle cx="200" cy="110" r="38" fill="#F472B6" stroke="#BE185D" stroke-width="4"/>
       <circle cx="200" cy="290" r="38" fill="#F472B6" stroke="#BE185D" stroke-width="4"/>
       <circle cx="110" cy="200" r="38" fill="#F472B6" stroke="#BE185D" stroke-width="4"/>
@@ -408,7 +324,57 @@ const FOLD_ITEMS = [
       <circle cx="264" cy="264" r="38" fill="#FB7185" stroke="#BE185D" stroke-width="4"/>
       <circle cx="264" cy="136" r="38" fill="#FB7185" stroke="#BE185D" stroke-width="4"/>
       <circle cx="136" cy="264" r="38" fill="#FB7185" stroke="#BE185D" stroke-width="4"/>
+      <!-- Center Disc -->
       <circle cx="200" cy="200" r="42" fill="#FDE047" stroke="#CA8A04" stroke-width="4"/>
+    `
+  },
+  {
+    id: 'teapot',
+    name: 'Teapot with Spout',
+    icon: '🫖',
+    isSymmetric: false,
+    validOrientations: [],
+    rule: 'Asymmetry Trap! The long pouring spout is on the left and the looped handle is on the right. No fold line will ever align both sides!',
+    validLinesText: '0 Lines (Not Symmetrical ❌)',
+    funTip: 'Not everything in the world is symmetrical! An everyday teapot is asymmetrical so you can hold it and pour comfortably.',
+    svg: `
+      <!-- Main Teapot Body -->
+      <ellipse cx="200" cy="225" rx="85" ry="70" fill="#EC4899" stroke="#9D174D" stroke-width="6"/>
+      <!-- Spout on Left ONLY -->
+      <path d="M 125,230 Q 75,210 60,150 Q 85,160 135,200 Z" fill="#F472B6" stroke="#9D174D" stroke-width="5"/>
+      <!-- Looped Handle on Right ONLY -->
+      <path d="M 275,180 C 350,190 350,270 275,280" fill="none" stroke="#9D174D" stroke-width="16" stroke-linecap="round"/>
+      <path d="M 275,180 C 350,190 350,270 275,280" fill="none" stroke="#F472B6" stroke-width="8" stroke-linecap="round"/>
+      <!-- Lid & Knob -->
+      <path d="M 160,160 Q 200,135 240,160 Z" fill="#BE185D" stroke="#9D174D" stroke-width="4"/>
+      <circle cx="200" cy="130" r="14" fill="#FACC15" stroke="#CA8A04" stroke-width="3"/>
+      <!-- Base Stand -->
+      <rect x="150" y="290" width="100" height="15" rx="6" fill="#BE185D"/>
+    `
+  },
+  {
+    id: 'rocket',
+    name: 'Space Rocket',
+    icon: '🚀',
+    isSymmetric: true,
+    validOrientations: ['vertical'],
+    rule: 'Fold vertically along the center axis: the fuselage, window, and twin fins match like mirror twins!',
+    validLinesText: '1 Line (Vertical ↕)',
+    funTip: 'Rockets need vertical symmetry to fly straight into space without spinning out of control!',
+    svg: `
+      <!-- Rocket Body -->
+      <path d="M 200,45 Q 260,120 260,260 L 140,260 Q 140,120 200,45 Z" fill="#F1F5F9" stroke="#334155" stroke-width="5"/>
+      <!-- Nose Cone -->
+      <path d="M 200,45 Q 235,90 240,130 L 160,130 Q 165,90 200,45 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="4"/>
+      <!-- Fins -->
+      <path d="M 140,220 L 70,300 L 140,280 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="4"/>
+      <path d="M 260,220 L 330,300 L 260,280 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="4"/>
+      <!-- Window -->
+      <circle cx="200" cy="180" r="26" fill="#38BDF8" stroke="#0284C7" stroke-width="4"/>
+      <circle cx="192" cy="172" r="6" fill="#FFFFFF"/>
+      <!-- Thruster Flame -->
+      <polygon points="165,260 200,350 235,260" fill="#F97316"/>
+      <polygon points="180,260 200,315 220,260" fill="#FDE047"/>
     `
   }
 ];
@@ -510,6 +476,7 @@ function updateFoldHalvesSvg(item) {
           <polygon points="0,0 400,400 0,400"/>
         </clipPath>
       </defs>
+      <polygon points="0,0 400,400 0,400" fill="#FFFFFF"/>
       <g clip-path="url(#clipDiagLeft)">${item.svg}</g>
     `;
     rightSvg.innerHTML = `
@@ -518,6 +485,7 @@ function updateFoldHalvesSvg(item) {
           <polygon points="0,0 400,0 400,400"/>
         </clipPath>
       </defs>
+      <polygon points="0,0 400,0 400,400" fill="#FFFFFF"/>
       <g clip-path="url(#clipDiagRight)">${item.svg}</g>
     `;
   } else {
@@ -570,9 +538,13 @@ function applyFoldTransform(progress) {
       rightHalf.style.opacity = progress > 50 ? '0.88' : '1';
     } else if (activeFoldOrientation === 'diagonal') {
       // Rotate across 45-degree diagonal axis (1, 1, 0)
-      const deg = (progress / 100) * 180;
+      // Negative angle lifts flap forward towards viewer in 3D
+      const deg = -(progress / 100) * 180;
       rightHalf.style.transform = `rotate3d(1, 1, 0, ${deg}deg)`;
-      rightHalf.style.opacity = progress > 50 ? '0.88' : '1';
+      rightHalf.style.filter = progress > 5 && progress < 95
+        ? 'drop-shadow(4px 8px 18px rgba(0, 0, 0, 0.25))'
+        : 'none';
+      rightHalf.style.opacity = '1';
     } else {
       // Vertical rotate leftwards around left hinge
       const deg = -(progress / 100) * 180;
@@ -662,11 +634,140 @@ function resetFoldState() {
 // ================= ACTIVITY 2: LINE DETECTIVE =================
 const DETECTIVE_SHAPES = [
   {
+    id: 'chair',
+    name: 'Wooden Chair',
+    icon: '🪑',
+    totalLines: 1,
+    clue: 'Look from the front: the backrest slats, seat, and twin legs mirror across the vertical center line!',
+    tip: 'A chair only has 1 line of symmetry (vertical). A horizontal fold would put the tall backrest over the open floor legs!',
+    shapeSvg: `
+      <!-- Backrest Uprights & Top rail -->
+      <path d="M 120,60 L 280,60 L 280,210 L 120,210 Z" fill="#D97706" stroke="#92400E" stroke-width="6"/>
+      <!-- Backrest Vertical Slats -->
+      <line x1="160" y1="65" x2="160" y2="205" stroke="#FDE68A" stroke-width="8"/>
+      <line x1="200" y1="65" x2="200" y2="205" stroke="#FDE68A" stroke-width="8"/>
+      <line x1="240" y1="65" x2="240" y2="205" stroke="#FDE68A" stroke-width="8"/>
+      <!-- Seat Cushion -->
+      <rect x="95" y="210" width="210" height="35" rx="8" fill="#F59E0B" stroke="#B45309" stroke-width="6"/>
+      <!-- Four Legs -->
+      <rect x="110" y="245" width="20" height="115" rx="4" fill="#92400E"/>
+      <rect x="270" y="245" width="20" height="115" rx="4" fill="#92400E"/>
+      <!-- Leg Support Rung -->
+      <rect x="125" y="300" width="150" height="12" rx="3" fill="#B45309"/>
+    `,
+    lines: [
+      { id: 'vert', name: 'Vertical Center Line ↕', x1: 200, y1: 30, x2: 200, y2: 375, isSymmetric: true, desc: 'Perfect! Splits chair backrest, seat, and twin legs into matching halves!' },
+      { id: 'horiz_seat', name: 'Horizontal Cut at Seat ↔ (Trap!)', x1: 40, y1: 225, x2: 360, y2: 225, isSymmetric: false, desc: 'Trap! The tall wooden backrest above does not match the empty chair legs below!' },
+      { id: 'diag_tilt', name: 'Corner Diagonal ⤢ (Trap!)', x1: 60, y1: 60, x2: 340, y2: 340, isSymmetric: false, desc: 'Trap! Slanted fold puts the backrest corner onto empty leg space!' }
+    ]
+  },
+  {
+    id: 'sandwich',
+    name: 'Deli Sandwich',
+    icon: '🥪',
+    totalLines: 1,
+    clue: 'Attention Detective: This delicious sub sandwich has HORIZONTAL symmetry! The top bread crust mirrors the bottom crust.',
+    tip: 'Not all symmetry is vertical! Folding top-to-bottom across the filling creates an exact mirror match.',
+    shapeSvg: `
+      <!-- Top Bread Crust (Arched) -->
+      <path d="M 80,180 Q 200,70 340,180 L 340,195 L 80,195 Z" fill="#D97706" stroke="#92400E" stroke-width="5"/>
+      <ellipse cx="140" cy="155" rx="18" ry="8" fill="#F59E0B" opacity="0.6"/>
+      <ellipse cx="230" cy="135" rx="22" ry="9" fill="#F59E0B" opacity="0.6"/>
+      <!-- Center Fillings (Symmetrical across Y=200) -->
+      <rect x="70" y="195" width="280" height="10" rx="4" fill="#10B981" stroke="#047857" stroke-width="2"/>
+      <rect x="90" y="193" width="70" height="14" rx="3" fill="#EF4444"/>
+      <rect x="230" y="193" width="70" height="14" rx="3" fill="#EF4444"/>
+      <!-- Bottom Bread Crust (Mirror of top bread) -->
+      <path d="M 80,220 Q 200,330 340,220 L 340,205 L 80,205 Z" fill="#D97706" stroke="#92400E" stroke-width="5"/>
+      <ellipse cx="140" cy="245" rx="18" ry="8" fill="#F59E0B" opacity="0.6"/>
+      <ellipse cx="230" cy="265" rx="22" ry="9" fill="#F59E0B" opacity="0.6"/>
+    `,
+    lines: [
+      { id: 'horiz', name: 'Horizontal Center Line ↔', x1: 40, y1: 200, x2: 360, y2: 200, isSymmetric: true, desc: 'Brilliant! Top curved bread and toppings fold right onto matching bottom bread!' },
+      { id: 'vert_cut', name: 'Vertical Cut ↕ (Trap!)', x1: 200, y1: 40, x2: 200, y2: 360, isSymmetric: false, desc: 'Trap! The left side has a rounded crust tip while the right side has a cut angle!' },
+      { id: 'diag_cut', name: 'Slanted Cut ⤢ (Trap!)', x1: 60, y1: 80, x2: 340, y2: 320, isSymmetric: false, desc: 'Trap! Slanted fold misses the horizontal symmetry axis!' }
+    ]
+  },
+  {
+    id: 'diamond',
+    name: 'Diamond Gem',
+    icon: '💎',
+    totalLines: 4,
+    clue: 'A diamond has 4 lines of symmetry: 1 vertical, 1 horizontal, and 2 diagonals connecting corner to corner!',
+    tip: 'Try the diagonal lines: on a rhombus diamond, corner diagonals fold opposite points directly onto each other!',
+    shapeSvg: `
+      <!-- Diamond Rhombus Outer -->
+      <polygon points="200,60 340,200 200,340 60,200" fill="#38BDF8" stroke="#0284C7" stroke-width="8"/>
+      <!-- Inner Facet Medallion -->
+      <polygon points="200,120 280,200 200,280 120,200" fill="#BAE6FD" stroke="#0284C7" stroke-width="4"/>
+    `,
+    lines: [
+      { id: 'diag1', name: 'Corner Diagonal 1 ⤢', x1: 50, y1: 50, x2: 350, y2: 350, isSymmetric: true, desc: 'Awesome diagonal fold! Top-left corner matches bottom-right corner!' },
+      { id: 'diag2', name: 'Corner Diagonal 2 ⤡', x1: 350, y1: 50, x2: 50, y2: 350, isSymmetric: true, desc: 'Awesome diagonal fold! Top-right corner matches bottom-left corner!' },
+      { id: 'vert', name: 'Vertical Center Line ↕', x1: 200, y1: 30, x2: 200, y2: 370, isSymmetric: true, desc: 'Splits left diamond tip onto right tip!' },
+      { id: 'horiz', name: 'Horizontal Center Line ↔', x1: 30, y1: 200, x2: 370, y2: 200, isSymmetric: true, desc: 'Splits top diamond tip onto bottom tip!' },
+      { id: 'trap_off', name: 'Off-Axis Cut (Trap!)', x1: 90, y1: 60, x2: 310, y2: 340, isSymmetric: false, desc: 'Trap! Off-axis line does not connect opposing corners!' }
+    ]
+  },
+  {
+    id: 'skateboard',
+    name: 'Skateboard Deck',
+    icon: '🛹',
+    totalLines: 2,
+    clue: 'This skateboard has 2 lines of symmetry: vertical (nose to tail) AND horizontal (top rail to bottom rail)!',
+    tip: 'A rectangle or skateboard deck has 2 symmetry lines (↕ and ↔). But its corner diagonals are NOT symmetry lines!',
+    shapeSvg: `
+      <!-- Deck Board -->
+      <rect x="50" y="130" width="300" height="140" rx="70" fill="#8B5CF6" stroke="#5B21B6" stroke-width="6"/>
+      <!-- Grip Tape Center Inlay -->
+      <rect x="80" y="150" width="240" height="100" rx="50" fill="#1E293B"/>
+      <!-- Center Flame Emblem -->
+      <circle cx="200" cy="200" r="24" fill="#F59E0B" stroke="#D97706" stroke-width="3"/>
+      <!-- Left Truck Bolts -->
+      <circle cx="110" cy="175" r="5" fill="#F1F5F9"/>
+      <circle cx="110" cy="225" r="5" fill="#F1F5F9"/>
+      <circle cx="135" cy="175" r="5" fill="#F1F5F9"/>
+      <circle cx="135" cy="225" r="5" fill="#F1F5F9"/>
+      <!-- Right Truck Bolts (Exact Mirror) -->
+      <circle cx="265" cy="175" r="5" fill="#F1F5F9"/>
+      <circle cx="265" cy="225" r="5" fill="#F1F5F9"/>
+      <circle cx="290" cy="175" r="5" fill="#F1F5F9"/>
+      <circle cx="290" cy="225" r="5" fill="#F1F5F9"/>
+    `,
+    lines: [
+      { id: 'vert', name: 'Vertical Split (Nose to Tail) ↕', x1: 200, y1: 30, x2: 200, y2: 370, isSymmetric: true, desc: 'Great! Splits nose onto tail with matching wheels and bolts!' },
+      { id: 'horiz', name: 'Horizontal Line ↔', x1: 20, y1: 200, x2: 380, y2: 200, isSymmetric: true, desc: 'Great! Top rail edge folds cleanly down onto matching bottom rail!' },
+      { id: 'diag_trap', name: 'Corner Diagonal ⤢ (Trap!)', x1: 60, y1: 100, x2: 340, y2: 300, isSymmetric: false, desc: 'Trap! Long boards do not have diagonal symmetry: corners stick out into empty air!' }
+    ]
+  },
+  {
+    id: 'mug',
+    name: 'Mug with Handle',
+    icon: '☕',
+    totalLines: 0,
+    clue: 'Attention Detective: Look at the handle on the right! Does the left side have a handle to match?',
+    tip: 'Not everything has symmetry! An everyday coffee mug with a handle on only one side has 0 lines of symmetry.',
+    shapeSvg: `
+      <!-- Mug Body -->
+      <rect x="120" y="110" width="160" height="190" rx="18" fill="#EC4899" stroke="#9D174D" stroke-width="7"/>
+      <!-- Top Rim Oval -->
+      <ellipse cx="200" cy="110" rx="80" ry="20" fill="#F472B6" stroke="#9D174D" stroke-width="5"/>
+      <ellipse cx="200" cy="110" rx="65" ry="12" fill="#78350F"/>
+      <!-- Handle on Right Side ONLY -->
+      <path d="M 280,140 C 345,150 345,245 280,255" fill="none" stroke="#EC4899" stroke-width="24" stroke-linecap="round"/>
+      <path d="M 280,140 C 345,150 345,245 280,255" fill="none" stroke="#9D174D" stroke-width="7" stroke-linecap="round"/>
+    `,
+    lines: [
+      { id: 'vert_test', name: 'Vertical Center Line ↕ (Trap!)', x1: 200, y1: 20, x2: 200, y2: 360, isSymmetric: false, desc: 'Caught the trap! The right side has a big looped handle, but the left side has smooth ceramic with NO handle!' },
+      { id: 'horiz_test', name: 'Horizontal Cut ↔ (Trap!)', x1: 40, y1: 205, x2: 360, y2: 205, isSymmetric: false, desc: 'Trap! The top open rim with hot cocoa does not match the flat solid bottom base!' }
+    ]
+  },
+  {
     id: 'square',
     name: 'Square',
     icon: '🟦',
     totalLines: 4,
-    clue: 'A square has 4 true lines of symmetry! Be careful not to pick off-center cuts.',
+    clue: 'A square has 4 true lines of symmetry! 1 vertical, 1 horizontal, and 2 corner diagonals.',
     tip: 'Regular shapes with equal sides have the same number of symmetry lines as their sides: 4 equal sides = 4 symmetry lines!',
     shapeSvg: `<rect x="70" y="70" width="260" height="260" rx="4" fill="#818CF8" stroke="#3730A3" stroke-width="8"/>`,
     lines: [
@@ -678,92 +779,51 @@ const DETECTIVE_SHAPES = [
     ]
   },
   {
-    id: 'rectangle',
-    name: 'Rectangle',
-    icon: '🟨',
-    totalLines: 2,
-    clue: 'A rectangle has ONLY 2 lines of symmetry (↕ and ↔)! Its corner diagonals are famous traps!',
-    tip: 'Try folding notebook paper across the diagonal corner-to-corner: the corners stick out, so diagonals are NOT symmetry lines for rectangles!',
-    shapeSvg: `<rect x="50" y="110" width="300" height="180" rx="4" fill="#FBBF24" stroke="#B45309" stroke-width="8"/>`,
-    lines: [
-      { id: 'vert', name: 'Vertical Line ↕', x1: 200, y1: 60, x2: 200, y2: 340, isSymmetric: true, desc: 'Folds left rectangle half onto right half!' },
-      { id: 'horiz', name: 'Horizontal Line ↔', x1: 20, y1: 200, x2: 380, y2: 200, isSymmetric: true, desc: 'Folds top rectangle half onto bottom half!' },
-      { id: 'diag1', name: 'Diagonal 1 ⤢ (Trap!)', x1: 40, y1: 100, x2: 360, y2: 300, isSymmetric: false, desc: 'Corner trap! Diagonals leave pointed corners sticking out into empty air!' },
-      { id: 'diag2', name: 'Diagonal 2 ⤡ (Trap!)', x1: 360, y1: 100, x2: 40, y2: 300, isSymmetric: false, desc: 'Corner trap! Folds corner across but ends up askew!' }
-    ]
-  },
-  {
-    id: 'equilateral_tri',
-    name: 'Equilateral Triangle',
-    icon: '🔺',
-    totalLines: 3,
-    clue: 'All 3 sides are equal! 3 lines of symmetry pass from each tip to the opposite side midpoint.',
-    tip: 'An equilateral triangle has 3 equal sides and exactly 3 lines of symmetry!',
-    shapeSvg: `<polygon points="200,60 340,320 60,320" fill="#F43F5E" stroke="#9F1239" stroke-width="8" stroke-linejoin="round"/>`,
-    lines: [
-      { id: 'vert', name: 'Vertical (Top Vertex) ↕', x1: 200, y1: 30, x2: 200, y2: 360, isSymmetric: true, desc: 'Splits triangle into two identical mirror right-triangles!' },
-      { id: 'diag1', name: 'Left Vertex to Side ⤡', x1: 50, y1: 330, x2: 280, y2: 180, isSymmetric: true, desc: 'Folds bottom-left corner across to opposite edge!' },
-      { id: 'diag2', name: 'Right Vertex to Side ⤢', x1: 350, y1: 330, x2: 120, y2: 180, isSymmetric: true, desc: 'Folds bottom-right corner across to opposite edge!' },
-      { id: 'trap_horiz', name: 'Horizontal Cut ↔ (Trap!)', x1: 40, y1: 220, x2: 360, y2: 220, isSymmetric: false, desc: 'Trap! Folds a pointy top triangle onto a flat trapezoid base—halves do not match!' }
-    ]
-  },
-  {
-    id: 'isosceles_tri',
-    name: 'Isosceles Triangle',
-    icon: '📐',
+    id: 'guitar',
+    name: 'Acoustic Guitar',
+    icon: '🎸',
     totalLines: 1,
-    clue: 'An isosceles triangle has 2 equal sides and ONLY 1 line of symmetry right down the middle!',
-    tip: 'Side-to-vertex folds fail because the base is a different length from the other two sides.',
-    shapeSvg: `<polygon points="200,50 310,340 90,340" fill="#10B981" stroke="#047857" stroke-width="8" stroke-linejoin="round"/>`,
+    clue: 'An acoustic guitar has an hourglass wooden body, a round center soundhole, and a straight neck with tuning pegs.',
+    tip: 'Guitar bodies are crafted symmetrically so strings resonate with pure, balanced acoustic tone!',
+    shapeSvg: `
+      <!-- Headstock & Neck -->
+      <rect x="188" y="30" width="24" height="60" rx="4" fill="#78350F" stroke="#451A03" stroke-width="3"/>
+      <rect x="191" y="90" width="18" height="90" fill="#B45309" stroke="#451A03" stroke-width="3"/>
+      <!-- Tuning Pegs Left and Right -->
+      <circle cx="178" cy="45" r="6" fill="#F59E0B"/>
+      <circle cx="178" cy="65" r="6" fill="#F59E0B"/>
+      <circle cx="222" cy="45" r="6" fill="#F59E0B"/>
+      <circle cx="222" cy="65" r="6" fill="#F59E0B"/>
+      <!-- Guitar Upper Bout Body -->
+      <ellipse cx="200" cy="210" rx="65" ry="45" fill="#D97706" stroke="#78350F" stroke-width="5"/>
+      <!-- Guitar Lower Bout Body -->
+      <ellipse cx="200" cy="285" rx="90" ry="65" fill="#D97706" stroke="#78350F" stroke-width="5"/>
+      <!-- Center Soundhole -->
+      <circle cx="200" cy="225" r="24" fill="#1E293B" stroke="#78350F" stroke-width="4"/>
+      <!-- Bridge & Saddle -->
+      <rect x="175" y="300" width="50" height="12" rx="3" fill="#451A03"/>
+    `,
     lines: [
-      { id: 'vert', name: 'Vertical Center Line ↕', x1: 200, y1: 20, x2: 200, y2: 370, isSymmetric: true, desc: 'The ONLY line of symmetry that splits the two twin sides!' },
-      { id: 'horiz', name: 'Horizontal Line ↔ (Trap!)', x1: 60, y1: 220, x2: 340, y2: 220, isSymmetric: false, desc: 'Trap! The top tip does not match the wide bottom base!' },
-      { id: 'diag', name: 'Slanted Line ⤢ (Trap!)', x1: 80, y1: 350, x2: 260, y2: 190, isSymmetric: false, desc: 'Trap! Angles do not match when folded across!' }
+      { id: 'vert', name: 'Vertical String Line ↕', x1: 200, y1: 15, x2: 200, y2: 375, isSymmetric: true, desc: 'Brilliant! Splits the guitar neck, soundhole, and hourglass body into perfect twin sides!' },
+      { id: 'horiz_waist', name: 'Horizontal Cut at Waist ↔ (Trap!)', x1: 30, y1: 235, x2: 370, y2: 235, isSymmetric: false, desc: 'Trap! The thin wooden neck at the top does not match the wide curved soundboard at the bottom!' },
+      { id: 'diag_chord', name: 'Slanted Cut ⤢ (Trap!)', x1: 60, y1: 70, x2: 340, y2: 330, isSymmetric: false, desc: 'Trap! Diagonal line tilts across and misses the opposite curves completely!' }
     ]
   },
   {
-    id: 'circle',
-    name: 'Circle',
-    icon: '🟣',
-    totalLines: 999, // Infinite
-    clue: 'A circle has INFINITE lines of symmetry! But lines MUST pass through the center point!',
-    tip: 'Because a circle is perfectly round all the way around 360°, every diameter through the center is a line of symmetry!',
-    shapeSvg: `<circle cx="200" cy="200" r="140" fill="#A855F7" stroke="#6B21A8" stroke-width="8"/>
-               <circle cx="200" cy="200" r="6" fill="#FFFFFF"/>`,
-    lines: [
-      { id: 'vert', name: 'Vertical Diameter ↕', x1: 200, y1: 30, x2: 200, y2: 370, isSymmetric: true, desc: 'Cuts circle into twin left and right semicircles!' },
-      { id: 'horiz', name: 'Horizontal Diameter ↔', x1: 30, y1: 200, x2: 370, y2: 200, isSymmetric: true, desc: 'Cuts circle into twin top and bottom semicircles!' },
-      { id: 'diag1', name: 'Diagonal 1 ⤢', x1: 70, y1: 70, x2: 330, y2: 330, isSymmetric: true, desc: 'Passes right through center point: perfect match!' },
-      { id: 'trap_chord', name: 'Off-Center Cut (Trap!)', x1: 80, y1: 100, x2: 320, y2: 100, isSymmetric: false, desc: 'Trap! Does not pass through the center point, cutting uneven slices!' }
-    ]
-  },
-  {
-    id: 'regular_hexagon',
-    name: 'Regular Hexagon',
+    id: 'stop_sign',
+    name: 'STOP Sign (Octagon)',
     icon: '🛑',
-    totalLines: 6,
-    clue: 'A regular 6-sided hexagon has 6 lines of symmetry! Don\'t fall for off-angle cuts.',
-    tip: 'Hexagons are the building blocks of honeycombs because their symmetry makes them fit together seamlessly!',
-    shapeSvg: `<polygon points="200,50 330,125 330,275 200,350 70,275 70,125" fill="#EC4899" stroke="#9D174D" stroke-width="8" stroke-linejoin="round"/>`,
+    totalLines: 8,
+    clue: 'A regular octagon STOP sign has 8 equal sides and 8 lines of symmetry!',
+    tip: 'Regular polygons always have as many lines of symmetry as they have equal sides: 8 sides = 8 lines!',
+    shapeSvg: `<polygon points="200,45 310,90 355,200 310,310 200,355 90,310 45,200 90,90" fill="#EF4444" stroke="#991B1B" stroke-width="8"/>
+               <text x="200" y="215" font-family="'Nunito', sans-serif" font-weight="900" font-size="52" fill="#FFFFFF" text-anchor="middle">STOP</text>`,
     lines: [
-      { id: 'vert', name: 'Vertex to Vertex ↕', x1: 200, y1: 30, x2: 200, y2: 370, isSymmetric: true, desc: 'Cuts from top vertex to bottom vertex!' },
-      { id: 'horiz', name: 'Side to Side Midpoint ↔', x1: 40, y1: 200, x2: 360, y2: 200, isSymmetric: true, desc: 'Cuts through flat horizontal sides!' },
-      { id: 'diag1', name: 'Vertex Pair ⤢', x1: 50, y1: 115, x2: 350, y2: 285, isSymmetric: true, desc: 'Connects opposite diagonal corners!' },
-      { id: 'diag2', name: 'Vertex Pair ⤡', x1: 350, y1: 115, x2: 50, y2: 285, isSymmetric: true, desc: 'Connects opposite diagonal corners!' },
-      { id: 'trap_slice', name: 'Off-Angle Slice (Trap!)', x1: 90, y1: 70, x2: 310, y2: 330, isSymmetric: false, desc: 'Trap! Skewed angle cuts uneven edges that cannot fold together!' }
-    ]
-  },
-  {
-    id: 'scalene_trap',
-    name: 'Scalene Triangle',
-    icon: '📐',
-    totalLines: 0,
-    clue: 'A scalene triangle has NO lines of symmetry! All 3 sides are unequal, so no fold line will ever align the sides.',
-    tip: 'If all 3 side lengths are different, the shape has 0 lines of symmetry.',
-    shapeSvg: `<polygon points="80,330 350,300 160,70" fill="#0EA5E9" stroke="#0369A1" stroke-width="8" stroke-linejoin="round"/>`,
-    lines: [
-      { id: 'test1', name: 'Vertical Test Line ↕ (Trap!)', x1: 200, y1: 40, x2: 200, y2: 360, isSymmetric: false, desc: 'Trap! Left side has acute corner, right side has long leg.' },
-      { id: 'test2', name: 'Top Vertex to Base ⤢ (Trap!)', x1: 160, y1: 40, x2: 215, y2: 350, isSymmetric: false, desc: 'Trap! Left and right base lengths are completely different!' }
+      { id: 'vert', name: 'Vertical Axis ↕', x1: 200, y1: 25, x2: 200, y2: 375, isSymmetric: true, desc: 'Splits top side to bottom side!' },
+      { id: 'horiz', name: 'Horizontal Axis ↔', x1: 25, y1: 200, x2: 375, y2: 200, isSymmetric: true, desc: 'Splits left side to right side!' },
+      { id: 'diag1', name: 'Diagonal 1 ⤢', x1: 50, y1: 50, x2: 350, y2: 350, isSymmetric: true, desc: 'Connects opposite vertex pair!' },
+      { id: 'diag2', name: 'Diagonal 2 ⤡', x1: 350, y1: 50, x2: 50, y2: 350, isSymmetric: true, desc: 'Connects opposite vertex pair!' },
+      { id: 'trap_cut', name: 'Corner Slice (Trap!)', x1: 60, y1: 150, x2: 300, y2: 350, isSymmetric: false, desc: 'Trap! Off-center cut slices uneven pieces that do not mirror!' }
     ]
   }
 ];
@@ -960,59 +1020,84 @@ const PAINTER_COLORS = [
 const GUIDED_PATTERNS = [
   {
     id: 'heart',
-    name: 'Mini Heart',
+    name: '8-Bit Heart',
     icon: '❤️',
     leftCells: [
-      { r: 3, c: 4, color: '#EF4444' },
-      { r: 3, c: 3, color: '#EF4444' },
-      { r: 4, c: 5, color: '#EF4444' },
-      { r: 4, c: 4, color: '#EF4444' },
-      { r: 4, c: 2, color: '#EF4444' },
-      { r: 5, c: 4, color: '#EF4444' },
-      { r: 6, c: 5, color: '#EF4444' }
-    ]
-  },
-  {
-    id: 'tree',
-    name: 'Pine Tree',
-    icon: '🌲',
-    leftCells: [
-      { r: 2, c: 5, color: '#10B981' },
-      { r: 3, c: 5, color: '#10B981' },
-      { r: 3, c: 4, color: '#10B981' },
-      { r: 4, c: 5, color: '#10B981' },
-      { r: 4, c: 4, color: '#10B981' },
-      { r: 4, c: 3, color: '#10B981' },
-      { r: 5, c: 5, color: '#F97316' },
-      { r: 6, c: 5, color: '#F97316' }
+      { r: 1, c: 1, color: '#EF4444' }, { r: 1, c: 2, color: '#EF4444' },
+      { r: 2, c: 0, color: '#EF4444' }, { r: 2, c: 1, color: '#EF4444' }, { r: 2, c: 2, color: '#EF4444' }, { r: 2, c: 3, color: '#EF4444' },
+      { r: 3, c: 0, color: '#EF4444' }, { r: 3, c: 1, color: '#EF4444' }, { r: 3, c: 2, color: '#EF4444' }, { r: 3, c: 3, color: '#EF4444' },
+      { r: 4, c: 1, color: '#EF4444' }, { r: 4, c: 2, color: '#EF4444' }, { r: 4, c: 3, color: '#EF4444' },
+      { r: 5, c: 2, color: '#EF4444' }, { r: 5, c: 3, color: '#EF4444' },
+      { r: 6, c: 3, color: '#EF4444' }
     ]
   },
   {
     id: 'butterfly',
-    name: 'Mini Butterfly',
+    name: 'Butterfly',
     icon: '🦋',
     leftCells: [
-      { r: 3, c: 4, color: '#6366F1' },
-      { r: 3, c: 3, color: '#6366F1' },
-      { r: 4, c: 5, color: '#1E293B' },
-      { r: 4, c: 4, color: '#FACC15' },
-      { r: 4, c: 2, color: '#6366F1' },
-      { r: 5, c: 5, color: '#1E293B' },
-      { r: 5, c: 3, color: '#38BDF8' }
+      { r: 1, c: 1, color: '#38BDF8' }, { r: 1, c: 2, color: '#38BDF8' },
+      { r: 2, c: 0, color: '#38BDF8' }, { r: 2, c: 1, color: '#38BDF8' }, { r: 2, c: 2, color: '#38BDF8' }, { r: 2, c: 3, color: '#1E293B' },
+      { r: 3, c: 1, color: '#38BDF8' }, { r: 3, c: 2, color: '#38BDF8' }, { r: 3, c: 3, color: '#1E293B' },
+      { r: 4, c: 2, color: '#1E293B' }, { r: 4, c: 3, color: '#1E293B' },
+      { r: 5, c: 1, color: '#EC4899' }, { r: 5, c: 2, color: '#EC4899' }, { r: 5, c: 3, color: '#1E293B' },
+      { r: 6, c: 0, color: '#EC4899' }, { r: 6, c: 1, color: '#EC4899' }, { r: 6, c: 2, color: '#EC4899' }
     ]
   },
   {
-    id: 'house',
-    name: 'Cozy House',
-    icon: '🏠',
+    id: 'diamond',
+    name: 'Diamond Gem',
+    icon: '💎',
     leftCells: [
-      { r: 3, c: 5, color: '#EF4444' },
-      { r: 4, c: 5, color: '#EF4444' },
-      { r: 4, c: 4, color: '#EF4444' },
-      { r: 5, c: 5, color: '#F59E0B' },
-      { r: 5, c: 4, color: '#38BDF8' },
-      { r: 6, c: 5, color: '#F59E0B' },
-      { r: 6, c: 4, color: '#F59E0B' }
+      { r: 1, c: 3, color: '#6366F1' },
+      { r: 2, c: 2, color: '#6366F1' }, { r: 2, c: 3, color: '#38BDF8' },
+      { r: 3, c: 1, color: '#6366F1' }, { r: 3, c: 2, color: '#38BDF8' }, { r: 3, c: 3, color: '#38BDF8' },
+      { r: 4, c: 0, color: '#6366F1' }, { r: 4, c: 1, color: '#38BDF8' }, { r: 4, c: 2, color: '#38BDF8' }, { r: 4, c: 3, color: '#6366F1' },
+      { r: 5, c: 1, color: '#6366F1' }, { r: 5, c: 2, color: '#38BDF8' }, { r: 5, c: 3, color: '#38BDF8' },
+      { r: 6, c: 2, color: '#6366F1' }, { r: 6, c: 3, color: '#38BDF8' },
+      { r: 7, c: 3, color: '#6366F1' }
+    ]
+  },
+  {
+    id: 'castle',
+    name: 'Castle Tower',
+    icon: '🏰',
+    leftCells: [
+      { r: 1, c: 1, color: '#F59E0B' }, { r: 1, c: 3, color: '#F59E0B' },
+      { r: 2, c: 1, color: '#F59E0B' }, { r: 2, c: 2, color: '#F59E0B' }, { r: 2, c: 3, color: '#F59E0B' },
+      { r: 3, c: 1, color: '#F59E0B' }, { r: 3, c: 2, color: '#F59E0B' }, { r: 3, c: 3, color: '#F59E0B' },
+      { r: 4, c: 1, color: '#F59E0B' }, { r: 4, c: 2, color: '#F59E0B' }, { r: 4, c: 3, color: '#F59E0B' },
+      { r: 5, c: 0, color: '#D97706' }, { r: 5, c: 1, color: '#D97706' }, { r: 5, c: 2, color: '#D97706' }, { r: 5, c: 3, color: '#D97706' },
+      { r: 6, c: 0, color: '#D97706' }, { r: 6, c: 1, color: '#D97706' }, { r: 6, c: 2, color: '#D97706' }, { r: 6, c: 3, color: '#1E293B' },
+      { r: 7, c: 0, color: '#D97706' }, { r: 7, c: 1, color: '#D97706' }, { r: 7, c: 2, color: '#D97706' }, { r: 7, c: 3, color: '#1E293B' }
+    ]
+  },
+  {
+    id: 'alien',
+    name: 'Space Alien',
+    icon: '👾',
+    leftCells: [
+      { r: 1, c: 2, color: '#10B981' },
+      { r: 2, c: 1, color: '#10B981' }, { r: 2, c: 3, color: '#10B981' },
+      { r: 3, c: 0, color: '#10B981' }, { r: 3, c: 1, color: '#10B981' }, { r: 3, c: 2, color: '#10B981' }, { r: 3, c: 3, color: '#10B981' },
+      { r: 4, c: 0, color: '#10B981' }, { r: 4, c: 1, color: '#1E293B' }, { r: 4, c: 2, color: '#10B981' }, { r: 4, c: 3, color: '#10B981' },
+      { r: 5, c: 0, color: '#10B981' }, { r: 5, c: 1, color: '#10B981' }, { r: 5, c: 2, color: '#10B981' }, { r: 5, c: 3, color: '#10B981' },
+      { r: 6, c: 0, color: '#10B981' }, { r: 6, c: 2, color: '#10B981' },
+      { r: 7, c: 1, color: '#10B981' }, { r: 7, c: 3, color: '#10B981' }
+    ]
+  },
+  {
+    id: 'flower',
+    name: 'Magic Flower',
+    icon: '🌸',
+    leftCells: [
+      { r: 1, c: 3, color: '#EC4899' },
+      { r: 2, c: 2, color: '#EC4899' }, { r: 2, c: 3, color: '#EC4899' },
+      { r: 3, c: 1, color: '#EC4899' }, { r: 3, c: 2, color: '#EC4899' }, { r: 3, c: 3, color: '#FACC15' },
+      { r: 4, c: 1, color: '#EC4899' }, { r: 4, c: 2, color: '#EC4899' }, { r: 4, c: 3, color: '#FACC15' },
+      { r: 5, c: 2, color: '#EC4899' }, { r: 5, c: 3, color: '#EC4899' },
+      { r: 6, c: 3, color: '#10B981' },
+      { r: 7, c: 2, color: '#10B981' }, { r: 7, c: 3, color: '#10B981' }
     ]
   }
 ];
@@ -1023,11 +1108,12 @@ const FREE_DRAW_INSPIRATIONS = [
     name: 'Mushroom',
     icon: '🍄',
     cells: [
-      { r: 2, c: 5, color: '#EF4444' }, { r: 2, c: 6, color: '#EF4444' },
-      { r: 3, c: 4, color: '#EF4444' }, { r: 3, c: 5, color: '#FFFFFF' }, { r: 3, c: 6, color: '#FFFFFF' }, { r: 3, c: 7, color: '#EF4444' },
-      { r: 4, c: 3, color: '#EF4444' }, { r: 4, c: 4, color: '#EF4444' }, { r: 4, c: 5, color: '#EF4444' }, { r: 4, c: 6, color: '#EF4444' }, { r: 4, c: 7, color: '#EF4444' }, { r: 4, c: 8, color: '#EF4444' },
-      { r: 5, c: 5, color: '#F1F5F9' }, { r: 5, c: 6, color: '#F1F5F9' },
-      { r: 6, c: 5, color: '#F1F5F9' }, { r: 6, c: 6, color: '#F1F5F9' }
+      { r: 1, c: 3, color: '#EF4444' }, { r: 1, c: 4, color: '#EF4444' },
+      { r: 2, c: 2, color: '#EF4444' }, { r: 2, c: 3, color: '#FFFFFF' }, { r: 2, c: 4, color: '#FFFFFF' }, { r: 2, c: 5, color: '#EF4444' },
+      { r: 3, c: 1, color: '#EF4444' }, { r: 3, c: 2, color: '#EF4444' }, { r: 3, c: 3, color: '#EF4444' }, { r: 3, c: 4, color: '#EF4444' }, { r: 3, c: 5, color: '#EF4444' }, { r: 3, c: 6, color: '#EF4444' },
+      { r: 4, c: 0, color: '#EF4444' }, { r: 4, c: 1, color: '#EF4444' }, { r: 4, c: 2, color: '#EF4444' }, { r: 4, c: 3, color: '#EF4444' }, { r: 4, c: 4, color: '#EF4444' }, { r: 4, c: 5, color: '#EF4444' }, { r: 4, c: 6, color: '#EF4444' }, { r: 4, c: 7, color: '#EF4444' },
+      { r: 5, c: 3, color: '#F1F5F9' }, { r: 5, c: 4, color: '#F1F5F9' },
+      { r: 6, c: 3, color: '#F1F5F9' }, { r: 6, c: 4, color: '#F1F5F9' }
     ]
   },
   {
@@ -1035,9 +1121,10 @@ const FREE_DRAW_INSPIRATIONS = [
     name: 'Crown',
     icon: '👑',
     cells: [
-      { r: 3, c: 3, color: '#FACC15' }, { r: 3, c: 5, color: '#FACC15' }, { r: 3, c: 6, color: '#FACC15' }, { r: 3, c: 8, color: '#FACC15' },
-      { r: 4, c: 3, color: '#FACC15' }, { r: 4, c: 4, color: '#EF4444' }, { r: 4, c: 5, color: '#FACC15' }, { r: 4, c: 6, color: '#FACC15' }, { r: 4, c: 7, color: '#EF4444' }, { r: 4, c: 8, color: '#FACC15' },
-      { r: 5, c: 3, color: '#FACC15' }, { r: 5, c: 4, color: '#FACC15' }, { r: 5, c: 5, color: '#FACC15' }, { r: 5, c: 6, color: '#FACC15' }, { r: 5, c: 7, color: '#FACC15' }, { r: 5, c: 8, color: '#FACC15' }
+      { r: 2, c: 1, color: '#FACC15' }, { r: 2, c: 3, color: '#FACC15' }, { r: 2, c: 4, color: '#FACC15' }, { r: 2, c: 6, color: '#FACC15' },
+      { r: 3, c: 1, color: '#FACC15' }, { r: 3, c: 2, color: '#EF4444' }, { r: 3, c: 3, color: '#FACC15' }, { r: 3, c: 4, color: '#FACC15' }, { r: 3, c: 5, color: '#EF4444' }, { r: 3, c: 6, color: '#FACC15' },
+      { r: 4, c: 1, color: '#FACC15' }, { r: 4, c: 2, color: '#FACC15' }, { r: 4, c: 3, color: '#FACC15' }, { r: 4, c: 4, color: '#FACC15' }, { r: 4, c: 5, color: '#FACC15' }, { r: 4, c: 6, color: '#FACC15' },
+      { r: 5, c: 1, color: '#FACC15' }, { r: 5, c: 2, color: '#FACC15' }, { r: 5, c: 3, color: '#FACC15' }, { r: 5, c: 4, color: '#FACC15' }, { r: 5, c: 5, color: '#FACC15' }, { r: 5, c: 6, color: '#FACC15' }
     ]
   },
   {
@@ -1045,10 +1132,13 @@ const FREE_DRAW_INSPIRATIONS = [
     name: 'Alien',
     icon: '👾',
     cells: [
-      { r: 2, c: 4, color: '#10B981' }, { r: 2, c: 7, color: '#10B981' },
-      { r: 3, c: 4, color: '#10B981' }, { r: 3, c: 5, color: '#10B981' }, { r: 3, c: 6, color: '#10B981' }, { r: 3, c: 7, color: '#10B981' },
-      { r: 4, c: 3, color: '#10B981' }, { r: 4, c: 4, color: '#1E293B' }, { r: 4, c: 5, color: '#10B981' }, { r: 4, c: 6, color: '#10B981' }, { r: 4, c: 7, color: '#1E293B' }, { r: 4, c: 8, color: '#10B981' },
-      { r: 5, c: 4, color: '#10B981' }, { r: 5, c: 7, color: '#10B981' }
+      { r: 1, c: 2, color: '#10B981' }, { r: 1, c: 5, color: '#10B981' },
+      { r: 2, c: 1, color: '#10B981' }, { r: 2, c: 3, color: '#10B981' }, { r: 2, c: 4, color: '#10B981' }, { r: 2, c: 6, color: '#10B981' },
+      { r: 3, c: 0, color: '#10B981' }, { r: 3, c: 1, color: '#10B981' }, { r: 3, c: 2, color: '#10B981' }, { r: 3, c: 3, color: '#10B981' }, { r: 3, c: 4, color: '#10B981' }, { r: 3, c: 5, color: '#10B981' }, { r: 3, c: 6, color: '#10B981' }, { r: 3, c: 7, color: '#10B981' },
+      { r: 4, c: 0, color: '#10B981' }, { r: 4, c: 1, color: '#1E293B' }, { r: 4, c: 2, color: '#10B981' }, { r: 4, c: 3, color: '#10B981' }, { r: 4, c: 4, color: '#10B981' }, { r: 4, c: 5, color: '#10B981' }, { r: 4, c: 6, color: '#1E293B' }, { r: 4, c: 7, color: '#10B981' },
+      { r: 5, c: 0, color: '#10B981' }, { r: 5, c: 1, color: '#10B981' }, { r: 5, c: 2, color: '#10B981' }, { r: 5, c: 3, color: '#10B981' }, { r: 5, c: 4, color: '#10B981' }, { r: 5, c: 5, color: '#10B981' }, { r: 5, c: 6, color: '#10B981' }, { r: 5, c: 7, color: '#10B981' },
+      { r: 6, c: 0, color: '#10B981' }, { r: 6, c: 2, color: '#10B981' }, { r: 6, c: 5, color: '#10B981' }, { r: 6, c: 7, color: '#10B981' },
+      { r: 7, c: 1, color: '#10B981' }, { r: 7, c: 3, color: '#10B981' }, { r: 7, c: 4, color: '#10B981' }, { r: 7, c: 6, color: '#10B981' }
     ]
   },
   {
@@ -1056,11 +1146,12 @@ const FREE_DRAW_INSPIRATIONS = [
     name: 'Sailboat',
     icon: '⛵',
     cells: [
-      { r: 2, c: 5, color: '#38BDF8' },
-      { r: 3, c: 5, color: '#38BDF8' }, { r: 3, c: 4, color: '#38BDF8' },
-      { r: 4, c: 5, color: '#1E293B' },
-      { r: 5, c: 4, color: '#F97316' }, { r: 5, c: 5, color: '#F97316' }, { r: 5, c: 6, color: '#F97316' }, { r: 5, c: 7, color: '#F97316' },
-      { r: 6, c: 5, color: '#F97316' }, { r: 6, c: 6, color: '#F97316' }
+      { r: 1, c: 3, color: '#38BDF8' },
+      { r: 2, c: 2, color: '#38BDF8' }, { r: 2, c: 3, color: '#38BDF8' },
+      { r: 3, c: 1, color: '#38BDF8' }, { r: 3, c: 2, color: '#38BDF8' }, { r: 3, c: 3, color: '#38BDF8' },
+      { r: 4, c: 3, color: '#1E293B' }, { r: 4, c: 4, color: '#1E293B' },
+      { r: 5, c: 1, color: '#F97316' }, { r: 5, c: 2, color: '#F97316' }, { r: 5, c: 3, color: '#F97316' }, { r: 5, c: 4, color: '#F97316' }, { r: 5, c: 5, color: '#F97316' }, { r: 5, c: 6, color: '#F97316' },
+      { r: 6, c: 2, color: '#F97316' }, { r: 6, c: 3, color: '#F97316' }, { r: 6, c: 4, color: '#F97316' }, { r: 6, c: 5, color: '#F97316' }
     ]
   },
   {
@@ -1068,11 +1159,13 @@ const FREE_DRAW_INSPIRATIONS = [
     name: 'Gem',
     icon: '💎',
     cells: [
-      { r: 2, c: 5, color: '#6366F1' }, { r: 2, c: 6, color: '#6366F1' },
-      { r: 3, c: 4, color: '#6366F1' }, { r: 3, c: 5, color: '#38BDF8' }, { r: 3, c: 6, color: '#38BDF8' }, { r: 3, c: 7, color: '#6366F1' },
-      { r: 4, c: 3, color: '#6366F1' }, { r: 4, c: 4, color: '#38BDF8' }, { r: 4, c: 5, color: '#38BDF8' }, { r: 4, c: 6, color: '#38BDF8' }, { r: 4, c: 7, color: '#38BDF8' }, { r: 4, c: 8, color: '#6366F1' },
-      { r: 5, c: 4, color: '#6366F1' }, { r: 5, c: 5, color: '#38BDF8' }, { r: 5, c: 6, color: '#38BDF8' }, { r: 5, c: 7, color: '#6366F1' },
-      { r: 6, c: 5, color: '#6366F1' }, { r: 6, c: 6, color: '#6366F1' }
+      { r: 1, c: 3, color: '#6366F1' }, { r: 1, c: 4, color: '#6366F1' },
+      { r: 2, c: 2, color: '#6366F1' }, { r: 2, c: 3, color: '#38BDF8' }, { r: 2, c: 4, color: '#38BDF8' }, { r: 2, c: 5, color: '#6366F1' },
+      { r: 3, c: 1, color: '#6366F1' }, { r: 3, c: 2, color: '#38BDF8' }, { r: 3, c: 3, color: '#38BDF8' }, { r: 3, c: 4, color: '#38BDF8' }, { r: 3, c: 5, color: '#38BDF8' }, { r: 3, c: 6, color: '#6366F1' },
+      { r: 4, c: 0, color: '#6366F1' }, { r: 4, c: 1, color: '#38BDF8' }, { r: 4, c: 2, color: '#38BDF8' }, { r: 4, c: 3, color: '#6366F1' }, { r: 4, c: 4, color: '#6366F1' }, { r: 4, c: 5, color: '#38BDF8' }, { r: 4, c: 6, color: '#38BDF8' }, { r: 4, c: 7, color: '#6366F1' },
+      { r: 5, c: 1, color: '#6366F1' }, { r: 5, c: 2, color: '#38BDF8' }, { r: 5, c: 3, color: '#38BDF8' }, { r: 5, c: 4, color: '#38BDF8' }, { r: 5, c: 5, color: '#38BDF8' }, { r: 5, c: 6, color: '#6366F1' },
+      { r: 6, c: 2, color: '#6366F1' }, { r: 6, c: 3, color: '#38BDF8' }, { r: 6, c: 4, color: '#38BDF8' }, { r: 6, c: 5, color: '#6366F1' },
+      { r: 7, c: 3, color: '#6366F1' }, { r: 7, c: 4, color: '#6366F1' }
     ]
   }
 ];
@@ -1081,7 +1174,7 @@ let painterMode = 'guided'; // 'guided' | 'free'
 let activePattern = GUIDED_PATTERNS[0];
 let activeColor = PAINTER_COLORS[0];
 let isEraserActive = false;
-let gridState = Array(12).fill(null).map(() => Array(12).fill(null));
+let gridState = Array(8).fill(null).map(() => Array(8).fill(null));
 
 function initPainterActivity() {
   initPainterSwatches();
@@ -1143,7 +1236,7 @@ function loadInspiration(inspId) {
   });
 
   // Populate grid with inspiration
-  gridState = Array(12).fill(null).map(() => Array(12).fill(null));
+  gridState = Array(8).fill(null).map(() => Array(8).fill(null));
   insp.cells.forEach(cell => {
     gridState[cell.r][cell.c] = cell.color;
   });
@@ -1220,7 +1313,7 @@ function selectGuidedPattern(patternId) {
 }
 
 function loadGuidedPattern(pattern) {
-  gridState = Array(12).fill(null).map(() => Array(12).fill(null));
+  gridState = Array(8).fill(null).map(() => Array(8).fill(null));
 
   pattern.leftCells.forEach(cell => {
     gridState[cell.r][cell.c] = cell.color;
@@ -1256,8 +1349,8 @@ function renderPainterGrid() {
   if (!container) return;
   container.innerHTML = '';
 
-  for (let r = 0; r < 12; r++) {
-    for (let c = 0; c < 12; c++) {
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
       const cell = document.createElement('div');
       cell.className = 'paint-cell';
       cell.dataset.row = r;
@@ -1266,7 +1359,7 @@ function renderPainterGrid() {
       const cellColor = gridState[r][c];
       cell.style.background = cellColor || '#FFFFFF';
 
-      if (painterMode === 'guided' && c < 6) {
+      if (painterMode === 'guided' && c < 4) {
         cell.classList.add('locked');
         cell.title = 'Reference pattern (left side)';
       } else {
@@ -1284,11 +1377,11 @@ function onCellClicked(r, c) {
 
   if (painterMode === 'free') {
     gridState[r][c] = colorToApply;
-    const mirrorC = 11 - c;
+    const mirrorC = 7 - c;
     gridState[r][mirrorC] = colorToApply;
     renderPainterGrid();
   } else {
-    if (c >= 6) {
+    if (c >= 4) {
       gridState[r][c] = colorToApply;
       updateSingleCellDisplay(r, c, colorToApply);
     }
@@ -1298,7 +1391,7 @@ function onCellClicked(r, c) {
 function updateSingleCellDisplay(r, c, color) {
   const container = document.getElementById('paintGridContainer');
   if (!container) return;
-  const index = r * 12 + c;
+  const index = r * 8 + c;
   const cell = container.children[index];
   if (cell) {
     cell.style.background = color || '#FFFFFF';
@@ -1312,10 +1405,10 @@ function checkPainterSymmetry() {
   let correctMatches = 0;
   let mistakes = 0;
 
-  for (let r = 0; r < 12; r++) {
-    for (let c = 0; c < 6; c++) {
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 4; c++) {
       const leftColor = gridState[r][c];
-      const mirrorC = 11 - c;
+      const mirrorC = 7 - c;
       const rightColor = gridState[r][mirrorC];
 
       if (leftColor) {
@@ -1357,7 +1450,7 @@ function checkPainterSymmetry() {
 
 function clearPainterGrid() {
   sound.playPop();
-  gridState = Array(12).fill(null).map(() => Array(12).fill(null));
+  gridState = Array(8).fill(null).map(() => Array(8).fill(null));
   if (painterMode === 'guided') {
     loadGuidedPattern(activePattern);
   } else {
@@ -1365,177 +1458,489 @@ function clearPainterGrid() {
   }
 }
 
-// ================= ACTIVITY 4: SYMMETRY CHALLENGE QUIZZES (4 LEVELS) =================
+// ================= ACTIVITY 4: MIRROR MATCH =================
+const MIRROR_MATCH_ITEMS = [
+  {
+    id: 'waving_cat',
+    name: 'Waving Kitty 🐱',
+    hint: 'Look closely: which paw is raised high waving hello?',
+    feedback: 'Splendid! In the mirror, the raised left paw reflects over to the right side! 🐱✨',
+    svg: `
+      <svg viewBox="0 0 160 160" width="100%" height="100%">
+        <!-- Cat Body & Head -->
+        <path d="M 45,55 L 25,20 L 65,40 Z" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
+        <path d="M 115,55 L 135,20 L 95,40 Z" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
+        <ellipse cx="80" cy="75" rx="45" ry="38" fill="#FBBF24" stroke="#B45309" stroke-width="3"/>
+        <circle cx="65" cy="70" r="6" fill="#1E293B"/>
+        <circle cx="95" cy="70" r="6" fill="#1E293B"/>
+        <polygon points="80,80 75,76 85,76" fill="#EF4444"/>
+        <ellipse cx="80" cy="125" rx="38" ry="30" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
+        <!-- Waving paw on left side -->
+        <ellipse cx="28" cy="85" rx="14" ry="20" transform="rotate(-30 28 85)" fill="#FBBF24" stroke="#B45309" stroke-width="3"/>
+        <circle cx="24" cy="77" r="4" fill="#FB7185"/>
+        <!-- Resting paw on right side -->
+        <ellipse cx="120" cy="130" rx="12" ry="10" fill="#FBBF24" stroke="#B45309" stroke-width="3"/>
+      </svg>
+    `,
+    choices: [
+      { id: 'correct', transform: 'scaleX(-1)', isCorrect: true, tip: 'Horizontal mirror flip!' },
+      { id: 'unflipped', transform: 'none', isCorrect: false, tip: 'Trap! This is identical to the original; it did not flip across the mirror!' },
+      { id: 'upside_down', transform: 'scaleY(-1)', isCorrect: false, tip: 'Trap! This is flipped upside-down, not across the vertical mirror!' },
+      { id: 'rotated', transform: 'scale(-1, -1)', isCorrect: false, tip: 'Trap! This is flipped both ways (upside-down and backwards)!' }
+    ]
+  },
+  {
+    id: 'teapot',
+    name: 'Tea Pot 🫖',
+    hint: 'Look at the long spout on the left and the round handle on the right!',
+    feedback: 'Spot on! The spout pointing left reflects to point right in the mirror! 🫖✨',
+    svg: `
+      <svg viewBox="0 0 160 160" width="100%" height="100%">
+        <!-- Pot Body -->
+        <circle cx="85" cy="95" r="42" fill="#38BDF8" stroke="#0284C7" stroke-width="4"/>
+        <ellipse cx="85" cy="55" rx="24" ry="8" fill="#0284C7"/>
+        <circle cx="85" cy="46" r="6" fill="#FBBF24"/>
+        <!-- Spout on Left -->
+        <path d="M 45,95 Q 18,90 22,65 Q 32,65 52,82 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/>
+        <!-- Handle on Right -->
+        <path d="M 125,75 Q 155,95 125,115" fill="none" stroke="#0284C7" stroke-width="8" stroke-linecap="round"/>
+      </svg>
+    `,
+    choices: [
+      { id: 'unflipped', transform: 'none', isCorrect: false, tip: 'Trap! The spout is still on the left!' },
+      { id: 'correct', transform: 'scaleX(-1)', isCorrect: true, tip: 'Horizontal mirror flip!' },
+      { id: 'rotated', transform: 'scale(-1, -1)', isCorrect: false, tip: 'Trap! The teapot is upside down!' },
+      { id: 'upside_down', transform: 'scaleY(-1)', isCorrect: false, tip: 'Trap! Tea would spill everywhere upside down!' }
+    ]
+  },
+  {
+    id: 'arrow',
+    name: 'Turn Arrow ↗️',
+    hint: 'Look which way the arrow points: up and curving to the right!',
+    feedback: 'Fantastic! An arrow pointing right reflects to point left! ↖️✨',
+    svg: `
+      <svg viewBox="0 0 160 160" width="100%" height="100%">
+        <!-- Arrow pointing up and right -->
+        <path d="M 40,130 C 40,85 70,55 110,55" fill="none" stroke="#10B981" stroke-width="14" stroke-linecap="round"/>
+        <polygon points="125,55 95,35 100,75" fill="#10B981"/>
+      </svg>
+    `,
+    choices: [
+      { id: 'upside_down', transform: 'scaleY(-1)', isCorrect: false, tip: 'Trap! Arrow is pointing downwards!' },
+      { id: 'unflipped', transform: 'none', isCorrect: false, tip: 'Trap! Arrow is still pointing right!' },
+      { id: 'correct', transform: 'scaleX(-1)', isCorrect: true, tip: 'Horizontal mirror flip!' },
+      { id: 'rotated', transform: 'rotate(90deg)', isCorrect: false, tip: 'Trap! Arrow is rotated sideways!' }
+    ]
+  },
+  {
+    id: 'sailboat',
+    name: 'Ocean Sailboat ⛵',
+    hint: 'Look at the sail curving to the right and the red flag waving right!',
+    feedback: 'Super sailor! The sail and flag mirror from pointing right to pointing left! ⛵🌊',
+    svg: `
+      <svg viewBox="0 0 160 160" width="100%" height="100%">
+        <!-- Boat Hull -->
+        <path d="M 25,120 L 135,120 L 115,145 L 45,145 Z" fill="#D97706" stroke="#92400E" stroke-width="3"/>
+        <!-- Mast -->
+        <line x1="75" y1="35" x2="75" y2="120" stroke="#78350F" stroke-width="5"/>
+        <!-- Red Flag on Mast -->
+        <polygon points="75,35 105,42 75,50" fill="#EF4444"/>
+        <!-- Big Curved Sail to Right -->
+        <path d="M 80,48 Q 130,85 80,115 Z" fill="#F8FAFC" stroke="#64748B" stroke-width="3"/>
+      </svg>
+    `,
+    choices: [
+      { id: 'correct', transform: 'scaleX(-1)', isCorrect: true, tip: 'Horizontal mirror flip!' },
+      { id: 'rotated', transform: 'scale(-1, -1)', isCorrect: false, tip: 'Trap! Boat is floating upside down in the sky!' },
+      { id: 'unflipped', transform: 'none', isCorrect: false, tip: 'Trap! Did not flip across the mirror!' },
+      { id: 'upside_down', transform: 'scaleY(-1)', isCorrect: false, tip: 'Trap! Hull is in the air!' }
+    ]
+  },
+  {
+    id: 'letter_r',
+    name: 'Alphabet Letter R 🔤',
+    hint: 'Look at the straight vertical bar on the left, and the round loop on the right!',
+    feedback: 'Great eye! The round loop flips to the left side in the mirror reflection! 🔤',
+    svg: `
+      <svg viewBox="0 0 160 160" width="100%" height="100%">
+        <!-- Letter R -->
+        <path d="M 50,30 L 95,30 C 115,30 115,75 95,75 L 50,75 Z" fill="#6366F1" stroke="#3730A3" stroke-width="4"/>
+        <path d="M 80,75 L 115,130 L 90,130 L 60,80 Z" fill="#6366F1" stroke="#3730A3" stroke-width="4"/>
+        <rect x="42" y="30" width="22" height="100" rx="4" fill="#6366F1" stroke="#3730A3" stroke-width="4"/>
+        <circle cx="78" cy="52" r="10" fill="#FFFFFF"/>
+      </svg>
+    `,
+    choices: [
+      { id: 'unflipped', transform: 'none', isCorrect: false, tip: 'Trap! That is an unflipped letter R!' },
+      { id: 'upside_down', transform: 'scaleY(-1)', isCorrect: false, tip: 'Trap! The letter is upside down!' },
+      { id: 'correct', transform: 'scaleX(-1)', isCorrect: true, tip: 'Horizontal mirror flip!' },
+      { id: 'rotated', transform: 'scale(-1, -1)', isCorrect: false, tip: 'Trap! Flipped upside down and backwards!' }
+    ]
+  },
+  {
+    id: 'snail',
+    name: 'Garden Snail 🐌',
+    hint: 'Look at the spiral shell on the left and the head with eye tentacles facing right!',
+    feedback: 'Champion! The snail crawling right reflects to crawl left! 🐌🌱',
+    svg: `
+      <svg viewBox="0 0 160 160" width="100%" height="100%">
+        <!-- Foot / Body -->
+        <path d="M 25,130 C 50,130 90,130 135,130 C 145,130 148,110 135,100 C 125,90 120,105 110,115 C 80,120 40,125 25,130 Z" fill="#FBBF24" stroke="#B45309" stroke-width="3"/>
+        <!-- Antennae on right head -->
+        <line x1="130" y1="100" x2="142" y2="80" stroke="#B45309" stroke-width="3"/>
+        <circle cx="143" cy="78" r="4" fill="#EF4444"/>
+        <!-- Shell on left -->
+        <circle cx="70" cy="95" r="32" fill="#F97316" stroke="#C2410C" stroke-width="4"/>
+        <circle cx="70" cy="95" r="20" fill="#EA580C" stroke="#9A3412" stroke-width="3"/>
+        <circle cx="70" cy="95" r="8" fill="#FDE047"/>
+      </svg>
+    `,
+    choices: [
+      { id: 'rotated', transform: 'scale(-1, -1)', isCorrect: false, tip: 'Trap! The snail is sliding upside down!' },
+      { id: 'correct', transform: 'scaleX(-1)', isCorrect: true, tip: 'Horizontal mirror flip!' },
+      { id: 'unflipped', transform: 'none', isCorrect: false, tip: 'Trap! Still crawling to the right!' },
+      { id: 'upside_down', transform: 'scaleY(-1)', isCorrect: false, tip: 'Trap! Shell is at the bottom upside down!' }
+    ]
+  },
+  {
+    id: 'car',
+    name: 'Speedy Car 🚗',
+    hint: 'Look at the tall spoiler on the back left and the yellow headlights on the front right!',
+    feedback: 'Zoom zoom! The headlights mirror to shine to the left! 🚗💨',
+    svg: `
+      <svg viewBox="0 0 160 160" width="100%" height="100%">
+        <!-- Rear Spoiler on left -->
+        <rect x="25" y="70" width="8" height="25" fill="#EF4444"/>
+        <rect x="20" y="65" width="22" height="6" rx="2" fill="#B91C1C"/>
+        <!-- Car Body -->
+        <path d="M 30,95 L 50,65 L 105,65 L 135,95 L 140,115 L 25,115 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="3"/>
+        <!-- Windows -->
+        <polygon points="56,70 76,70 76,90 42,90" fill="#E0F2FE"/>
+        <polygon points="82,70 102,70 125,90 82,90" fill="#E0F2FE"/>
+        <!-- Headlight on front right -->
+        <ellipse cx="138" cy="100" rx="4" ry="7" fill="#FDE047"/>
+        <!-- Wheels -->
+        <circle cx="48" cy="120" r="14" fill="#1E293B"/>
+        <circle cx="48" cy="120" r="6" fill="#CBD5E1"/>
+        <circle cx="118" cy="120" r="14" fill="#1E293B"/>
+        <circle cx="118" cy="120" r="6" fill="#CBD5E1"/>
+      </svg>
+    `,
+    choices: [
+      { id: 'unflipped', transform: 'none', isCorrect: false, tip: 'Trap! Headlights are still shining right!' },
+      { id: 'upside_down', transform: 'scaleY(-1)', isCorrect: false, tip: 'Trap! Wheels are in the air!' },
+      { id: 'correct', transform: 'scaleX(-1)', isCorrect: true, tip: 'Horizontal mirror flip!' },
+      { id: 'rotated', transform: 'scale(-1, -1)', isCorrect: false, tip: 'Trap! Upside down car!' }
+    ]
+  },
+  {
+    id: 'hand_point',
+    name: 'Pointing Hand 👉',
+    hint: 'Look which way the index finger is pointing: to the right!',
+    feedback: 'Direct hit! The index finger mirrors across the line to point left! 👈✨',
+    svg: `
+      <svg viewBox="0 0 160 160" width="100%" height="100%">
+        <!-- Sleeve on left -->
+        <rect x="15" y="60" width="30" height="50" rx="4" fill="#4F46E5" stroke="#3730A3" stroke-width="3"/>
+        <!-- Fist Body -->
+        <ellipse cx="65" cy="85" rx="25" ry="22" fill="#FBBF24" stroke="#B45309" stroke-width="3"/>
+        <!-- Pointing Index Finger to Right -->
+        <rect x="75" y="70" width="55" height="15" rx="7" fill="#FBBF24" stroke="#B45309" stroke-width="3"/>
+        <!-- Thumb -->
+        <ellipse cx="60" cy="72" rx="10" ry="8" fill="#FBBF24" stroke="#B45309" stroke-width="2"/>
+      </svg>
+    `,
+    choices: [
+      { id: 'correct', transform: 'scaleX(-1)', isCorrect: true, tip: 'Horizontal mirror flip!' },
+      { id: 'rotated', transform: 'scale(-1, -1)', isCorrect: false, tip: 'Trap! Hand is flipped upside down!' },
+      { id: 'unflipped', transform: 'none', isCorrect: false, tip: 'Trap! Still pointing right!' },
+      { id: 'upside_down', transform: 'scaleY(-1)', isCorrect: false, tip: 'Trap! Pointing down!' }
+    ]
+  }
+];
+
+let matchRoundIndex = 0;
+let matchScore = 0;
+let matchStreak = 0;
+let matchAnswered = false;
+
+function initMirrorMatch() {
+  matchRoundIndex = 0;
+  matchScore = 0;
+  matchStreak = 0;
+  renderMirrorMatchRound();
+}
+
+function renderMirrorMatchRound() {
+  matchAnswered = false;
+  const item = MIRROR_MATCH_ITEMS[matchRoundIndex];
+
+  const roundEl = document.getElementById('matchRoundIndicator');
+  const streakEl = document.getElementById('matchStreakBadge');
+  const scoreEl = document.getElementById('matchScore');
+  const nameEl = document.getElementById('matchItemName');
+  const cardEl = document.getElementById('matchSourceCard');
+  const hintEl = document.getElementById('matchItemHint');
+  const choicesGrid = document.getElementById('matchChoicesGrid');
+  const feedback = document.getElementById('matchFeedbackBanner');
+  const nextBtn = document.getElementById('btnNextMatch');
+
+  if (roundEl) roundEl.textContent = `Challenge ${matchRoundIndex + 1} of ${MIRROR_MATCH_ITEMS.length}`;
+  if (streakEl) streakEl.textContent = `🔥 Streak: ${matchStreak}`;
+  if (scoreEl) scoreEl.textContent = matchScore;
+  if (nameEl) nameEl.textContent = item.name;
+  if (cardEl) cardEl.innerHTML = item.svg;
+  if (hintEl) hintEl.textContent = item.hint;
+  if (feedback) feedback.classList.add('hidden');
+  if (nextBtn) nextBtn.classList.add('hidden');
+
+  if (choicesGrid) {
+    choicesGrid.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+    item.choices.forEach((choice, idx) => {
+      const card = document.createElement('div');
+      card.className = 'match-choice-card';
+      card.innerHTML = `
+        <span class="choice-badge">${letters[idx]}</span>
+        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; transform: ${choice.transform};">
+          ${item.svg}
+        </div>
+      `;
+      card.onclick = () => onSelectMirrorChoice(choice, card);
+      choicesGrid.appendChild(card);
+    });
+  }
+}
+
+function onSelectMirrorChoice(choice, clickedCard) {
+  if (matchAnswered) return;
+
+  const item = MIRROR_MATCH_ITEMS[matchRoundIndex];
+  const allCards = document.querySelectorAll('#matchChoicesGrid .match-choice-card');
+  const feedback = document.getElementById('matchFeedbackBanner');
+  const nextBtn = document.getElementById('btnNextMatch');
+  const scoreEl = document.getElementById('matchScore');
+  const streakEl = document.getElementById('matchStreakBadge');
+
+  if (choice.isCorrect) {
+    matchAnswered = true;
+    sound.playChime();
+    clickedCard.classList.add('correct');
+    allCards.forEach(c => c.classList.add('locked'));
+
+    matchScore += 10;
+    matchStreak += 1;
+    if (scoreEl) scoreEl.textContent = matchScore;
+    if (streakEl) streakEl.textContent = `🔥 Streak: ${matchStreak}`;
+
+    if (matchStreak >= 3 || matchRoundIndex === MIRROR_MATCH_ITEMS.length - 1) {
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+      }
+    }
+
+    if (feedback) {
+      feedback.classList.remove('hidden');
+      feedback.className = 'match-feedback-banner correct';
+      feedback.innerHTML = `🎉 <strong>Correct Reflection!</strong> ${item.feedback}`;
+    }
+
+    if (nextBtn) {
+      const isLast = matchRoundIndex === MIRROR_MATCH_ITEMS.length - 1;
+      nextBtn.textContent = isLast ? 'Play Again 🔄' : 'Next Challenge ➡️';
+      nextBtn.classList.remove('hidden');
+    }
+  } else {
+    sound.playBuzz();
+    clickedCard.classList.add('wrong');
+    matchStreak = 0;
+    if (streakEl) streakEl.textContent = `🔥 Streak: 0`;
+
+    if (feedback) {
+      feedback.classList.remove('hidden');
+      feedback.className = 'match-feedback-banner wrong';
+      feedback.innerHTML = `❌ <strong>Not quite!</strong> ${choice.tip} Try another choice!`;
+    }
+  }
+}
+
+function nextMirrorMatchRound() {
+  sound.playPop();
+  matchRoundIndex = (matchRoundIndex + 1) % MIRROR_MATCH_ITEMS.length;
+  renderMirrorMatchRound();
+}
+
+// ================= ACTIVITY 5: SYMMETRY CHALLENGE QUIZZES (GRADE 2 FRIENDLY) =================
 const SYMM_QUIZ_LEVELS = [
   {
     id: 'basics',
-    title: 'Level 1: Symmetry Basics',
-    desc: 'Can these real-world objects fold into identical matching halves?',
+    title: 'Level 1: Is It Symmetrical?',
+    desc: 'Can these objects fold into matching twin halves?',
     icon: '🦋',
     questions: [
       {
         illustration: '🦋',
-        question: 'Does this butterfly have a vertical line of symmetry down its middle?',
-        options: ['Yes! Left and right wings match ✅', 'No, the wings are completely different ❌'],
+        question: 'Does this butterfly have matching left and right halves?',
+        options: ['Yes, both wings match! 🦋', 'No, they don\'t match ❌'],
         correct: 0,
-        feedback: 'Correct! Nature gave butterflies bilateral symmetry: the vertical fold line matches both wings!'
+        feedback: 'Correct! When folded down the middle, both butterfly wings match up perfectly!'
+      },
+      {
+        illustration: '☕',
+        question: 'Does a coffee mug with 1 handle have matching left and right halves?',
+        options: ['No, the handle is on one side only! ❌', 'Yes, both sides match'],
+        correct: 0,
+        feedback: 'Great eye! The handle sticks out on one side, so the halves do not match!'
       },
       {
         illustration: '❤️',
-        question: 'Does a love heart have a vertical line of symmetry?',
-        options: ['Yes! Left and right curves match ✅', 'No, it is not symmetrical'],
+        question: 'Can you fold a love heart down the center so both sides match?',
+        options: ['Yes! Both sides match! ❤️', 'No, they are different ❌'],
         correct: 0,
-        feedback: 'Spot on! Folding down the center dip to the bottom tip aligns both curved lobes!'
-      },
-      {
-        illustration: '🍃',
-        question: 'Does this oak leaf have a line of symmetry?',
-        options: ['Yes, it matches perfectly', 'No! Lobes and side veins are uneven ❌'],
-        correct: 1,
-        feedback: 'Great eye! Natural leaves have uneven curves and alternating veins, making them asymmetrical!'
+        feedback: 'Spot on! The left curved loop matches the right curved loop!'
       },
       {
         illustration: '🚀',
-        question: 'Does a space rocket have a vertical line of symmetry?',
-        options: ['Yes, left and right fins & body match ✅', 'No, rockets are asymmetrical'],
+        question: 'Does a space rocket have a vertical line of symmetry down the middle?',
+        options: ['Yes, left and right fins match! 🚀', 'No, rockets don\'t match ❌'],
         correct: 0,
-        feedback: 'Exactly! Rockets need symmetry so they fly straight up into space without spinning!'
+        feedback: 'Awesome! Both rocket fins match so the rocket flies straight up into space!'
       },
       {
         illustration: '📄',
-        question: 'What does "Symmetrical" mean?',
-        options: ['Both halves match in shape and size ✅', 'The shape has sharp 3D corners', 'One side is larger than the other', 'It is made of wood'],
+        question: 'What does "Symmetrical" mean in math?',
+        options: ['Both sides match when folded in half! ✨', 'The shape is made of wood', 'One side is bigger than the other'],
         correct: 0,
-        feedback: 'Perfect! "Symmetrical" means both halves match up point-for-point when folded!'
+        feedback: 'Perfect! Symmetrical means both halves match up like mirror twins!'
       }
     ]
   },
   {
-    id: 'shapes',
-    title: 'Level 2: Counting Symmetry Lines',
-    desc: 'Master the number of symmetry lines in 2D geometric shapes!',
-    icon: '🟦',
+    id: 'direction',
+    title: 'Level 2: Up-Down or Left-Right?',
+    desc: 'Find which direction the fold line goes: vertical or horizontal!',
+    icon: '↕️',
     questions: [
       {
-        illustration: '🟦',
-        question: 'How many lines of symmetry does a SQUARE have?',
-        options: ['4 Lines (1 vertical, 1 horizontal, 2 diagonals) ✅', '2 Lines only', '1 Line only', '8 Lines'],
+        illustration: '🥪',
+        question: 'Which way can you fold this sandwich so top bread matches bottom bread?',
+        options: ['Horizontal fold (Top to Bottom) ↔', 'Vertical fold (Left to Right) ↕'],
         correct: 0,
-        feedback: 'Champion! A square has 4 lines of symmetry: vertical, horizontal, and both corner-to-corner diagonals!'
+        feedback: 'Yum! Folding horizontally across the middle matches top crust to bottom crust!'
       },
       {
-        illustration: '🟨',
-        question: 'How many lines of symmetry does a RECTANGLE have?',
-        options: ['4 Lines', '2 Lines (vertical & horizontal) ✅', '1 Line', '0 Lines'],
-        correct: 1,
-        feedback: 'Brilliant! A rectangle has only 2 lines. Diagonal folds do NOT match because pointed corners stick out!'
+        illustration: '🪑',
+        question: 'Which way can you fold a wooden chair so both sides match?',
+        options: ['Vertical fold (Left to Right) ↕', 'Horizontal fold (Top to Bottom) ↔'],
+        correct: 0,
+        feedback: 'Correct! The left legs and right legs match across the center vertical line!'
       },
       {
-        illustration: '🔺',
-        question: 'An EQUILATERAL triangle has 3 equal sides. How many lines of symmetry does it have?',
-        options: ['3 Lines (one from each vertex) ✅', '1 Line only', '0 Lines', '6 Lines'],
+        illustration: '🛹',
+        question: 'Can a skateboard fold BOTH top-to-bottom and left-to-right?',
+        options: ['Yes! It has 2 lines of symmetry! 🛹', 'No, only 1 way', '0 ways'],
         correct: 0,
-        feedback: 'Super! An equilateral triangle has 3 lines of symmetry passing from each tip to the opposite midpoint!'
+        feedback: 'Champion! A skateboard matches both ways: across its length and across its width!'
       },
       {
-        illustration: '📐',
-        question: 'How many lines of symmetry does a SCALENE triangle (all sides different) have?',
-        options: ['0 Lines (No lines match!) ✅', '1 Line', '2 Lines', '3 Lines'],
+        illustration: '💎',
+        question: 'Can a diamond gem fold in more than one direction?',
+        options: ['Yes, it can fold across its corners and center! 💎', 'No, only one way'],
         correct: 0,
-        feedback: 'Correct! Scalene triangles have 0 lines of symmetry because all three sides are different lengths!'
+        feedback: 'Brilliant! A diamond has multiple lines of symmetry passing through opposite points!'
       },
       {
-        illustration: '⭕',
-        question: 'Which shape has INFINITE lines of symmetry?',
-        options: ['Circle ✅', 'Square', 'Rectangle', 'Hexagon'],
+        illustration: '🫖',
+        question: 'Can a teapot with a spout on one side and handle on the other fold to match?',
+        options: ['No, it does not match (Asymmetrical) ❌', 'Yes, any fold works'],
         correct: 0,
-        feedback: 'Hooray! Any straight line passing right through the center point of a circle divides it into twin halves!'
+        feedback: 'Sharp detective! The spout and handle are completely different, so it cannot fold to match!'
       }
     ]
   },
   {
     id: 'letters',
-    title: 'Level 3: Alphabet & Numbers',
-    desc: 'Discover which letters and numbers hide secret symmetry lines!',
+    title: 'Level 3: Letter & Number Fun',
+    desc: 'Discover secret symmetry in alphabet letters and numbers!',
     icon: '🅰️',
     questions: [
       {
         illustration: '🅰️',
-        question: 'Does the capital letter "A" have a line of symmetry?',
-        options: ['Yes, 1 Vertical line ↕ ✅', 'Yes, 1 Horizontal line ↔', 'No lines', '2 Lines'],
+        question: 'Can you fold the capital letter "A" down the middle to match?',
+        options: ['Yes, vertical fold down the middle! ↕', 'No, it cannot fold ❌'],
         correct: 0,
-        feedback: 'Correct! A vertical fold down the peak through the crossbar folds both legs together!'
+        feedback: 'Correct! A vertical line right down the peak folds both legs of "A" together!'
       },
       {
-        illustration: '🏨',
-        question: 'Does the capital letter "H" have BOTH vertical and horizontal symmetry?',
-        options: ['Yes! Both ↕ and ↔ work ✅', 'Only vertical', 'Only horizontal', 'No symmetry'],
+        illustration: '🅱️',
+        question: 'Which way can you fold the capital letter "B"?',
+        options: ['Horizontal fold across the middle! ↔', 'Vertical fold down the middle ↕'],
         correct: 0,
-        feedback: 'Superstar! Letter H can be folded vertically or horizontally across its center bar!'
-      },
-      {
-        illustration: '🇪',
-        question: 'What kind of symmetry does the capital letter "E" have?',
-        options: ['Horizontal line ↔ ✅', 'Vertical line ↕', 'Diagonal line ⤢', 'No symmetry'],
-        correct: 0,
-        feedback: 'Spot on! Fold top to bottom across the middle bar: both halves match!'
-      },
-      {
-        illustration: '8️⃣',
-        question: 'Does the digit "8" have lines of symmetry?',
-        options: ['Yes, both vertical and horizontal ✅', 'Only vertical', 'No symmetry', 'Only diagonal'],
-        correct: 0,
-        feedback: 'Great eye! The number 8 has two loops that reflect vertically and horizontally!'
+        feedback: 'Spot on! Fold top-to-bottom so the top loop covers the bottom loop!'
       },
       {
         illustration: '🔤',
-        question: 'Which of these letters has NO lines of symmetry?',
-        options: ['Letter F ❌', 'Letter M', 'Letter T', 'Letter Y'],
+        question: 'Can you fold the letter "F" into matching halves?',
+        options: ['No, letter "F" has no symmetry lines! ❌', 'Yes, it matches both ways'],
         correct: 0,
-        feedback: 'Exactly right! Letter F has bars on the right side only—neither fold will align!'
+        feedback: 'Great eye! The bars on "F" stick out on the right only, so neither fold will align!'
+      },
+      {
+        illustration: '8️⃣',
+        question: 'Does the number "8" have lines of symmetry?',
+        options: ['Yes, both top-to-bottom and left-to-right! ✨', 'No, zero lines'],
+        correct: 0,
+        feedback: 'Super! The two round loops reflect in both directions!'
+      },
+      {
+        illustration: 'Ⓜ️',
+        question: 'Which fold makes matching halves for the capital letter "M"?',
+        options: ['Vertical fold down the center! ↕', 'Horizontal fold across the middle ↔'],
+        correct: 0,
+        feedback: 'Champion! Left and right peaks of "M" fold together vertically!'
       }
     ]
   },
   {
-    id: 'nature',
-    title: 'Level 4: Real-World & Nature',
-    desc: 'Explore symmetry in animals, plants, and everyday real objects!',
+    id: 'shapes',
+    title: 'Level 4: Shape Detective',
+    desc: 'Count fold lines in basic shapes and mirror reflections!',
     icon: '⭐',
     questions: [
       {
-        illustration: '⭐',
-        question: 'A sea starfish has 5 equal arms. How many lines of symmetry does it have?',
-        options: ['5 Lines (one through each arm) ✅', '1 Line only', '0 Lines', '10 Lines'],
+        illustration: '🟦',
+        question: 'How many ways can you fold a square into matching halves?',
+        options: ['4 ways (Up-down, Left-right, and 2 Diagonals) ⭐', 'Only 1 way', '0 ways'],
         correct: 0,
-        feedback: 'Fantastic! A regular 5-arm starfish has 5 lines of symmetry cutting through each arm!'
+        feedback: 'You rock! A square can fold 4 different ways and always match!'
+      },
+      {
+        illustration: '⭕',
+        question: 'How many fold lines can you make on a round circle?',
+        options: ['Lots and lots (as many as you want!) ⭕', 'Only 1 line', 'Only 2 lines'],
+        correct: 0,
+        feedback: 'Amazing! Any straight line going through the center of a circle cuts it into matching halves!'
+      },
+      {
+        illustration: '🔺',
+        question: 'A triangle where all 3 sides are equal has how many fold lines?',
+        options: ['3 fold lines (one from each corner point) 🔺', '1 line only', '0 lines'],
+        correct: 0,
+        feedback: 'Correct! Each of the 3 corners can fold down to the opposite side!'
       },
       {
         illustration: '🛑',
-        question: 'A STOP sign has 8 equal sides (Octagon). How many lines of symmetry does a regular octagon have?',
-        options: ['8 Lines ✅', '4 Lines', '2 Lines', '1 Line'],
+        question: 'An 8-sided STOP sign has how many fold lines?',
+        options: ['8 fold lines! 🛑', 'Only 2 fold lines', '0 fold lines'],
         correct: 0,
-        feedback: 'Master level! Regular shapes have the same number of symmetry lines as their sides: 8 sides = 8 lines!'
-      },
-      {
-        illustration: '😊',
-        question: 'Why do human faces have vertical symmetry?',
-        options: ['Two eyes, two ears, and a center nose/mouth ✅', 'Faces are asymmetrical circles', 'Only one side of the face works', 'Faces have 4 symmetry lines'],
-        correct: 0,
-        feedback: 'Awesome! Human faces have bilateral symmetry across the center vertical line!'
-      },
-      {
-        illustration: '🐝',
-        question: 'Honeybee honeycomb cells are regular HEXAGONS. Why do bees use hexagons?',
-        options: ['Their 6-fold symmetry lets them fit together without any gaps ✅', 'Hexagons are round', 'Hexagons have 0 symmetry', 'Hexagons melt easily'],
-        correct: 0,
-        feedback: 'Genius! The 6-line symmetry of hexagons lets bees pack honeycombs perfectly with zero wasted space!'
+        feedback: 'Outstanding! An 8-sided regular shape has 8 lines of symmetry!'
       },
       {
         illustration: '🪞',
-        question: 'When you stand directly in front of a mirror, what is the line of symmetry?',
-        options: ['The mirror surface acting as the reflection line ✅', 'The ceiling above', 'Your left shoe', 'The wall behind you'],
+        question: 'When you wave your right hand in a mirror, which hand does your reflection wave?',
+        options: ['Left hand (it\'s a mirror reflection!) 🪞', 'Right foot', 'Both hands'],
         correct: 0,
-        feedback: 'Brilliant! The mirror acts as the reflection line, showing your mirror twin!'
+        feedback: 'Brilliant! Mirrors flip left and right—that\'s how reflection symmetry works!'
       }
     ]
   }
@@ -1753,6 +2158,8 @@ function bootSymmetryApp() {
   initFoldActivity();
   initDetectiveActivity();
   initPainterActivity();
+  initMirrorMatch();
+  renderSymmQuizLevelSelect();
 }
 
 if (document.readyState === 'loading') {

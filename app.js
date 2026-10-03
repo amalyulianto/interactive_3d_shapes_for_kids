@@ -281,58 +281,10 @@ const TextureBuilder = {
     ctx.stroke();
 
     return new THREE.CanvasTexture(canvas);
-  },
-
-  createDonutTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 1024;
-    const ctx = canvas.getContext('2d');
-
-    const gradDough = ctx.createLinearGradient(0, 0, 0, 1024);
-    gradDough.addColorStop(0, '#D97706');
-    gradDough.addColorStop(0.5, '#F59E0B');
-    gradDough.addColorStop(1, '#B45309');
-    ctx.fillStyle = gradDough;
-    ctx.fillRect(0, 0, 1024, 1024);
-
-    ctx.fillStyle = '#FB7185';
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(1024, 0);
-    ctx.lineTo(1024, 500);
-
-    for (let x = 1024; x >= 0; x -= 32) {
-      const wave = Math.sin((x / 1024) * Math.PI * 12) * 55 + Math.cos((x / 1024) * Math.PI * 6) * 30;
-      ctx.lineTo(x, 500 + wave);
-    }
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
-    ctx.fillRect(0, 40, 1024, 120);
-
-    const colors = ['#FBBF24', '#34D399', '#60A5FA', '#A855F7', '#FFFFFF', '#F43F5E'];
-    for (let i = 0; i < 90; i++) {
-      const sx = (i * 37) % 1024;
-      const sy = 80 + (i * 29) % 380;
-      const len = 22;
-      const rot = (i * 1.35);
-      ctx.save();
-      ctx.translate(sx, sy);
-      ctx.rotate(rot);
-      ctx.fillStyle = colors[i % colors.length];
-      ctx.beginPath();
-      ctx.rect(-4, -len / 2, 8, len);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    return new THREE.CanvasTexture(canvas);
   }
 };
 
-// 11 SHAPES DATABASE
+// 9 SHAPES DATABASE
 const SHAPES_DATA = [
   {
     id: 'cube',
@@ -989,94 +941,6 @@ const SHAPES_DATA = [
     }
   },
   {
-    id: 'torus',
-    name: 'Torus (Donut)',
-    icon: '🍩',
-    subtitle: 'A ring shape that looks like a delicious donut or swim tube',
-    color: 0xF43F5E,
-    faces: 1,
-    facesDesc: '1 Continuous Curved Ring',
-    edges: 0,
-    edgesDesc: '0 Edges',
-    vertices: 0,
-    verticesDesc: '0 Vertices',
-    examples: ['🍩 Glazed Donut', '🛟 Swimming Lifebuoy', '🥯 Bagel', '⭕ Rubber O-Ring'],
-    tip: 'A torus is special because it has a continuous hole right through the center!',
-    createGeom() {
-      return new THREE.TorusGeometry(1.4, 0.6, 24, 48);
-    },
-    createExplodedGroup(offset, mat) {
-      const group = new THREE.Group();
-      const torus = new THREE.Mesh(new THREE.TorusGeometry(1.4 + offset, 0.6, 24, 48), mat);
-      group.add(torus);
-      return group;
-    },
-    createRealMesh() {
-      const group = new THREE.Group();
-      const donutMat = new THREE.MeshStandardMaterial({
-        map: TextureBuilder.createDonutTexture(),
-        roughness: 0.35,
-        metalness: 0.05
-      });
-      const donut = new THREE.Mesh(new THREE.TorusGeometry(1.4, 0.58, 36, 72), donutMat);
-      donut.rotation.x = Math.PI / 2;
-      group.add(donut);
-
-      return group;
-    },
-    getVerticesCoords() {
-      return [];
-    }
-  },
-  {
-    id: 'hemisphere',
-    name: 'Hemisphere',
-    icon: '🥣',
-    subtitle: 'Exactly one half of a sphere with a flat circular bottom',
-    color: 0x06B6D4,
-    faces: 2,
-    facesDesc: '1 Flat Circle + 1 Curved Dome',
-    edges: 1,
-    edgesDesc: '1 Curved Edge',
-    vertices: 0,
-    verticesDesc: '0 Vertices',
-    examples: ['🥣 Soup Bowl', '🛖 Arctic Igloo', '🪖 Helmet', '🍋 Half-Cut Lemon'],
-    tip: 'If you slice an orange or sphere right down the middle, you get 2 hemispheres!',
-    createGeom() {
-      return new THREE.SphereGeometry(1.6, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2);
-    },
-    createExplodedGroup(offset, mat) {
-      const group = new THREE.Group();
-      const dome = new THREE.Mesh(new THREE.SphereGeometry(1.6, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2), mat);
-      dome.position.y = offset * 1.5;
-      group.add(dome);
-
-      const base = new THREE.Mesh(new THREE.CircleGeometry(1.6, 32), mat);
-      base.rotation.x = Math.PI / 2;
-      base.position.y = -offset * 1.5;
-      group.add(base);
-
-      return group;
-    },
-    createRealMesh() {
-      const group = new THREE.Group();
-      const snowMat = new THREE.MeshStandardMaterial({ color: 0xF1F5F9, roughness: 0.6 });
-      const igloo = new THREE.Mesh(new THREE.SphereGeometry(1.6, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2), snowMat);
-      group.add(igloo);
-
-      const tunnelMat = new THREE.MeshStandardMaterial({ color: 0xE2E8F0, roughness: 0.5 });
-      const tunnel = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 1.0, 16, 1, false, 0, Math.PI), tunnelMat);
-      tunnel.rotation.x = Math.PI / 2;
-      tunnel.position.set(0, 0, 1.6);
-      group.add(tunnel);
-
-      return group;
-    },
-    getVerticesCoords() {
-      return [];
-    }
-  },
-  {
     id: 'hexagonal_prism',
     name: 'Hexagonal Prism',
     icon: '✏️',
@@ -1168,97 +1032,6 @@ const SHAPES_DATA = [
         coords.push([x, -h, z]);
       }
       return coords;
-    }
-  },
-  {
-    id: 'octahedron',
-    name: 'Octahedron (Diamond Gem)',
-    icon: '💎',
-    subtitle: 'Has 8 triangular faces shaped like a sparkling gemstone',
-    color: 0x38BDF8,
-    faces: 8,
-    facesDesc: '8 Equilateral Triangles',
-    edges: 12,
-    edgesDesc: '12 Straight Edges',
-    vertices: 6,
-    verticesDesc: '6 Corner Vertices',
-    examples: ['💎 Cut Diamond', '✨ Fluorite Crystal', '🎲 8-Sided Game Die', '💠 Floating Polyhedron'],
-    tip: 'An octahedron looks like two square pyramids glued together at their bases!',
-    createGeom() {
-      return new THREE.OctahedronGeometry(1.8);
-    },
-    createExplodedGroup(offset, mat) {
-      const group = new THREE.Group();
-      const off = offset * 1.5;
-      const r = 1.8;
-
-      function makeTriangle(p0, p1, p2) {
-        const geom = new THREE.BufferGeometry();
-        const pos = new Float32Array([
-          p0[0], p0[1], p0[2],
-          p1[0], p1[1], p1[2],
-          p2[0], p2[1], p2[2]
-        ]);
-        geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-        geom.computeVertexNormals();
-        return new THREE.Mesh(geom, mat);
-      }
-
-      // 8 octants: (+-1, +-1, +-1)
-      const signs = [
-        [1, 1, 1], [-1, 1, 1], [-1, 1, -1], [1, 1, -1],
-        [1, -1, 1], [-1, -1, 1], [-1, -1, -1], [1, -1, -1]
-      ];
-
-      const invSqrt3 = 1 / Math.sqrt(3);
-
-      signs.forEach(([sx, sy, sz]) => {
-        const p1 = [sx * r, 0, 0];
-        const p2 = [0, sy * r, 0];
-        const p3 = [0, 0, sz * r];
-
-        // Ensure proper winding order
-        const tri = sy > 0 ? makeTriangle(p1, p2, p3) : makeTriangle(p1, p3, p2);
-
-        const nx = sx * invSqrt3;
-        const ny = sy * invSqrt3;
-        const nz = sz * invSqrt3;
-
-        tri.position.set(nx * off, ny * off, nz * off);
-        group.add(tri);
-      });
-
-      return group;
-    },
-    createRealMesh() {
-      const group = new THREE.Group();
-      const gemMat = new THREE.MeshPhysicalMaterial({
-        color: 0x7DD3FC,
-        transmission: 0.85,
-        opacity: 0.95,
-        transparent: true,
-        roughness: 0.05,
-        metalness: 0.1,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.05,
-        ior: 2.4
-      });
-      const gem = new THREE.Mesh(new THREE.OctahedronGeometry(1.8), gemMat);
-      group.add(gem);
-
-      const coreMat = new THREE.MeshBasicMaterial({ color: 0xE0F2FE, wireframe: true });
-      const core = new THREE.Mesh(new THREE.OctahedronGeometry(1.78), coreMat);
-      group.add(core);
-
-      return group;
-    },
-    getVerticesCoords() {
-      const s = 1.8;
-      return [
-        [0, s, 0], [0, -s, 0],
-        [s, 0, 0], [-s, 0, 0],
-        [0, 0, s], [0, 0, -s]
-      ];
     }
   }
 ];
@@ -1695,11 +1468,11 @@ const QUIZ_LEVELS = {
         hint: 'It has 1 circular base and 1 pointy vertex.'
       },
       {
-        text: 'Which 3D shape looks like a delicious glazed donut with a hole?',
-        visual: '🍩',
-        options: ['Torus (Donut)', 'Octahedron', 'Hemisphere', 'Hexagonal Prism'],
+        text: 'Which 3D shape has 6 identical square faces like a playing die?',
+        visual: '🎲',
+        options: ['Cube', 'Sphere', 'Cone', 'Cylinder'],
         answer: 0,
-        hint: 'A torus is a ring shape with a hole right in the center!'
+        hint: 'A cube has 6 equal square faces!'
       }
     ]
   },
@@ -1735,11 +1508,11 @@ const QUIZ_LEVELS = {
         hint: '1 square base + 4 triangular walls = 5 faces.'
       },
       {
-        text: 'How many triangular faces are there on an OCTAHEDRON?',
-        visual: '💎',
-        options: ['6 Triangles', '8 Triangles', '10 Triangles', '12 Triangles'],
+        text: 'How many corner points (vertices) does a CONE have?',
+        visual: '🍦',
+        options: ['0 Vertices', '1 Vertex', '4 Vertices', '8 Vertices'],
         answer: 1,
-        hint: '"Octa" means 8! It has 8 sparkling triangular faces.'
+        hint: 'A cone has 1 sharp vertex point at the very top!'
       }
     ]
   },
@@ -1749,7 +1522,7 @@ const QUIZ_LEVELS = {
       {
         text: 'A juice carton and a brick are real-world examples of which shape?',
         visual: '🧃',
-        options: ['Rectangular Prism (Cuboid)', 'Sphere', 'Cone', 'Torus'],
+        options: ['Rectangular Prism (Cuboid)', 'Sphere', 'Cone', 'Cube'],
         answer: 0,
         hint: 'They have 6 rectangular sides.'
       },
@@ -1763,16 +1536,16 @@ const QUIZ_LEVELS = {
       {
         text: 'A classic wooden pencil has 6 long flat sides. What shape is it?',
         visual: '✏️',
-        options: ['Hexagonal Prism', 'Sphere', 'Octahedron', 'Cone'],
+        options: ['Hexagonal Prism', 'Sphere', 'Triangular Prism', 'Cone'],
         answer: 0,
         hint: 'Hexagon has 6 sides to keep the pencil from rolling off desks!'
       },
       {
-        text: 'An arctic snow igloo or a soup bowl is shaped like a...?',
-        visual: '🛖',
-        options: ['Hemisphere', 'Cylinder', 'Cube', 'Pyramid'],
+        text: 'A rolling soccer ball or basketball is an example of which shape?',
+        visual: '⚽',
+        options: ['Sphere', 'Cylinder', 'Cube', 'Cone'],
         answer: 0,
-        hint: 'A hemisphere is exactly one half of a sphere.'
+        hint: 'A sphere is completely round and can roll in every direction!'
       },
       {
         text: 'The Ancient Egyptian Pyramids in Giza are examples of which solid?',
@@ -1796,14 +1569,14 @@ const QUIZ_LEVELS = {
       {
         text: '"I have 2 flat circles and 1 curved body. Stand me up and I stay still, push me on my side and I roll. Who am I?"',
         visual: '🥫',
-        options: ['Cube', 'Cylinder', 'Pyramid', 'Torus'],
+        options: ['Cube', 'Cylinder', 'Pyramid', 'Cone'],
         answer: 1,
         hint: 'A soup can or drinking glass.'
       },
       {
         text: '"All 6 of my faces are squares of the exact same size. Who am I?"',
         visual: '🎲',
-        options: ['Cube', 'Cuboid', 'Hemisphere', 'Octahedron'],
+        options: ['Cube', 'Cuboid', 'Cylinder', 'Cone'],
         answer: 0,
         hint: 'Roll me in a board game to get lucky numbers!'
       },
@@ -1815,11 +1588,11 @@ const QUIZ_LEVELS = {
         hint: 'Waffle cones hold ice cream deliciously.'
       },
       {
-        text: '"Slice me in half and I make two bowls. Who was I originally?"',
-        visual: '🍊',
+        text: '"I am round like a marble and have no corners at all. Who am I?"',
+        visual: '🔮',
         options: ['Sphere', 'Cube', 'Cone', 'Cylinder'],
         answer: 0,
-        hint: 'A sphere sliced in half becomes two hemispheres!'
+        hint: 'A sphere has no corners and rolls smoothly!'
       }
     ]
   }
@@ -1980,11 +1753,8 @@ const SORTER_GAMES = {
       { id: 'cube', name: 'Cube', icon: '🎲', bin: 'stack', hint: 'With 6 flat square faces, cubes stack perfectly without rolling!' },
       { id: 'cone', name: 'Cone', icon: '🍦', bin: 'both', hint: 'Rolls in circles on its side, and stands on its flat circular base!' },
       { id: 'cuboid', name: 'Rectangular Prism', icon: '🧱', bin: 'stack', hint: 'Flat rectangle faces make great stacks like bricks!' },
-      { id: 'torus', name: 'Torus (Donut)', icon: '🍩', bin: 'roll', hint: 'Continuous curved ring rolls easily like a tire!' },
       { id: 'tri_prism', name: 'Triangular Prism', icon: '⛺', bin: 'stack', hint: 'Flat triangles and rectangles slide and stack!' },
-      { id: 'hemisphere', name: 'Hemisphere', icon: '🥣', bin: 'both', hint: 'Rolls on its rounded dome, slides on its flat circular base!' },
       { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'stack', hint: '4 flat triangular faces slide and stack firmly!' },
-      { id: 'octahedron', name: 'Octahedron', icon: '💎', bin: 'stack', hint: 'All 8 flat triangular facets can slide or rest flat!' },
       { id: 'drum', name: 'Snare Drum', icon: '🥁', bin: 'both', hint: 'Rolls on its round side and stacks on flat drum heads!' },
       { id: 'juice', name: 'Juice Carton', icon: '🧃', bin: 'stack', hint: 'Flat rectangular box faces stack neatly on grocery shelves!' },
       { id: 'bball', name: 'Basketball', icon: '🏀', bin: 'roll', hint: 'A spherical ball rolls freely in every direction!' },
@@ -2007,8 +1777,6 @@ const SORTER_GAMES = {
       { id: 'cone', name: 'Cone', icon: '🍦', bin: 'circle', hint: 'Has 1 flat circular base at the bottom!' },
       { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'triangle', hint: 'All 4 faces are flat triangles!' },
       { id: 'cuboid', name: 'Rectangular Prism', icon: '🧃', bin: 'rect_square', hint: 'Has 6 flat rectangular faces!' },
-      { id: 'octahedron', name: 'Octahedron', icon: '💎', bin: 'triangle', hint: 'All 8 faces are equilateral triangles!' },
-      { id: 'hemisphere', name: 'Hemisphere', icon: '🥣', bin: 'circle', hint: 'Its flat base is a circle!' },
       { id: 'tent', name: 'Camping Tent', icon: '⛺', bin: 'triangle', hint: 'Its entrance and back doors are triangular faces!' },
       { id: 'cereal', name: 'Cereal Box', icon: '🥣', bin: 'rect_square', hint: 'All 6 sides are flat rectangles!' },
       { id: 'drum', name: 'Snare Drum', icon: '🥁', bin: 'circle', hint: 'Top and bottom drum skins are flat circles!' },
@@ -2031,14 +1799,10 @@ const SORTER_GAMES = {
       { id: 'cone', name: 'Cone', icon: '🎉', bin: 'pointy', hint: 'The pointy tip at the top is a vertex!' },
       { id: 'cylinder', name: 'Cylinder', icon: '🥫', bin: 'smooth', hint: 'Has 2 curved edges, but zero sharp corners!' },
       { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'pointy', hint: 'Has 4 sharp corner vertices!' },
-      { id: 'torus', name: 'Torus (Donut)', icon: '🍩', bin: 'smooth', hint: 'Completely smooth ring with zero corners!' },
       { id: 'square_pyr', name: 'Square Pyramid', icon: '🏛️', bin: 'pointy', hint: '4 base corners + 1 apex = 5 vertices!' },
-      { id: 'hemisphere', name: 'Hemisphere', icon: '🥣', bin: 'smooth', hint: '1 circular edge, but zero corner points!' },
       { id: 'tri_prism', name: 'Triangular Prism', icon: '⛺', bin: 'pointy', hint: 'Has 6 sharp corner vertices (3 at each end)!' },
       { id: 'hex_prism', name: 'Hexagonal Prism', icon: '✏️', bin: 'pointy', hint: 'Has 12 corner vertices (6 top + 6 bottom)!' },
-      { id: 'octahedron', name: 'Octahedron', icon: '💎', bin: 'pointy', hint: 'Has 6 sharp corner vertices!' },
       { id: 'globe', name: 'Earth Globe', icon: '🌍', bin: 'smooth', hint: 'Completely spherical with zero sharp corners!' },
-      { id: 'lifebuoy', name: 'Swim Lifebuoy', icon: '🛟', bin: 'smooth', hint: 'Torus ring shape with zero vertices!' },
       { id: 'orange', name: 'Fresh Orange', icon: '🍊', bin: 'smooth', hint: 'Round sphere fruit with zero corners!' }
     ]
   },

@@ -24,8 +24,9 @@
 
     <!-- Lesson Switcher between 3D Shapes & Symmetry -->
     <div class="lesson-switcher">
+      <a href="index.html" class="lesson-chip home" title="Back to All Lessons">← See all lessons</a>
       <span class="lesson-label">Lesson:</span>
-      <a href="index.html" class="lesson-chip link" title="Go to Lesson 1: 3D Shapes">📐 3D Shapes</a>
+      <a href="shapes.html" class="lesson-chip link" title="Go to Lesson 1: 3D Shapes">📐 3D Shapes</a>
       <span class="lesson-chip active" title="Current Lesson">🪞 Symmetry</span>
     </div>
 
@@ -39,6 +40,9 @@
         </button>
         <button id="tabPainter" class="tab-btn" onclick="switchSymmetryMode('painter')">
           <span class="tab-icon">🎨</span> Mirror Painter
+        </button>
+        <button id="tabMatch" class="tab-btn" onclick="switchSymmetryMode('match')">
+          <span class="tab-icon">🪞</span> Mirror Match
         </button>
         <button id="tabQuiz" class="tab-btn" onclick="switchSymmetryMode('quiz')">
           <span class="tab-icon">🏆</span> Symmetry Quiz
@@ -323,7 +327,74 @@
       </div>
     </section>
 
-    <!-- ACTIVITY 4: SYMMETRY CHALLENGE QUIZ -->
+    <!-- ACTIVITY 4: MIRROR MATCH -->
+    <section id="matchView" class="view-panel">
+      <div class="match-stage-container">
+        <!-- Top HUD info -->
+        <div class="match-hud-bar">
+          <div class="match-status-left">
+            <span class="hud-pill-tag">🪞 Mirror Match</span>
+            <span class="match-round-text" id="matchRoundIndicator">Challenge 1 of 8</span>
+          </div>
+          <div class="match-status-right">
+            <span class="match-streak-badge" id="matchStreakBadge">🔥 Streak: 0</span>
+            <span class="quiz-score-badge">⭐ Score: <span id="matchScore">0</span></span>
+          </div>
+        </div>
+
+        <!-- Prompt Question Banner -->
+        <div class="match-prompt-banner">
+          <span class="prompt-icon">🔍</span>
+          <span id="matchPromptText">Look at the original item on the left. Pick its TRUE mirror reflection across the glowing line!</span>
+        </div>
+
+        <!-- Main Mirror Arena: Left (Original) + Center (Mirror Line) + Right (Choices Area) -->
+        <div class="mirror-arena">
+          <!-- Left side: Source Object -->
+          <div class="mirror-source-wrapper">
+            <div class="mirror-box-header">
+              <span class="box-tag">Original Object</span>
+              <h3 id="matchItemName" class="mirror-item-title">Item</h3>
+            </div>
+            <div class="mirror-object-card" id="matchSourceCard">
+              <!-- SVG / Visual inserted dynamically -->
+            </div>
+            <p id="matchItemHint" class="mirror-clue-text">Look carefully at which side the features face!</p>
+          </div>
+
+          <!-- Glowing Center Mirror Divider -->
+          <div class="center-mirror-divider">
+            <div class="mirror-glass-line"></div>
+            <span class="mirror-badge-label">🪞 MIRROR LINE 🪞</span>
+          </div>
+
+          <!-- Right side: Choices Section -->
+          <div class="mirror-choices-wrapper">
+            <div class="mirror-box-header">
+              <span class="box-tag">Pick The True Reflection</span>
+              <span class="helper-subtext">Click 1 of 4 choices:</span>
+            </div>
+
+            <!-- 4 Choice Cards Grid -->
+            <div class="match-choices-grid" id="matchChoicesGrid">
+              <!-- Dynamically generated choice cards A, B, C, D -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback Banner -->
+        <div id="matchFeedbackBanner" class="match-feedback-banner hidden"></div>
+
+        <!-- Navigation Row -->
+        <div class="match-footer-row">
+          <button id="btnNextMatch" class="btn-next-question hidden" onclick="nextMirrorMatchRound()">
+            Next Challenge ➡️
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVITY 5: SYMMETRY CHALLENGE QUIZ -->
     <section id="quizView" class="view-panel">
       <div class="quiz-container">
         

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Solid Shapes Adventure - Alapakadala Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Three.js and OrbitControls via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Canvas Confetti for Celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <!-- Header / Navigation (Slides down on hover) -->
+  <header class="main-header">
+    <div class="brand">
+      <div class="brand-logo">✨📐</div>
+      <div class="brand-text">
+        <h1>3D Solid Shapes Adventure</h1>
+        <span class="studio-badge">By Alapakadala Studio</span>
+      </div>
+    </div>
+
+    <div class="lesson-switcher">
+      <a href="index.html" class="lesson-chip home" title="Back to All Lessons">← See all lessons</a>
+      <span class="lesson-label">Lesson:</span>
+      <span class="lesson-chip active">📐 3D Shapes</span>
+      <a href="symmetry.html" class="lesson-chip link" title="Go to Lesson 2: Symmetry">🪞 Symmetry ➔</a>
+    </div>
+    
+    <div class="nav-controls">
+      <nav class="mode-tabs">
+        <button id="tabExplorer" class="tab-btn active" onclick="switchMode('explorer')">
+          <span class="tab-icon">🎮</span> 3D Explorer
+        </button>
+        <button id="tabSorter" class="tab-btn" onclick="switchMode('sorter')">
+          <span class="tab-icon">🗂️</span> Sorting Lab
+        </button>
+        <button id="tabQuiz" class="tab-btn" onclick="switchMode('quiz')">
+          <span class="tab-icon">🏆</span> Shape Quizzes
+        </button>
+      </nav>
+      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Main App Shell -->
+  <main class="app-container" id="appContainer">
+    <!-- MODE 1: 3D EXPLORER (HERO VIEW) -->
+    <section id="explorerView" class="view-panel active">
+      
+      <!-- Shape Selector Carousel (9 Shapes) -->
+      <div class="shapes-shelf-wrapper">
+        <div class="shapes-shelf" id="shapesShelf">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Main Stage Layout -->
+      <div class="stage-container" id="stageContainer">
+        <!-- 3D Arena Card with dedicated bottom toolbar -->
+        <div class="canvas-wrapper" id="canvasWrapper">
+          
+          <!-- 3D Viewport Area (100% Unobstructed) -->
+          <div class="canvas-viewport" id="canvasViewport">
+            <canvas id="webglCanvas"></canvas>
+            
+            <!-- Top Canvas Quick Controls -->
+            <div class="canvas-top-bar">
+              <!-- Display Mode Toggle -->
+              <div class="display-mode-switch">
+                <button id="modeGeomBtn" class="mode-pill-btn active" onclick="setShapeDisplayMode('geom')">
+                  🔷 Geometry
+                </button>
+                <button id="modeRealBtn" class="mode-pill-btn" onclick="setShapeDisplayMode('real')">
+                  🌍 Real World Object
+                </button>
+              </div>
+
+              <!-- Viewport Size / Theater Toggle -->
+              <button id="btnTheaterMode" class="hud-btn" title="Toggle Theater / Wide Mode" onclick="toggleTheaterMode()">
+                <span id="theaterBtnIcon">⛶</span> <span class="hud-btn-label">Wide Stage</span>
+              </button>
+            </div>
+
+            <!-- Explode / Separate Faces Slider (Top Left Corner) -->
+            <div class="canvas-slider-card" id="explodeSliderCard">
+              <div class="slider-title-row">
+                <span class="slider-title">💥 Explode Faces:</span>
+                <span class="slider-val" id="explodeValText">0%</span>
+              </div>
+              <input type="range" id="explodeRange" min="0" max="100" value="0" step="1" oninput="onExplodeSlider(this.value)">
+            </div>
+
+            <!-- Color Customization Stack (Top Right Corner) -->
+            <div class="canvas-right-stack">
+              <!-- 1. Paint Shape Color Palette -->
+              <div class="canvas-palette-card" id="colorPalette">
+                <span class="palette-label">🎨 Paint:</span>
+                <div class="color-dots" id="colorDots">
+                  <span class="color-dot active" style="background:#6366F1;" onclick="setCustomColor(0x6366F1, this)" title="Indigo"></span>
+                  <span class="color-dot" style="background:#EC4899;" onclick="setCustomColor(0xEC4899, this)" title="Pink"></span>
+                  <span class="color-dot" style="background:#10B981;" onclick="setCustomColor(0x10B981, this)" title="Emerald"></span>
+                  <span class="color-dot" style="background:#F59E0B;" onclick="setCustomColor(0xF59E0B, this)" title="Amber"></span>
+                  <span class="color-dot" style="background:#06B6D4;" onclick="setCustomColor(0x06B6D4, this)" title="Cyan"></span>
+                  <span class="color-dot" style="background:#8B5CF6;" onclick="setCustomColor(0x8B5CF6, this)" title="Purple"></span>
+                  <span class="color-dot" style="background:#F43F5E;" onclick="setCustomColor(0xF43F5E, this)" title="Rose"></span>
+                </div>
+              </div>
+
+              <!-- 2. Background Color Picker (Below Painter) -->
+              <div class="canvas-palette-card" id="bgPalette" title="Change Background Color">
+                <span class="palette-label">🌄 BG:</span>
+                <div class="color-dots" id="bgDots">
+                  <span class="bg-swatch active" style="background:#F8FAFC;" onclick="setCanvasBg('#F8FAFC', this)" title="Soft Light"></span>
+                  <span class="bg-swatch" style="background:#FFFFFF;" onclick="setCanvasBg('#FFFFFF', this)" title="Studio White"></span>
+                  <span class="bg-swatch" style="background:#134E4A;" onclick="setCanvasBg('#134E4A', this)" title="Classroom Board"></span>
+                  <span class="bg-swatch" style="background:#0F172A;" onclick="setCanvasBg('#0F172A', this)" title="Dark Slate"></span>
+                  <span class="bg-swatch" style="background:#FEF3C7;" onclick="setCanvasBg('#FEF3C7', this)" title="Warm Paper"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Drag Hint -->
+            <div class="drag-hint">
+              <span>👆 Drag to rotate 3D • Scroll to zoom</span>
+            </div>
+          </div>
+
+          <!-- Dedicated Bottom Toolbar Strip (Completely outside the 3D viewport) -->
+          <div class="canvas-bottom-bar">
+            <!-- Auto Rotate Toggle -->
+            <button id="btnAutoRotate" class="bar-btn" title="Toggle Auto-Spin" onclick="toggleAutoRotate()">
+              <span class="bar-btn-icon">🔄</span>
+              <span class="bar-btn-label">Spin: <b id="autoRotateStatus">OFF</b></span>
+            </button>
+
+            <!-- Reset Camera -->
+            <button id="btnResetView" class="bar-btn" title="Center View" onclick="resetCamera()">
+              <span class="bar-btn-icon">🎯</span>
+              <span class="bar-btn-label">Center</span>
+            </button>
+
+            <!-- Toggle Base / Floor Grid -->
+            <button id="btnToggleGrid" class="bar-btn active" title="Show/Hide Base Grid" onclick="toggleFloorGrid()">
+              <span class="bar-btn-icon">🏁</span>
+              <span class="bar-btn-label">Base Grid: <b id="gridStatus">ON</b></span>
+            </button>
+
+            <!-- Highlight Edges -->
+            <button id="btnHighlightEdges" class="bar-btn" title="Highlight Edges" onclick="toggleHighlightEdges()">
+              <span class="bar-btn-icon">📏</span>
+              <span class="bar-btn-label">Edges</span>
+            </button>
+
+            <!-- Highlight Vertices (Updated from Corners) -->
+            <button id="btnHighlightVertices" class="bar-btn" title="Highlight Vertices" onclick="toggleHighlightVertices()">
+              <span class="bar-btn-icon">🔴</span>
+              <span class="bar-btn-label">Vertices</span>
+            </button>
+
+            <!-- Clean X-Ray Mode -->
+            <button id="btnCleanXRay" class="bar-btn" title="Clean X-Ray View" onclick="toggleCleanXRay()">
+              <span class="bar-btn-icon">🦴</span>
+              <span class="bar-btn-label">Clean X-Ray</span>
+            </button>
+
+            <!-- Full Wireframe Mesh -->
+            <button id="btnWireframeMesh" class="bar-btn" title="Full Polygon Wireframe Mesh" onclick="toggleWireframeMesh()">
+              <span class="bar-btn-icon">🕸️</span>
+              <span class="bar-btn-label">Mesh Wires</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Math Properties & Details Sidebar -->
+        <aside class="shape-details-panel" id="detailsPanel">
+          <div class="panel-header">
+            <div class="shape-badge-icon" id="shapeIcon">🎲</div>
+            <div>
+              <h2 id="shapeName">Cube</h2>
+              <p class="shape-subtitle" id="shapeSubtitle">A 3D solid with 6 equal square faces</p>
+            </div>
+          </div>
+
+          <!-- Elementary Math Properties Card (Faces, Edges, Vertices) -->
+          <div class="properties-grid">
+            <div class="prop-card face-card" onclick="flashHighlight('faces')">
+              <div class="prop-icon">🟦</div>
+              <div class="prop-info">
+                <span class="prop-label">Faces</span>
+                <span class="prop-number" id="propFaces">6</span>
+                <span class="prop-desc" id="propFacesDesc">Flat surfaces</span>
+              </div>
+            </div>
+
+            <div class="prop-card edge-card" onclick="flashHighlight('edges')">
+              <div class="prop-icon">📏</div>
+              <div class="prop-info">
+                <span class="prop-label">Edges</span>
+                <span class="prop-number" id="propEdges">12</span>
+                <span class="prop-desc" id="propEdgesDesc">Straight border lines</span>
+              </div>
+            </div>
+
+            <div class="prop-card vert-card" onclick="flashHighlight('vertices')">
+              <div class="prop-icon">🔴</div>
+              <div class="prop-info">
+                <span class="prop-label">Vertices</span>
+                <span class="prop-number" id="propVertices">8</span>
+                <span class="prop-desc" id="propVerticesDesc">Corner points</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real World Examples List -->
+          <div class="real-examples-card">
+            <h3>🏠 Everyday Real-World Examples:</h3>
+            <div class="examples-list" id="examplesList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Kid-Friendly Tip -->
+          <div class="fun-tip-box" id="funTipBox">
+            <span class="tip-bulb">💡</span>
+            <span class="tip-text" id="funTipText">Playing dice and Rubik's cubes are perfect cubes!</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- MODE 2: THEMED 5-QUESTION QUIZZES -->
+    <section id="quizView" class="view-panel">
+      <div class="quiz-container">
+        
+        <!-- Quiz Level Selection Hub -->
+        <div id="quizLevelSelect" class="quiz-card text-center">
+          <div class="quiz-hero-icon">🏆 ⭐ 🎈</div>
+          <h2>Grade 2 Math Challenge Quizzes</h2>
+          <p>Choose a quiz challenge below! Each quiz has 5 bite-sized questions with instant stars and confetti.</p>
+          
+          <div class="quiz-selection-grid">
+            <div class="quiz-level-card" onclick="startQuizWithLevel(1)">
+              <div class="level-icon">🔰</div>
+              <h3>Quiz 1: Shape Explorer</h3>
+              <p>Recognize and name common 3D solid shapes.</p>
+              <span class="level-badge">5 Questions • Beginner</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startQuizWithLevel(2)">
+              <div class="level-icon">🕵️‍♂️</div>
+              <h3>Quiz 2: Property Detective</h3>
+              <p>Count faces, edges, and vertices like a pro detective.</p>
+              <span class="level-badge">5 Questions • Counting</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startQuizWithLevel(3)">
+              <div class="level-icon">🏠</div>
+              <h3>Quiz 3: Real-World Matcher</h3>
+              <p>Match everyday things to their geometric 3D shapes.</p>
+              <span class="level-badge">5 Questions • Visual</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startQuizWithLevel(4)">
+              <div class="level-icon">🧩</div>
+              <h3>Quiz 4: "Who Am I?" Riddles</h3>
+              <p>Read shape riddle clues to guess the secret solid shape.</p>
+              <span class="level-badge">5 Questions • Mystery</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Quiz Question Screen -->
+        <div id="quizActiveCard" class="quiz-card hidden">
+          <div class="quiz-header-status">
+            <div class="quiz-level-indicator" id="quizLevelTitle">Quiz 1: Shape Explorer</div>
+            <div class="quiz-header-right">
+              <span class="quiz-progress-text">Question <span id="currentQuestionNum">1</span> / 5</span>
+              <span class="quiz-score-badge">⭐ Score: <span id="liveScore">0</span></span>
+            </div>
+          </div>
+
+          <div class="quiz-progress-bar">
+            <div id="quizProgressFill" class="progress-fill" style="width: 20%;"></div>
+          </div>
+
+          <div class="quiz-question-body">
+            <div class="question-illustration" id="questionVisual">🎲</div>
+            <h3 id="questionText">Question goes here...</h3>
+          </div>
+
+          <div class="quiz-options-grid" id="quizOptions">
+            <!-- Options dynamically added -->
+          </div>
+
+          <div id="quizFeedback" class="quiz-feedback hidden"></div>
+
+          <div class="quiz-nav-row">
+            <button id="btnNextQuestion" class="btn-next-question hidden" onclick="onNextQuizQuestion()">
+              Next Question ➡️
+            </button>
+          </div>
+        </div>
+
+        <!-- Quiz Completion Screen -->
+        <div id="quizEndCard" class="quiz-card text-center hidden">
+          <div class="trophy-bounce" id="quizEndTrophy">🏆</div>
+          <h2 id="quizEndTitle">Awesome Job, Shape Champion!</h2>
+          <p id="quizEndMessage">You finished all 5 questions with flying colors.</p>
+          
+          <div class="final-score-box">
+            <div class="stars-row" id="finalStars">⭐⭐⭐⭐⭐</div>
+            <div class="score-display">Score: <span id="finalScoreVal">100</span> / 100</div>
+          </div>
+
+          <div class="quiz-actions-row">
+            <button class="primary-big-btn" onclick="retryCurrentQuiz()">
+              Play This Quiz Again 🔄
+            </button>
+            <button class="secondary-big-btn" onclick="returnToQuizSelect()">
+              Pick Another Quiz 📋
+            </button>
+            <button class="secondary-big-btn" onclick="switchMode('explorer')">
+              Back to 3D Explorer 🎮
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MODE 3: SHAPE SORTER LAB -->
+    <section id="sorterView" class="view-panel">
+      <div class="sorter-container">
+        
+        <!-- Sorter Game Selection Screen -->
+        <div id="sorterLevelSelect" class="quiz-card text-center">
+          <div class="quiz-hero-icon">🗂️ 🧺 ✨</div>
+          <h2>Shape Sorter Lab</h2>
+          <p>Choose a sorting game below! Drag or tap the objects to classify them into the correct baskets.</p>
+          
+          <div class="quiz-selection-grid">
+            <div class="quiz-level-card" onclick="startSorterGame(1)">
+              <div class="level-icon">🎳</div>
+              <h3>Game 1: Can It Roll or Stack?</h3>
+              <p>Sort shapes by motion: Rolling (curved) vs. Stacking & Sliding (flat) vs. Both.</p>
+              <span class="level-badge">Grade 2 Essential • Motion</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startSorterGame(2)">
+              <div class="level-icon">🔺</div>
+              <h3>Game 2: Face Shape Matcher</h3>
+              <p>Sort shapes by the shape of their flat faces (Triangles, Squares/Rectangles, Circles).</p>
+              <span class="level-badge">Face Geometry • 3 Baskets</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startSorterGame(3)">
+              <div class="level-icon">📌</div>
+              <h3>Game 3: Pointy vs. Smooth</h3>
+              <p>Identify which solids have sharp corner vertices and which have zero vertices.</p>
+              <span class="level-badge">Vertex Detective • 2 Baskets</span>
+            </div>
+
+            <div class="quiz-level-card" onclick="startSorterGame(4)">
+              <div class="level-icon">🥫</div>
+              <h3>Game 4: Real-World Sorter</h3>
+              <p>Match everyday things (dice, soda can, party hat, basketball) to their 3D shape baskets.</p>
+              <span class="level-badge">Everyday Items • 4 Baskets</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Sorting Game Screen -->
+        <div id="sorterActiveScreen" class="quiz-card hidden">
+          <div class="sorter-header-bar">
+            <div class="sorter-header-left">
+              <button class="sorter-back-btn" onclick="returnToSorterSelect()" title="Back to Game List">
+                ⬅️ All Games
+              </button>
+              <h3 id="sorterGameTitle">Game 1: Can It Roll or Stack?</h3>
+            </div>
+            <div class="sorter-header-right">
+              <span class="sorter-counter">Sorted: <span id="sorterSortedCount">0</span> / <span id="sorterTotalCount">6</span></span>
+              <span class="quiz-score-badge">⭐ Score: <span id="sorterScore">0</span></span>
+            </div>
+          </div>
+
+          <div class="sorter-instruction-banner" id="sorterInstructions">
+            💡 Drag an item into a basket, or <strong>tap an item</strong> then <strong>tap a basket</strong>!
+          </div>
+
+          <!-- Drop Bins Row -->
+          <div class="sorter-bins-container" id="sorterBinsContainer">
+            <!-- Dynamically generated baskets -->
+          </div>
+
+          <!-- Unsorted Items Pool -->
+          <div class="sorter-pool-wrapper">
+            <div class="pool-header-row">
+              <h4 class="pool-title">📦 Items to Sort:</h4>
+              <span class="pool-tip-text">Tap or drag cards below:</span>
+            </div>
+            <div class="sorter-pool" id="sorterPool">
+              <!-- Dynamically generated draggable/tappable items -->
+            </div>
+          </div>
+
+          <div id="sorterFeedback" class="quiz-feedback hidden"></div>
+        </div>
+
+        <!-- Sorter Game Completion Screen -->
+        <div id="sorterEndScreen" class="quiz-card text-center hidden">
+          <div class="trophy-bounce">🎉 🏆</div>
+          <h2 id="sorterEndTitle">Outstanding Sorting!</h2>
+          <p id="sorterEndMessage">You successfully categorized all the shapes!</p>
+
+          <div class="final-score-box">
+            <div class="stars-row" id="sorterFinalStars">⭐⭐⭐⭐⭐</div>
+            <div class="score-display">Final Score: <span id="sorterFinalScore">100</span> Points</div>
+          </div>
+
+          <div class="quiz-actions-row">
+            <button class="primary-big-btn" onclick="retryCurrentSorter()">
+              Play Again 🔄
+            </button>
+            <button class="secondary-big-btn" onclick="returnToSorterSelect()">
+              Choose Another Game 🗂️
+            </button>
+            <button class="secondary-big-btn" onclick="switchMode('explorer')">
+              Back to 3D Explorer 🎮
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer with Studio Attribution (Below the fold) -->
+  <footer class="main-footer">
+    <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary School 3D Geometry Learning</p>
+    <p class="copyright">© 2026 Alapakadala Studio • Making Math Engaging & Interactive!</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
