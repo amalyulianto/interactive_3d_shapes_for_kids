@@ -27,6 +27,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
   background: var(--bg-gradient);
@@ -34,7 +38,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
 }
 
 /* Global Utility */
@@ -157,6 +160,8 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .mode-tabs {
@@ -165,6 +170,22 @@ body {
   padding: 4px;
   border-radius: var(--radius-pill);
   gap: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+
+.mode-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.mode-tabs::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
 }
 
 .tab-btn {
@@ -182,6 +203,7 @@ body {
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tab-btn.active {
@@ -1803,6 +1825,20 @@ input[type="range"] {
 
   .brand-text h1 {
     font-size: 1.05rem;
+  }
+
+  .nav-controls {
+    width: 100%;
+    order: 3;
+    justify-content: space-between;
+  }
+
+  .mode-tabs {
+    flex: 1 1 auto;
+  }
+
+  .icon-toggle-btn {
+    flex-shrink: 0;
   }
 
   .tab-btn {

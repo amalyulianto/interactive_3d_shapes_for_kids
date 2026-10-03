@@ -1417,6 +1417,27 @@ function toggleTheaterMode() {
   setTimeout(onWindowResize, 60);
 }
 
+// Color & BG Palette (Expand / Collapse)
+let isPaletteCollapsed = false;
+
+function toggleColorPalette() {
+  sound.playPop();
+  isPaletteCollapsed = !isPaletteCollapsed;
+  const panel = document.getElementById('paletteContentPanel');
+  const btn = document.getElementById('btnTogglePalette');
+  const arrow = document.getElementById('paletteToggleArrow');
+
+  if (panel) {
+    panel.classList.toggle('collapsed', isPaletteCollapsed);
+  }
+  if (btn) {
+    btn.classList.toggle('active', !isPaletteCollapsed);
+  }
+  if (arrow) {
+    arrow.textContent = isPaletteCollapsed ? '▸' : '▾';
+  }
+}
+
 // Auto Rotate
 function toggleAutoRotate() {
   sound.playPop();

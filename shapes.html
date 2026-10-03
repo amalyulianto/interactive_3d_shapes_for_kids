@@ -99,30 +99,38 @@
             </div>
 
             <!-- Color Customization Stack (Top Right Corner) -->
-            <div class="canvas-right-stack">
-              <!-- 1. Paint Shape Color Palette -->
-              <div class="canvas-palette-card" id="colorPalette">
-                <span class="palette-label">🎨 Paint:</span>
-                <div class="color-dots" id="colorDots">
-                  <span class="color-dot active" style="background:#6366F1;" onclick="setCustomColor(0x6366F1, this)" title="Indigo"></span>
-                  <span class="color-dot" style="background:#EC4899;" onclick="setCustomColor(0xEC4899, this)" title="Pink"></span>
-                  <span class="color-dot" style="background:#10B981;" onclick="setCustomColor(0x10B981, this)" title="Emerald"></span>
-                  <span class="color-dot" style="background:#F59E0B;" onclick="setCustomColor(0xF59E0B, this)" title="Amber"></span>
-                  <span class="color-dot" style="background:#06B6D4;" onclick="setCustomColor(0x06B6D4, this)" title="Cyan"></span>
-                  <span class="color-dot" style="background:#8B5CF6;" onclick="setCustomColor(0x8B5CF6, this)" title="Purple"></span>
-                  <span class="color-dot" style="background:#F43F5E;" onclick="setCustomColor(0xF43F5E, this)" title="Rose"></span>
-                </div>
-              </div>
+            <div class="canvas-right-stack" id="canvasRightStack">
+              <button class="palette-toggle-btn" id="btnTogglePalette" onclick="toggleColorPalette()" title="Expand or Collapse Colors">
+                <span class="palette-toggle-icon">🎨</span>
+                <span class="palette-toggle-label">Colors</span>
+                <span class="palette-toggle-arrow" id="paletteToggleArrow">▾</span>
+              </button>
 
-              <!-- 2. Background Color Picker (Below Painter) -->
-              <div class="canvas-palette-card" id="bgPalette" title="Change Background Color">
-                <span class="palette-label">🌄 BG:</span>
-                <div class="color-dots" id="bgDots">
-                  <span class="bg-swatch active" style="background:#F8FAFC;" onclick="setCanvasBg('#F8FAFC', this)" title="Soft Light"></span>
-                  <span class="bg-swatch" style="background:#FFFFFF;" onclick="setCanvasBg('#FFFFFF', this)" title="Studio White"></span>
-                  <span class="bg-swatch" style="background:#134E4A;" onclick="setCanvasBg('#134E4A', this)" title="Classroom Board"></span>
-                  <span class="bg-swatch" style="background:#0F172A;" onclick="setCanvasBg('#0F172A', this)" title="Dark Slate"></span>
-                  <span class="bg-swatch" style="background:#FEF3C7;" onclick="setCanvasBg('#FEF3C7', this)" title="Warm Paper"></span>
+              <div class="palette-content-panel" id="paletteContentPanel">
+                <!-- 1. Paint Shape Color Palette -->
+                <div class="canvas-palette-card" id="colorPalette">
+                  <span class="palette-label">🎨 Paint:</span>
+                  <div class="color-dots" id="colorDots">
+                    <span class="color-dot active" style="background:#6366F1;" onclick="setCustomColor(0x6366F1, this)" title="Indigo"></span>
+                    <span class="color-dot" style="background:#EC4899;" onclick="setCustomColor(0xEC4899, this)" title="Pink"></span>
+                    <span class="color-dot" style="background:#10B981;" onclick="setCustomColor(0x10B981, this)" title="Emerald"></span>
+                    <span class="color-dot" style="background:#F59E0B;" onclick="setCustomColor(0xF59E0B, this)" title="Amber"></span>
+                    <span class="color-dot" style="background:#06B6D4;" onclick="setCustomColor(0x06B6D4, this)" title="Cyan"></span>
+                    <span class="color-dot" style="background:#8B5CF6;" onclick="setCustomColor(0x8B5CF6, this)" title="Purple"></span>
+                    <span class="color-dot" style="background:#F43F5E;" onclick="setCustomColor(0xF43F5E, this)" title="Rose"></span>
+                  </div>
+                </div>
+
+                <!-- 2. Background Color Picker (Below Painter) -->
+                <div class="canvas-palette-card" id="bgPalette" title="Change Background Color">
+                  <span class="palette-label">🌄 BG:</span>
+                  <div class="color-dots" id="bgDots">
+                    <span class="bg-swatch active" style="background:#F8FAFC;" onclick="setCanvasBg('#F8FAFC', this)" title="Soft Light"></span>
+                    <span class="bg-swatch" style="background:#FFFFFF;" onclick="setCanvasBg('#FFFFFF', this)" title="Studio White"></span>
+                    <span class="bg-swatch" style="background:#134E4A;" onclick="setCanvasBg('#134E4A', this)" title="Classroom Board"></span>
+                    <span class="bg-swatch" style="background:#0F172A;" onclick="setCanvasBg('#0F172A', this)" title="Dark Slate"></span>
+                    <span class="bg-swatch" style="background:#FEF3C7;" onclick="setCanvasBg('#FEF3C7', this)" title="Warm Paper"></span>
+                  </div>
                 </div>
               </div>
             </div>

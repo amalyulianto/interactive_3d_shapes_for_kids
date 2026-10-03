@@ -510,8 +510,50 @@ input[type="range"] {
   right: 14px;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 6px;
   z-index: 10;
+}
+
+.palette-toggle-btn {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 2px solid #CBD5E1;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.palette-toggle-btn:hover {
+  background: #EEF2FF;
+  border-color: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.palette-toggle-arrow {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.palette-content-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.palette-content-panel.collapsed {
+  display: none;
 }
 
 .canvas-palette-card {
@@ -1644,6 +1686,11 @@ input[type="range"] {
     grid-template-columns: 1fr;
     gap: 14px;
   }
+
+  /* Wide Stage is redundant when layout is stacked single column */
+  #btnTheaterMode {
+    display: none !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1787,6 +1834,12 @@ input[type="range"] {
   .canvas-right-stack {
     top: 46px;
     right: 8px;
+    gap: 4px;
+  }
+
+  .palette-toggle-btn {
+    padding: 3px 8px;
+    font-size: 0.72rem;
     gap: 4px;
   }
 
