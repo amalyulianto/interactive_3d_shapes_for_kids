@@ -1418,7 +1418,7 @@ function toggleTheaterMode() {
 }
 
 // Color & BG Palette (Expand / Collapse)
-let isPaletteCollapsed = false;
+let isPaletteCollapsed = true;
 
 function toggleColorPalette() {
   sound.playPop();
