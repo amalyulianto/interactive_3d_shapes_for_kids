@@ -2146,7 +2146,7 @@ const QUIZ_LEVELS = {
         visualId: 'triangular_prism',
         options: ['Triangular Prism', 'Square Pyramid', 'Triangular Pyramid', 'Cube'],
         answer: 0,
-        hint: 'A classic camping tent and a Toblerone chocolate bar are triangular prisms!'
+        hint: 'A classic camping tent is a great example of a triangular prism!'
       }
     ]
   },
@@ -2554,15 +2554,8 @@ const SORTER_GAMES = {
     ],
     items: [
       { id: 'tent_p', name: 'Camping Tent', icon: '⛺', bin: 'tri_prism', hint: 'Triangular ends with rectangular floor and roof!' },
-      { id: 'roof_p', name: 'House Roof', icon: '🏠', bin: 'tri_prism', hint: 'Triangular prism shape lets rain glide off!' },
-      { id: 'toblerone_p', name: 'Toblerone Chocolate', icon: '🍫', bin: 'tri_prism', hint: 'Famous Swiss triangular prism chocolate bar!' },
-      { id: 'cheese_p', name: 'Cheese Wedge', icon: '🧀', bin: 'tri_prism', hint: 'Wedge of cheese is a triangular prism!' },
       { id: 'giza_p', name: 'Great Pyramid of Giza', icon: '🏜️', bin: 'square_pyr', hint: 'Wide square base with 4 triangular faces!' },
-      { id: 'teepee_p', name: 'Teepee Tent', icon: '🛖', bin: 'square_pyr', hint: 'Pyramid tent with 4 triangular walls!' },
-      { id: 'lantern_p', name: 'Lantern Cover', icon: '🏮', bin: 'square_pyr', hint: 'Square base pyramid lantern!' },
       { id: 'teabag_p', name: 'Pyramid Tea Bag', icon: '🍵', bin: 'tri_pyr', hint: 'Has 4 equilateral triangle sides—a true tetrahedron!' },
-      { id: 'pyraminx_p', name: 'Pyraminx Puzzle', icon: '🔺', bin: 'tri_pyr', hint: 'Triangle puzzle pyramid with 4 triangular faces!' },
-      { id: 'die4_p', name: '4-Sided Die', icon: '🎲', bin: 'tri_pyr', hint: 'Tetrahedral 4-sided gaming die!' },
       { id: 'pencil_p', name: 'Wooden Pencil', icon: '✏️', bin: 'hex_prism', hint: 'Has 2 hexagon ends and 6 rectangular sides!' },
       { id: 'hexnut_p', name: 'Hex Nut / Bolt', icon: '🔩', bin: 'hex_prism', hint: '6-sided hexagonal prism metal nut!' },
       { id: 'honeycomb_p', name: 'Honeycomb Cell', icon: '🍯', bin: 'hex_prism', hint: 'Bee honeycombs are hexagonal prisms!' }

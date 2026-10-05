@@ -315,7 +315,12 @@
         <!-- Active Quiz Question Screen -->
         <div id="quizActiveCard" class="quiz-card hidden">
           <div class="quiz-header-status">
-            <div class="quiz-level-indicator" id="quizLevelTitle">Quiz 1: Shape Explorer</div>
+            <div class="quiz-header-left">
+              <button class="sorter-back-btn" onclick="returnToQuizSelect()" title="Back to Quiz List">
+                ⬅️ All Quizzes
+              </button>
+              <div class="quiz-level-indicator" id="quizLevelTitle">Quiz 1: Shape Explorer</div>
+            </div>
             <div class="quiz-header-right">
               <span class="quiz-progress-text">Question <span id="currentQuestionNum">1</span> / 5</span>
               <span class="quiz-score-badge">⭐ Score: <span id="liveScore">0</span></span>

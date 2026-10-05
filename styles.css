@@ -1044,6 +1044,12 @@ input[type="range"] {
   gap: 8px;
 }
 
+.quiz-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .quiz-level-indicator {
   font-weight: 800;
   font-size: 1.15rem;
