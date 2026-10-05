@@ -231,3 +231,6 @@ When modifying, extending, or maintaining this codebase, adhere strictly to the 
    - Keep geometric equations and data arrays in `*-data.js`.
    - Keep audio synthesizer in `sound.js`.
    - Keep DOM coordinators in `*-main.js`.
+6. **Strict Two-Tier Navigation Hierarchy**:
+   - From lesson-level pages (`shapes.html`, `symmetry.html`), back navigation must route to the grade's lesson list page (`index.html#grade-2`), NOT to the root grade selection screen.
+   - From the grade's lesson list page (`#lessonsView` in `index.html`), provide explicit back navigation to the grades selection screen (`#gradesView` / `showGradesView()`).
