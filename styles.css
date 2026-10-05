@@ -1094,12 +1094,20 @@ input[type="range"] {
 .question-illustration {
   font-size: 3.8rem;
   margin-bottom: 12px;
-  display: inline-block;
-  padding: 12px 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
   background: #F8FAFC;
   border: 3px solid #E2E8F0;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
+  min-height: 96px;
+}
+
+.question-illustration svg {
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
 }
 
 .quiz-question-body h3 {
@@ -1399,10 +1407,15 @@ input[type="range"] {
   grid-template-columns: repeat(2, 1fr);
 }
 
+.sorter-bins-container.bins-5 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
 @media (max-width: 768px) {
   .sorter-bins-container.bins-2,
   .sorter-bins-container.bins-3,
-  .sorter-bins-container.bins-4 {
+  .sorter-bins-container.bins-4,
+  .sorter-bins-container.bins-5 {
     grid-template-columns: 1fr;
   }
 }
@@ -1522,9 +1535,16 @@ input[type="range"] {
 }
 
 .sorted-chip .chip-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 2.2rem;
   line-height: 1.1;
   margin-bottom: 2px;
+}
+
+.sorted-chip .chip-emoji svg {
+  display: block;
 }
 
 .sorted-chip .chip-name-sub {
@@ -1640,11 +1660,29 @@ input[type="range"] {
 }
 
 .item-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 3.4rem;
   line-height: 1;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.12));
   transition: transform 0.2s ease;
   pointer-events: none;
+}
+
+.item-visual svg {
+  display: block;
+}
+
+.feedback-mini-icon {
+  display: inline-flex;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+.feedback-mini-icon svg {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .item-name {

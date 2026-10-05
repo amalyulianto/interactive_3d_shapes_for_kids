@@ -1553,45 +1553,600 @@ function switchMode(mode) {
   }
 }
 
+// ================= HIGH-QUALITY 3D VECTOR SVG LIBRARY =================
+// Returns dedicated, geometrically accurate 3D vector SVG illustrations
+// for all 9 solids and real-world objects (replacing inaccurate system emojis).
+function getShapeOrObjectSvg(rawId, size = 52) {
+  if (!rawId) return '';
+
+  const idMap = {
+    // Emojis to IDs
+    '🎲': 'dice', '⚽': 'soccer', '🥫': 'soda', '🎉': 'partyhat', '⛺': 'tent',
+    '🧱': 'brick', '🏛️': 'square_pyramid', '🔺': 'triangular_pyramid', '🧃': 'juice',
+    '🚧': 'traffic_cone', '✏️': 'pencil', '🧩': 'rubiks', '🏜️': 'giza', '🍵': 'teabag',
+    '🍦': 'waffle_cone', '🏀': 'bball', '🔮': 'marble', '🥁': 'drum', '🍊': 'orange',
+    '🔲': 'flat_only', '🔵': 'curved_only', '🔄': 'both_surfaces', '✨': 'pointy',
+    '🌊': 'smooth', '🌀': 'roll', '🧊': 'icecube', '🎁': 'giftbox', '📚': 'book',
+    '🧽': 'eraser', '🧻': 'roll_paper', '🔋': 'battery', '🌍': 'globe', '🏠': 'roof',
+    '🍫': 'toblerone', '🧀': 'cheese', '🛖': 'teepee', '🏮': 'lantern', '🔩': 'hexnut',
+    '🍯': 'honeycomb',
+
+    // Sorter / Quiz item aliases
+    'cube_item': 'dice', 'dice_v': 'dice', 'dice_rw': 'dice',
+    'rubiks_item': 'rubiks', 'rubiks_v': 'rubiks', 'rubiks_rw': 'rubiks',
+    'icecube_rw': 'icecube', 'giftbox_rw': 'giftbox',
+    'juice_item': 'juice', 'juice_v': 'juice', 'juice_rw': 'juice',
+    'brick_item': 'brick', 'brick_v': 'brick', 'brick_rw': 'brick',
+    'book_rw': 'book', 'eraser_rw': 'eraser',
+    'soda_item': 'soda', 'soda_v': 'soda', 'soda_rw': 'soda',
+    'drum_item': 'drum', 'drum_v': 'drum', 'drum_rw': 'drum',
+    'roll_rw': 'roll_paper', 'battery_rw': 'battery',
+    'traffic_item': 'traffic_cone', 'cone_v': 'traffic_cone', 'traffic_rw': 'traffic_cone',
+    'hat_item': 'partyhat', 'hat_v': 'partyhat', 'partyhat_rw': 'partyhat',
+    'waffle_item': 'waffle_cone', 'waffle_rw': 'waffle_cone',
+    'soccer_item': 'soccer', 'soccer_v': 'soccer', 'soccer_rw': 'soccer',
+    'bball_v': 'bball', 'bball_rw': 'bball',
+    'orange_item': 'orange', 'orange_v': 'orange', 'orange_rw': 'orange',
+    'globe_rw': 'globe',
+    'tent_item': 'tent', 'tent_v': 'tent', 'tent_p': 'tent',
+    'roof_p': 'roof', 'toblerone_p': 'toblerone', 'cheese_p': 'cheese',
+    'giza_item': 'giza', 'giza_v': 'giza', 'giza_p': 'giza',
+    'teepee_p': 'teepee', 'lantern_p': 'lantern',
+    'teabag_item': 'teabag', 'tea_v': 'teabag', 'teabag_p': 'teabag',
+    'pyraminx_p': 'pyraminx', 'die4_p': 'die4',
+    'pencil_item': 'pencil', 'pencil_v': 'pencil', 'pencil_p': 'pencil',
+    'hexnut_p': 'hexnut', 'honeycomb_p': 'honeycomb',
+
+    // Basket category aliases
+    'tri_prism': 'triangular_prism',
+    'square_pyr': 'square_pyramid',
+    'tri_pyr': 'triangular_pyramid',
+    'hex_prism': 'hexagonal_prism'
+  };
+
+  const key = idMap[rawId] || rawId;
+
+  // Header template
+  const svgOpen = `<svg viewBox="0 0 64 64" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" style="display:block;">`;
+  const svgClose = `</svg>`;
+
+  switch (key) {
+    // ---- 9 SOLIDS (FROM 3D EXPLORER) ----
+    case 'cube':
+      return `${svgOpen}
+        <polygon points="32,8 54,20 32,32 10,20" fill="#818CF8" stroke="#312E81" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="10,20 32,32 32,56 10,44" fill="#6366F1" stroke="#312E81" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,32 54,20 54,44 32,56" fill="#4338CA" stroke="#312E81" stroke-width="1.5" stroke-linejoin="round"/>
+      ${svgClose}`;
+
+    case 'cuboid':
+      return `${svgOpen}
+        <polygon points="26,10 56,18 38,26 8,18" fill="#F472B6" stroke="#831843" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="8,18 38,26 38,56 8,48" fill="#EC4899" stroke="#831843" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="38,26 56,18 56,48 38,56" fill="#BE185D" stroke="#831843" stroke-width="1.5" stroke-linejoin="round"/>
+      ${svgClose}`;
+
+    case 'cylinder':
+      return `${svgOpen}
+        <path d="M14,18 L14,46 C14,52 22,56 32,56 C42,56 50,52 50,46 L50,18 Z" fill="#10B981" stroke="#047857" stroke-width="1.5"/>
+        <path d="M14,18 C14,24 22,27 32,27 C42,27 50,24 50,18" fill="#059669" opacity="0.3"/>
+        <ellipse cx="32" cy="18" rx="18" ry="7.5" fill="#34D399" stroke="#047857" stroke-width="1.5"/>
+        <path d="M14,46 C14,52 22,56 32,56 C42,56 50,52 50,46" fill="none" stroke="#047857" stroke-width="1.5"/>
+      ${svgClose}`;
+
+    case 'cone':
+      return `${svgOpen}
+        <path d="M12,48 L32,10 L52,48 C52,54.5 43,58 32,58 C21,58 12,54.5 12,48 Z" fill="#F59E0B" stroke="#B45309" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M32,10 L52,48 C52,54.5 43,58 32,58 Z" fill="#D97706" opacity="0.4"/>
+        <ellipse cx="32" cy="48" rx="20" ry="7" fill="none" stroke="#B45309" stroke-width="1.2" stroke-dasharray="3 2"/>
+      ${svgClose}`;
+
+    case 'sphere':
+      return `${svgOpen}
+        <ellipse cx="32" cy="56" rx="18" ry="4" fill="rgba(15,23,42,0.18)"/>
+        <circle cx="32" cy="31" r="23" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1.5"/>
+        <circle cx="36" cy="35" r="17" fill="#1D4ED8" opacity="0.35"/>
+        <circle cx="40" cy="39" r="11" fill="#1E3A8A" opacity="0.3"/>
+        <ellipse cx="24" cy="22" rx="7" ry="4" fill="#FFFFFF" opacity="0.75" transform="rotate(-30 24 22)"/>
+        <circle cx="21" cy="20" r="2.5" fill="#FFFFFF" opacity="0.9"/>
+      ${svgClose}`;
+
+    case 'triangular_prism':
+      return `${svgOpen}
+        <polygon points="10,48 26,18 42,48" fill="#C084FC" stroke="#581C87" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="26,18 56,24 56,52 42,48" fill="#8B5CF6" stroke="#581C87" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="16,45 26,24 36,45" fill="#E9D5FF" opacity="0.4"/>
+      ${svgClose}`;
+
+    case 'square_pyramid':
+      return `${svgOpen}
+        <polygon points="32,10 8,46 32,54" fill="#2DD4BF" stroke="#042F2E" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,10 32,54 56,46" fill="#0D9488" stroke="#042F2E" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="8" y1="46" x2="32" y2="54" stroke="#115E59" stroke-width="2"/>
+        <line x1="32" y1="54" x2="56" y2="46" stroke="#042F2E" stroke-width="2"/>
+      ${svgClose}`;
+
+    case 'triangular_pyramid':
+      return `${svgOpen}
+        <polygon points="12,46 34,54 54,42" fill="#BE123C" opacity="0.4"/>
+        <polygon points="32,10 12,46 34,54" fill="#F472B6" stroke="#4C0519" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,10 34,54 54,42" fill="#E11D48" stroke="#4C0519" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="32" y1="10" x2="34" y2="54" stroke="#4C0519" stroke-width="1.5"/>
+      ${svgClose}`;
+
+    case 'hexagonal_prism':
+      return `${svgOpen}
+        <polygon points="32,10 48,15 48,25 32,30 16,25 16,15" fill="#FEF08A" stroke="#713F12" stroke-width="1.3" stroke-linejoin="round"/>
+        <polygon points="16,25 32,30 32,54 16,49" fill="#EAB308" stroke="#713F12" stroke-width="1.3" stroke-linejoin="round"/>
+        <polygon points="32,30 48,25 48,49 32,54" fill="#CA8A04" stroke="#713F12" stroke-width="1.3" stroke-linejoin="round"/>
+      ${svgClose}`;
+
+    // ---- REAL-WORLD OBJECTS (ACCURATE 3D GEOMETRY) ----
+    case 'traffic_cone':
+      return `${svgOpen}
+        <polygon points="8,52 32,58 56,52 32,46" fill="#1E293B" stroke="#0F172A" stroke-width="1.5"/>
+        <polygon points="20,50 30,12 34,12 44,50" fill="#EA580C" stroke="#C2410C" stroke-width="1.2"/>
+        <polygon points="32,12 34,12 44,50 32,51" fill="#C2410C" opacity="0.3"/>
+        <polygon points="26,24 38,24 39,30 25,30" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="0.8"/>
+        <polygon points="23,37 41,37 43,44 21,44" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="0.8"/>
+      ${svgClose}`;
+
+    case 'rubiks':
+      return `${svgOpen}
+        <polygon points="32,7 55,19 32,31 9,19" fill="#0F172A"/>
+        <polygon points="9,19 32,31 32,57 9,45" fill="#0F172A"/>
+        <polygon points="32,31 55,19 55,45 32,57" fill="#0F172A"/>
+        <polygon points="32,9 38,12 32,15 26,12" fill="#F8FAFC"/>
+        <polygon points="39,12.5 45,15.5 39,18.5 33,15.5" fill="#FEF08A"/>
+        <polygon points="46,16 52,19 46,22 40,19" fill="#F8FAFC"/>
+        <polygon points="25,12.5 31,15.5 25,18.5 19,15.5" fill="#FEF08A"/>
+        <polygon points="32,16 38,19 32,22 26,19" fill="#FACC15"/>
+        <polygon points="39,19.5 45,22.5 39,25.5 33,22.5" fill="#F8FAFC"/>
+        <polygon points="18,16 24,19 18,22 12,19" fill="#F8FAFC"/>
+        <polygon points="25,19.5 31,22.5 25,25.5 19,22.5" fill="#FEF08A"/>
+        <polygon points="32,23 38,26 32,29 26,26" fill="#F8FAFC"/>
+        <polygon points="11,21 17,24 17,31 11,28" fill="#3B82F6"/>
+        <polygon points="18,24.5 24,27.5 24,34.5 18,31.5" fill="#10B981"/>
+        <polygon points="25,28 31,31 31,38 25,35" fill="#3B82F6"/>
+        <polygon points="11,30 17,33 17,40 11,37" fill="#10B981"/>
+        <polygon points="18,33.5 24,36.5 24,43.5 18,40.5" fill="#2563EB"/>
+        <polygon points="25,37 31,40 31,47 25,44" fill="#10B981"/>
+        <polygon points="11,39 17,42 17,49 11,46" fill="#3B82F6"/>
+        <polygon points="18,42.5 24,45.5 24,52.5 18,49.5" fill="#10B981"/>
+        <polygon points="25,46 31,49 31,56 25,53" fill="#1D4ED8"/>
+        <polygon points="33,31 39,28 39,35 33,38" fill="#EF4444"/>
+        <polygon points="40,27.5 46,24.5 46,31.5 40,34.5" fill="#F97316"/>
+        <polygon points="47,24 53,21 53,28 47,31" fill="#EF4444"/>
+        <polygon points="33,40 39,37 39,44 33,47" fill="#F97316"/>
+        <polygon points="40,36.5 46,33.5 46,40.5 40,43.5" fill="#DC2626"/>
+        <polygon points="47,33 53,30 53,37 47,40" fill="#F97316"/>
+        <polygon points="33,49 39,46 39,53 33,56" fill="#EF4444"/>
+        <polygon points="40,45.5 46,42.5 46,49.5 40,52.5" fill="#F97316"/>
+        <polygon points="47,42 53,39 53,46 47,49" fill="#B91C1C"/>
+      ${svgClose}`;
+
+    case 'waffle_cone':
+      return `${svgOpen}
+        <ellipse cx="32" cy="22" rx="15" ry="14" fill="#F472B6" stroke="#DB2777" stroke-width="1.5"/>
+        <ellipse cx="28" cy="18" rx="4" ry="2" fill="#FFFFFF" opacity="0.6"/>
+        <circle cx="32" cy="8" r="4.5" fill="#DC2626" stroke="#991B1B" stroke-width="1"/>
+        <path d="M32,8 Q35,2 39,4" fill="none" stroke="#15803D" stroke-width="1.5" stroke-linecap="round"/>
+        <polygon points="18,26 46,26 32,58" fill="#F59E0B" stroke="#B45309" stroke-width="1.5"/>
+        <line x1="22" y1="30" x2="40" y2="48" stroke="#B45309" stroke-width="1.2"/>
+        <line x1="26" y1="26" x2="36" y2="52" stroke="#B45309" stroke-width="1.2"/>
+        <line x1="42" y1="30" x2="24" y2="48" stroke="#B45309" stroke-width="1.2"/>
+        <line x1="38" y1="26" x2="28" y2="52" stroke="#B45309" stroke-width="1.2"/>
+      ${svgClose}`;
+
+    case 'partyhat':
+      return `${svgOpen}
+        <path d="M14,52 L32,14 L50,52 C50,57 41,60 32,60 C23,60 14,57 14,52 Z" fill="#8B5CF6" stroke="#6D28D9" stroke-width="1.5"/>
+        <circle cx="26" cy="42" r="3.5" fill="#FACC15"/>
+        <circle cx="38" cy="45" r="3" fill="#38BDF8"/>
+        <circle cx="32" cy="30" r="3" fill="#F43F5E"/>
+        <circle cx="24" cy="50" r="2.5" fill="#34D399"/>
+        <circle cx="32" cy="12" r="6" fill="#FBBF24" stroke="#F59E0B" stroke-width="1"/>
+        <circle cx="32" cy="12" r="3" fill="#FEF08A"/>
+      ${svgClose}`;
+
+    case 'dice':
+      return `${svgOpen}
+        <polygon points="32,8 54,20 32,32 10,20" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="10,20 32,32 32,56 10,44" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,32 54,20 54,44 32,56" fill="#CBD5E1" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="32" cy="20" r="3.5" fill="#EF4444"/>
+        <circle cx="18" cy="29" r="2.5" fill="#1E293B"/>
+        <circle cx="24" cy="45" r="2.5" fill="#1E293B"/>
+        <circle cx="39" cy="47" r="2.5" fill="#1E293B"/>
+        <circle cx="43" cy="38" r="2.5" fill="#1E293B"/>
+        <circle cx="47" cy="29" r="2.5" fill="#1E293B"/>
+      ${svgClose}`;
+
+    case 'juice':
+      return `${svgOpen}
+        <path d="M26,16 L26,6 L18,8" fill="none" stroke="#EF4444" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <polygon points="26,14 52,19 36,25 10,20" fill="#FDBA74" stroke="#C2410C" stroke-width="1.2"/>
+        <polygon points="10,20 36,25 36,56 10,51" fill="#FB923C" stroke="#C2410C" stroke-width="1.2"/>
+        <polygon points="36,25 52,19 52,50 36,56" fill="#EA580C" stroke="#C2410C" stroke-width="1.2"/>
+        <circle cx="23" cy="38" r="6.5" fill="#FEF08A" stroke="#EA580C" stroke-width="1"/>
+        <circle cx="23" cy="38" r="4.5" fill="#F97316"/>
+      ${svgClose}`;
+
+    case 'brick':
+      return `${svgOpen}
+        <polygon points="24,12 56,20 38,28 6,20" fill="#EF4444" stroke="#991B1B" stroke-width="1.4" stroke-linejoin="round"/>
+        <polygon points="6,20 38,28 38,52 6,44" fill="#DC2626" stroke="#991B1B" stroke-width="1.4" stroke-linejoin="round"/>
+        <polygon points="38,28 56,20 56,44 38,52" fill="#B91C1C" stroke="#991B1B" stroke-width="1.4" stroke-linejoin="round"/>
+        <ellipse cx="18" cy="20" rx="3.5" ry="1.8" fill="#7F1D1D"/>
+        <ellipse cx="31" cy="23.5" rx="3.5" ry="1.8" fill="#7F1D1D"/>
+        <ellipse cx="44" cy="21.5" rx="3.5" ry="1.8" fill="#7F1D1D"/>
+      ${svgClose}`;
+
+    case 'soda':
+      return `${svgOpen}
+        <path d="M16,20 L16,48 C16,54 23,57 32,57 C41,57 48,54 48,48 L48,20 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>
+        <path d="M16,34 Q32,24 48,38 L48,44 Q32,30 16,40 Z" fill="#FFFFFF" opacity="0.9"/>
+        <ellipse cx="32" cy="18" rx="16" ry="6.5" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1.5"/>
+        <ellipse cx="32" cy="18" rx="5" ry="2.5" fill="#CBD5E1" stroke="#64748B" stroke-width="1"/>
+      ${svgClose}`;
+
+    case 'drum':
+      return `${svgOpen}
+        <path d="M12,22 L12,46 C12,52 21,56 32,56 C43,56 52,42 52,46 L52,22 Z" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1.5"/>
+        <line x1="16" y1="23" x2="16" y2="48" stroke="#94A3B8" stroke-width="2"/>
+        <line x1="26" y1="25" x2="26" y2="52" stroke="#94A3B8" stroke-width="2"/>
+        <line x1="38" y1="25" x2="38" y2="52" stroke="#94A3B8" stroke-width="2"/>
+        <line x1="48" y1="23" x2="48" y2="48" stroke="#94A3B8" stroke-width="2"/>
+        <ellipse cx="32" cy="22" rx="20" ry="8" fill="#F8FAFC" stroke="#64748B" stroke-width="1.8"/>
+        <line x1="14" y1="12" x2="36" y2="24" stroke="#D97706" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="50" y1="12" x2="28" y2="24" stroke="#D97706" stroke-width="2.2" stroke-linecap="round"/>
+      ${svgClose}`;
+
+    case 'soccer':
+      return `${svgOpen}
+        <ellipse cx="32" cy="56" rx="18" ry="4" fill="rgba(15,23,42,0.18)"/>
+        <circle cx="32" cy="32" r="22" fill="#F8FAFC" stroke="#0F172A" stroke-width="1.5"/>
+        <polygon points="32,24 39,29 36,37 28,37 25,29" fill="#0F172A"/>
+        <line x1="32" y1="24" x2="32" y2="10" stroke="#0F172A" stroke-width="1.5"/>
+        <line x1="39" y1="29" x2="51" y2="23" stroke="#0F172A" stroke-width="1.5"/>
+        <line x1="36" y1="37" x2="46" y2="46" stroke="#0F172A" stroke-width="1.5"/>
+        <line x1="28" y1="37" x2="18" y2="46" stroke="#0F172A" stroke-width="1.5"/>
+        <line x1="25" y1="29" x2="13" y2="23" stroke="#0F172A" stroke-width="1.5"/>
+        <polygon points="32,10 26,11 38,11" fill="#0F172A"/>
+        <polygon points="51,23 53,30 48,32" fill="#0F172A"/>
+        <polygon points="13,23 11,30 16,32" fill="#0F172A"/>
+      ${svgClose}`;
+
+    case 'bball':
+      return `${svgOpen}
+        <ellipse cx="32" cy="56" rx="18" ry="4" fill="rgba(15,23,42,0.18)"/>
+        <circle cx="32" cy="32" r="22" fill="#EA580C" stroke="#7C2D12" stroke-width="1.5"/>
+        <line x1="10" y1="32" x2="54" y2="32" stroke="#431407" stroke-width="1.8"/>
+        <line x1="32" y1="10" x2="32" y2="54" stroke="#431407" stroke-width="1.8"/>
+        <path d="M16,16 Q28,32 16,48" fill="none" stroke="#431407" stroke-width="1.8"/>
+        <path d="M48,16 Q36,32 48,48" fill="none" stroke="#431407" stroke-width="1.8"/>
+      ${svgClose}`;
+
+    case 'pencil':
+      return `${svgOpen}
+        <polygon points="26,8 38,8 38,14 26,14" fill="#FB7185" stroke="#E11D48" stroke-width="1"/>
+        <polygon points="25,14 39,14 39,19 25,19" fill="#CBD5E1" stroke="#64748B" stroke-width="1"/>
+        <polygon points="25,19 29,19 29,45 25,45" fill="#FACC15" stroke="#A16207" stroke-width="0.8"/>
+        <polygon points="29,19 35,19 35,45 29,45" fill="#EAB308" stroke="#A16207" stroke-width="0.8"/>
+        <polygon points="35,19 39,19 39,45 35,45" fill="#CA8A04" stroke="#A16207" stroke-width="0.8"/>
+        <polygon points="25,45 39,45 32,56" fill="#FDE68A" stroke="#A16207" stroke-width="1"/>
+        <polygon points="30,52 34,52 32,56" fill="#1E293B"/>
+      ${svgClose}`;
+
+    case 'giza':
+      return `${svgOpen}
+        <path d="M4,54 Q20,48 38,52 Q52,56 60,52 L60,60 L4,60 Z" fill="#D97706"/>
+        <circle cx="50" cy="14" r="6" fill="#FBBF24"/>
+        <polygon points="30,14 6,48 32,54" fill="#FDE047" stroke="#B45309" stroke-width="1.3" stroke-linejoin="round"/>
+        <line x1="22" y1="26" x2="30.5" y2="28" stroke="#CA8A04" stroke-width="1"/>
+        <line x1="14" y1="37" x2="31.2" y2="41" stroke="#CA8A04" stroke-width="1"/>
+        <polygon points="30,14 32,54 58,46" fill="#D97706" stroke="#92400E" stroke-width="1.3" stroke-linejoin="round"/>
+        <line x1="31" y1="28" x2="49" y2="25" stroke="#92400E" stroke-width="1"/>
+        <line x1="31.5" y1="41" x2="54" y2="38" stroke="#92400E" stroke-width="1"/>
+      ${svgClose}`;
+
+    case 'teabag':
+      return `${svgOpen}
+        <path d="M32,18 C26,10 16,12 14,18" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+        <polygon points="10,18 18,18 18,25 10,25" fill="#EF4444" stroke="#B91C1C" stroke-width="1"/>
+        <polygon points="32,18 12,48 34,55" fill="#F1F5F9" fill-opacity="0.85" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,18 34,55 54,44" fill="#E2E8F0" fill-opacity="0.75" stroke="#94A3B8" stroke-width="1.5" stroke-linejoin="round"/>
+        <ellipse cx="28" cy="46" rx="9" ry="5" fill="#78350F" opacity="0.85"/>
+        <circle cx="24" cy="44" r="2" fill="#451A03"/>
+        <circle cx="30" cy="48" r="1.5" fill="#451A03"/>
+        <circle cx="35" cy="45" r="2" fill="#451A03"/>
+      ${svgClose}`;
+
+    case 'tent':
+      return `${svgOpen}
+        <polygon points="6,52 38,56 58,48 24,44" fill="rgba(15,23,42,0.15)"/>
+        <polygon points="22,18 56,24 54,48 38,52" fill="#059669" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="8,48 22,18 38,52" fill="#10B981" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="14,48 22,24 30,50" fill="#047857"/>
+        <line x1="22" y1="24" x2="22" y2="49" stroke="#FACC15" stroke-width="1.5"/>
+      ${svgClose}`;
+
+    case 'roof':
+      return `${svgOpen}
+        <polygon points="42,14 48,16 48,24 42,22" fill="#B91C1C" stroke="#7F1D1D" stroke-width="1"/>
+        <polygon points="20,18 56,22 56,44 38,48" fill="#DC2626" stroke="#991B1B" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="6,44 20,18 38,48" fill="#F87171" stroke="#991B1B" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="26" y1="28" x2="56" y2="31" stroke="#7F1D1D" stroke-width="1"/>
+        <line x1="32" y1="38" x2="56" y2="40" stroke="#7F1D1D" stroke-width="1"/>
+      ${svgClose}`;
+
+    case 'toblerone':
+      return `${svgOpen}
+        <polygon points="22,18 56,22 56,46 38,50" fill="#FBBF24" stroke="#B45309" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="8,46 22,18 38,50" fill="#FDE047" stroke="#B45309" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="18,42 22,32 26,42" fill="#78350F"/>
+        <text x="24" y="38" font-size="7" font-weight="900" fill="#78350F" transform="rotate(7 24 38)">T</text>
+      ${svgClose}`;
+
+    case 'cheese':
+      return `${svgOpen}
+        <polygon points="18,18 56,22 56,44 36,48" fill="#FBBF24" stroke="#D97706" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="8,44 18,18 36,48" fill="#FDE047" stroke="#D97706" stroke-width="1.5" stroke-linejoin="round"/>
+        <ellipse cx="26" cy="38" rx="4" ry="3" fill="#D97706"/>
+        <ellipse cx="16" cy="36" rx="2.5" ry="2" fill="#D97706"/>
+        <ellipse cx="42" cy="32" rx="3" ry="2" fill="#B45309"/>
+      ${svgClose}`;
+
+    case 'teepee':
+      return `${svgOpen}
+        <line x1="26" y1="6" x2="38" y2="24" stroke="#78350F" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="38" y1="6" x2="26" y2="24" stroke="#78350F" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="32" y1="5" x2="32" y2="24" stroke="#78350F" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="32,18 10,54 32,58" fill="#FED7AA" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,18 32,58 54,54" fill="#FDBA74" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="26,57 32,42 38,57" fill="#7C2D12"/>
+      ${svgClose}`;
+
+    case 'lantern':
+      return `${svgOpen}
+        <circle cx="32" cy="10" r="3.5" fill="#EAB308" stroke="#A16207" stroke-width="1.2"/>
+        <polygon points="32,14 8,40 32,46" fill="#DC2626" stroke="#991B1B" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,14 32,46 56,40" fill="#B91C1C" stroke="#991B1B" stroke-width="1.5" stroke-linejoin="round"/>
+        <rect x="22" y="44" width="20" height="14" rx="2" fill="#FEF08A" stroke="#CA8A04" stroke-width="1.2"/>
+      ${svgClose}`;
+
+    case 'pyraminx':
+      return `${svgOpen}
+        <polygon points="32,10 12,46 34,54" fill="#0F172A"/>
+        <polygon points="32,13 26,24 32,24" fill="#EF4444"/>
+        <polygon points="25,26 19,37 25,37" fill="#EF4444"/>
+        <polygon points="32,26 26,37 32,37" fill="#EF4444"/>
+        <polygon points="18,39 13,48 22,50" fill="#EF4444"/>
+        <polygon points="32,10 34,54 54,42" fill="#0F172A"/>
+        <polygon points="34,13 34,24 41,21" fill="#3B82F6"/>
+        <polygon points="34,26 34,37 41,34" fill="#3B82F6"/>
+        <polygon points="42,23 42,34 49,31" fill="#3B82F6"/>
+        <polygon points="34,39 34,51 44,46" fill="#3B82F6"/>
+      ${svgClose}`;
+
+    case 'die4':
+      return `${svgOpen}
+        <polygon points="32,10 12,46 34,54" fill="#7C3AED" stroke="#4C1D95" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,10 34,54 54,42" fill="#6D28D9" stroke="#4C1D95" stroke-width="1.5" stroke-linejoin="round"/>
+        <text x="24" y="38" font-size="9" font-weight="900" fill="#FDE047" text-anchor="middle">4</text>
+        <text x="40" y="36" font-size="9" font-weight="900" fill="#FDE047" text-anchor="middle">1</text>
+      ${svgClose}`;
+
+    case 'hexnut':
+      return `${svgOpen}
+        <polygon points="32,12 48,17 48,27 32,32 16,27 16,17" fill="#CBD5E1" stroke="#475569" stroke-width="1.4" stroke-linejoin="round"/>
+        <polygon points="16,27 32,32 32,52 16,47" fill="#94A3B8" stroke="#475569" stroke-width="1.4" stroke-linejoin="round"/>
+        <polygon points="32,32 48,27 48,47 32,52" fill="#64748B" stroke="#475569" stroke-width="1.4" stroke-linejoin="round"/>
+        <ellipse cx="32" cy="22" rx="7" ry="3.5" fill="#334155" stroke="#1E293B" stroke-width="1.2"/>
+      ${svgClose}`;
+
+    case 'honeycomb':
+      return `${svgOpen}
+        <polygon points="32,10 48,15 48,25 32,30 16,25 16,15" fill="#FACC15" stroke="#B45309" stroke-width="1.3"/>
+        <polygon points="16,25 32,30 32,54 16,49" fill="#EAB308" stroke="#B45309" stroke-width="1.3"/>
+        <polygon points="32,30 48,25 48,49 32,54" fill="#CA8A04" stroke="#B45309" stroke-width="1.3"/>
+        <ellipse cx="32" cy="20" rx="8" ry="4" fill="#D97706"/>
+        <ellipse cx="30" cy="19" rx="3" ry="1.5" fill="#FEF08A" opacity="0.8"/>
+      ${svgClose}`;
+
+    case 'marble':
+      return `${svgOpen}
+        <ellipse cx="32" cy="56" rx="18" ry="4" fill="rgba(15,23,42,0.18)"/>
+        <circle cx="32" cy="32" r="22" fill="#0284C7" stroke="#0369A1" stroke-width="1.5"/>
+        <path d="M18,22 Q32,42 46,26" fill="none" stroke="#FACC15" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M22,40 Q32,18 42,38" fill="none" stroke="#F43F5E" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="24" cy="22" rx="6" ry="3" fill="#FFFFFF" opacity="0.75" transform="rotate(-30 24 22)"/>
+      ${svgClose}`;
+
+    case 'orange':
+      return `${svgOpen}
+        <ellipse cx="32" cy="56" rx="18" ry="4" fill="rgba(15,23,42,0.18)"/>
+        <circle cx="32" cy="34" r="21" fill="#F97316" stroke="#C2410C" stroke-width="1.5"/>
+        <circle cx="26" cy="26" r="14" fill="#FB923C" opacity="0.6"/>
+        <path d="M32,14 Q32,8 34,6" fill="none" stroke="#78350F" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M33,10 Q42,6 44,14 Q36,16 33,10 Z" fill="#22C55E" stroke="#15803D" stroke-width="1"/>
+      ${svgClose}`;
+
+    case 'globe':
+      return `${svgOpen}
+        <ellipse cx="32" cy="58" rx="14" ry="4" fill="#94A3B8" stroke="#475569" stroke-width="1.2"/>
+        <line x1="32" y1="58" x2="32" y2="48" stroke="#64748B" stroke-width="3"/>
+        <path d="M14,28 A20,20 0 0,0 32,48" fill="none" stroke="#64748B" stroke-width="2.5"/>
+        <circle cx="32" cy="26" r="17" fill="#38BDF8" stroke="#0284C7" stroke-width="1.3"/>
+        <path d="M24,20 Q30,16 34,22 Q30,28 26,24 Z" fill="#22C55E"/>
+        <path d="M36,26 Q42,24 40,32 Q34,34 36,26 Z" fill="#22C55E"/>
+      ${svgClose}`;
+
+    case 'book':
+      return `${svgOpen}
+        <polygon points="20,12 56,18 42,28 6,22" fill="#2563EB" stroke="#1E40AF" stroke-width="1.4" stroke-linejoin="round"/>
+        <polygon points="6,22 42,28 42,34 6,28" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+        <polygon points="42,28 56,18 56,44 42,52" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+        <polygon points="6,28 42,34 42,54 6,48" fill="#1D4ED8" stroke="#1E40AF" stroke-width="1.4"/>
+        <polygon points="6,22 6,48 4,46 4,20" fill="#1E3A8A"/>
+      ${svgClose}`;
+
+    case 'eraser':
+      return `${svgOpen}
+        <polygon points="22,14 56,20 40,28 6,22" fill="#D97706" stroke="#92400E" stroke-width="1.3" stroke-linejoin="round"/>
+        <polygon points="6,22 40,28 40,38 6,32" fill="#B45309" stroke="#92400E" stroke-width="1.3" stroke-linejoin="round"/>
+        <polygon points="40,28 56,20 56,30 40,38" fill="#92400E" stroke="#78350F" stroke-width="1.3" stroke-linejoin="round"/>
+        <polygon points="6,32 40,38 40,48 6,42" fill="#334155" stroke="#1E293B" stroke-width="1.2"/>
+        <polygon points="40,38 56,30 56,40 40,48" fill="#1E293B" stroke="#0F172A" stroke-width="1.2"/>
+      ${svgClose}`;
+
+    case 'roll_paper':
+      return `${svgOpen}
+        <path d="M16,18 L16,48 C16,54 23,57 32,57 C41,57 48,54 48,48 L48,18 Z" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+        <ellipse cx="32" cy="18" rx="16" ry="6.5" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+        <ellipse cx="32" cy="18" rx="6" ry="2.5" fill="#78350F" stroke="#451A03" stroke-width="1"/>
+      ${svgClose}`;
+
+    case 'battery':
+      return `${svgOpen}
+        <ellipse cx="32" cy="10" rx="5" ry="2" fill="#94A3B8" stroke="#475569" stroke-width="1"/>
+        <rect x="27" y="10" width="10" height="4" fill="#CBD5E1"/>
+        <path d="M18,14 L18,28 C18,32 24,34 32,34 C40,34 46,32 46,28 L46,14 Z" fill="#F59E0B" stroke="#B45309" stroke-width="1.3"/>
+        <ellipse cx="32" cy="14" rx="14" ry="5" fill="#FCD34D" stroke="#B45309" stroke-width="1.3"/>
+        <path d="M18,28 L18,50 C18,55 24,58 32,58 C40,58 46,55 46,50 L46,28 Z" fill="#1E293B" stroke="#0F172A" stroke-width="1.3"/>
+        <text x="32" y="44" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">+</text>
+      ${svgClose}`;
+
+    case 'icecube':
+      return `${svgOpen}
+        <polygon points="32,8 54,20 32,32 10,20" fill="#E0F2FE" stroke="#38BDF8" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="10,20 32,32 32,56 10,44" fill="#BAE6FD" stroke="#38BDF8" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="32,32 54,20 54,44 32,56" fill="#7DD3FC" stroke="#38BDF8" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="16" y1="26" x2="28" y2="34" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="36" x2="48" y2="28" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+      ${svgClose}`;
+
+    case 'giftbox':
+      return `${svgOpen}
+        <ellipse cx="26" cy="8" rx="5" ry="3" fill="#FACC15" stroke="#CA8A04" stroke-width="1"/>
+        <ellipse cx="38" cy="8" rx="5" ry="3" fill="#FACC15" stroke="#CA8A04" stroke-width="1"/>
+        <circle cx="32" cy="9" r="3" fill="#EAB308"/>
+        <polygon points="32,10 54,22 32,34 10,22" fill="#818CF8" stroke="#3730A3" stroke-width="1.4"/>
+        <polygon points="30,11 34,13 34,33 30,31" fill="#FACC15"/>
+        <polygon points="19,17 23,19 45,27 41,25" fill="#FACC15"/>
+        <polygon points="10,22 32,34 32,56 10,44" fill="#6366F1" stroke="#3730A3" stroke-width="1.4"/>
+        <polygon points="19,27 23,29 23,51 19,49" fill="#FACC15"/>
+        <polygon points="32,34 54,22 54,44 32,56" fill="#4338CA" stroke="#3730A3" stroke-width="1.4"/>
+        <polygon points="41,29 45,27 45,49 41,51" fill="#FACC15"/>
+      ${svgClose}`;
+
+    // ---- BASKET CATEGORIES / ATTRIBUTES ----
+    case 'roll':
+      return `${svgOpen}
+        <circle cx="32" cy="32" r="20" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1.5"/>
+        <path d="M22,18 A16,16 0 0,1 46,26" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="48,22 48,30 40,28" fill="#FFFFFF"/>
+        <path d="M42,46 A16,16 0 0,1 18,38" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="16,42 16,34 24,36" fill="#FFFFFF"/>
+      ${svgClose}`;
+
+    case 'both':
+    case 'both_surfaces':
+      return `${svgOpen}
+        <path d="M18,22 L18,46 C18,50 24,53 32,53 C40,53 46,50 46,46 L46,22 Z" fill="#10B981" stroke="#047857" stroke-width="1.5"/>
+        <ellipse cx="32" cy="22" rx="14" ry="6" fill="#6EE7B7" stroke="#047857" stroke-width="1.5"/>
+        <path d="M12,36 Q8,24 20,14" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M52,28 Q56,40 44,50" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+      ${svgClose}`;
+
+    case 'stack':
+      return `${svgOpen}
+        <polygon points="32,10 46,17 32,24 18,17" fill="#C084FC" stroke="#6B21A8" stroke-width="1"/>
+        <polygon points="18,17 32,24 32,34 18,27" fill="#A855F7" stroke="#6B21A8" stroke-width="1"/>
+        <polygon points="32,24 46,17 46,27 32,34" fill="#9333EA" stroke="#6B21A8" stroke-width="1"/>
+        <polygon points="32,28 48,36 32,44 16,36" fill="#818CF8" stroke="#3730A3" stroke-width="1"/>
+        <polygon points="16,36 32,44 32,56 16,48" fill="#6366F1" stroke="#3730A3" stroke-width="1"/>
+        <polygon points="32,44 48,36 48,48 32,56" fill="#4338CA" stroke="#3730A3" stroke-width="1"/>
+      ${svgClose}`;
+
+    case 'flat_only':
+      return `${svgOpen}
+        <polygon points="32,8 54,20 32,32 10,20" fill="#A78BFA" stroke="#5B21B6" stroke-width="1.5"/>
+        <polygon points="10,20 32,32 32,56 10,44" fill="#8B5CF6" stroke="#5B21B6" stroke-width="1.5"/>
+        <polygon points="32,32 54,20 54,44 32,56" fill="#7C3AED" stroke="#5B21B6" stroke-width="1.5"/>
+      ${svgClose}`;
+
+    case 'curved_only':
+      return `${svgOpen}
+        <circle cx="32" cy="32" r="22" fill="#06B6D4" stroke="#0891B2" stroke-width="1.5"/>
+        <ellipse cx="25" cy="23" rx="7" ry="4" fill="#FFFFFF" opacity="0.75" transform="rotate(-30 25 23)"/>
+      ${svgClose}`;
+
+    case 'pointy':
+      return `${svgOpen}
+        <polygon points="32,6 38,24 56,24 42,35 47,52 32,42 17,52 22,35 8,24 26,24" fill="#F43F5E" stroke="#BE123C" stroke-width="1.5"/>
+        <circle cx="32" cy="6" r="3.5" fill="#FDE047" stroke="#CA8A04" stroke-width="1"/>
+      ${svgClose}`;
+
+    case 'smooth':
+      return `${svgOpen}
+        <circle cx="32" cy="32" r="22" fill="#0EA5E9" stroke="#0284C7" stroke-width="1.5"/>
+        <path d="M16,34 Q24,26 32,34 T48,34" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+      ${svgClose}`;
+
+    default:
+      return `${svgOpen}
+        <polygon points="32,10 52,21 32,32 12,21" fill="#94A3B8" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="12,21 32,32 32,54 12,43" fill="#64748B" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="32,32 52,21 52,43 32,54" fill="#475569" stroke="#334155" stroke-width="1.5"/>
+      ${svgClose}`;
+  }
+}
+
 // ================= 4 THEMED 5-QUESTION QUIZZES =================
 const QUIZ_LEVELS = {
   1: {
     title: 'Quiz 1: Shape Explorer',
     questions: [
       {
-        text: 'Which 3D shape has 6 identical square faces?',
+        text: 'Which 3D solid shape has 6 identical square faces?',
         visual: '🎲',
+        visualId: 'cube',
         options: ['Cube', 'Cylinder', 'Sphere', 'Cone'],
         answer: 0,
-        hint: 'A playing dice is a famous example of this shape.'
+        hint: 'A playing dice or Rubik’s cube has 6 matching square faces.'
       },
       {
-        text: 'What is the name of a solid shape that is round like a basketball?',
+        text: 'What is the name of a round solid shape with zero edges and zero corners?',
         visual: '⚽',
-        options: ['Cuboid', 'Sphere', 'Cone', 'Pyramid'],
-        answer: 1,
-        hint: 'It has zero straight edges and zero corners.'
+        visualId: 'sphere',
+        options: ['Sphere', 'Rectangular Prism', 'Cone', 'Square Pyramid'],
+        answer: 0,
+        hint: 'Think of soccer balls, basketballs, and marbles.'
       },
       {
-        text: 'Which shape has 2 flat circular bases and 1 curved surface?',
+        text: 'Which solid shape has 2 flat circular bases and 1 smooth curved surface?',
         visual: '🥫',
+        visualId: 'cylinder',
         options: ['Cylinder', 'Cube', 'Triangular Prism', 'Cone'],
         answer: 0,
-        hint: 'Think of a soda can or canned soup.'
+        hint: 'Think of a soda can, soup can, or drum.'
       },
       {
-        text: 'What shape looks like a party hat with a pointy top?',
+        text: 'Which solid has 1 flat circle base and slopes up to a single pointy apex at the top?',
         visual: '🎉',
-        options: ['Sphere', 'Cone', 'Cuboid', 'Cylinder'],
+        visualId: 'cone',
+        options: ['Sphere', 'Cone', 'Rectangular Prism', 'Cylinder'],
         answer: 1,
-        hint: 'It has 1 circular base and 1 pointy vertex.'
+        hint: 'A birthday party hat and a traffic cone are classic cones!'
       },
       {
-        text: 'Which 3D shape has 6 identical square faces like a playing die?',
-        visual: '🎲',
-        options: ['Cube', 'Sphere', 'Cone', 'Cylinder'],
+        text: 'Which 3D shape has 2 triangular end faces connected by 3 rectangle sides?',
+        visual: '⛺',
+        visualId: 'triangular_prism',
+        options: ['Triangular Prism', 'Square Pyramid', 'Triangular Pyramid', 'Cube'],
         answer: 0,
-        hint: 'A cube has 6 equal square faces!'
+        hint: 'A classic camping tent and a Toblerone chocolate bar are triangular prisms!'
       }
     ]
   },
@@ -1599,39 +2154,44 @@ const QUIZ_LEVELS = {
     title: 'Quiz 2: Property Detective',
     questions: [
       {
-        text: 'How many vertices (corner points) does a CUBE have?',
-        visual: '📦',
+        text: 'How many corner vertices does a CUBE have in total?',
+        visual: '🎲',
+        visualId: 'cube',
         options: ['4 Vertices', '6 Vertices', '8 Vertices', '12 Vertices'],
         answer: 2,
-        hint: 'Count 4 vertices at the top and 4 vertices at the bottom!'
+        hint: 'Count 4 vertices at the top square and 4 vertices at the bottom square.'
       },
       {
         text: 'How many straight edges does a RECTANGULAR PRISM (Cuboid) have?',
         visual: '🧱',
+        visualId: 'cuboid',
         options: ['6 Edges', '8 Edges', '10 Edges', '12 Edges'],
         answer: 3,
-        hint: 'Just like a cube, a cuboid has 12 edges.'
+        hint: 'Like a brick or cereal box, it has 12 straight edges.'
       },
       {
         text: 'Which 3D shapes have ZERO (0) vertices (no sharp corner points at all)?',
-        visual: '🔴',
-        options: ['Cube & Cone', 'Sphere & Cylinder', 'Square Pyramid', 'Triangular Prism'],
+        visual: '🔵',
+        visualId: 'cylinder',
+        options: ['Cube & Cone', 'Sphere & Cylinder', 'Square Pyramid & Cube', 'Triangular Prism & Cone'],
         answer: 1,
-        hint: 'Both sphere and cylinder are smooth with no sharp corner points.'
+        hint: 'Both the sphere and cylinder have smooth continuous curves with no sharp corners.'
       },
       {
         text: 'How many faces does a SQUARE PYRAMID have in total?',
         visual: '🏛️',
+        visualId: 'square_pyramid',
         options: ['3 Faces', '4 Faces', '5 Faces', '6 Faces'],
         answer: 2,
-        hint: '1 square base + 4 triangular walls = 5 faces.'
+        hint: '1 square base on the bottom + 4 slanted triangular walls = 5 faces.'
       },
       {
-        text: 'How many corner points (vertices) does a CONE have?',
-        visual: '🍦',
-        options: ['0 Vertices', '1 Vertex', '4 Vertices', '8 Vertices'],
+        text: 'A TRIANGULAR PYRAMID (Tetrahedron) has 4 vertices and how many triangular faces?',
+        visual: '🔺',
+        visualId: 'triangular_pyramid',
+        options: ['3 Faces', '4 Faces', '5 Faces', '6 Faces'],
         answer: 1,
-        hint: 'A cone has 1 sharp vertex point at the very top!'
+        hint: 'Every face is an equilateral triangle: 1 base triangle + 3 side triangles = 4 faces.'
       }
     ]
   },
@@ -1639,39 +2199,44 @@ const QUIZ_LEVELS = {
     title: 'Quiz 3: Real-World Matcher',
     questions: [
       {
-        text: 'A juice carton and a brick are real-world examples of which shape?',
+        text: 'A juice box, brick, and textbook are everyday examples of which solid shape?',
         visual: '🧃',
+        visualId: 'juice',
         options: ['Rectangular Prism (Cuboid)', 'Sphere', 'Cone', 'Cube'],
         answer: 0,
-        hint: 'They have 6 rectangular sides.'
+        hint: 'They have 6 rectangular faces and stack neatly.'
       },
       {
-        text: 'A triangular camping tent matches which 3D geometric solid?',
-        visual: '⛺',
-        options: ['Cylinder', 'Triangular Prism', 'Cone', 'Cube'],
+        text: 'A traffic safety cone and a birthday party hat match which 3D geometric solid?',
+        visual: '🚧',
+        visualId: 'traffic_cone',
+        options: ['Cylinder', 'Cone', 'Square Pyramid', 'Cube'],
         answer: 1,
-        hint: 'It has 2 triangular ends and 3 rectangle sides.'
+        hint: 'Both have a circular base and slope up to a single pointy tip.'
       },
       {
-        text: 'A classic wooden pencil has 6 long flat sides. What shape is it?',
+        text: 'A classic wooden pencil has 2 hexagon ends and 6 rectangular sides. What solid is it?',
         visual: '✏️',
+        visualId: 'pencil',
         options: ['Hexagonal Prism', 'Sphere', 'Triangular Prism', 'Cone'],
         answer: 0,
-        hint: 'Hexagon has 6 sides to keep the pencil from rolling off desks!'
+        hint: 'Hexagonal prism has 6 flat sides so it doesn’t easily roll off desks!'
       },
       {
-        text: 'A rolling soccer ball or basketball is an example of which shape?',
-        visual: '⚽',
-        options: ['Sphere', 'Cylinder', 'Cube', 'Cone'],
+        text: 'A Rubik’s cube puzzle and playing dice are real-world examples of which shape?',
+        visual: '🧩',
+        visualId: 'rubiks',
+        options: ['Cube', 'Sphere', 'Cylinder', 'Rectangular Prism'],
         answer: 0,
-        hint: 'A sphere is completely round and can roll in every direction!'
+        hint: 'All 6 faces are identical squares!'
       },
       {
-        text: 'The Ancient Egyptian Pyramids in Giza are examples of which solid?',
+        text: 'The ancient Egyptian Pyramids in Giza have a square base and 4 triangular sides. What shape are they?',
         visual: '🏜️',
-        options: ['Triangular Prism', 'Square Pyramid', 'Cuboid', 'Sphere'],
+        visualId: 'giza',
+        options: ['Triangular Prism', 'Square Pyramid', 'Triangular Pyramid', 'Rectangular Prism'],
         answer: 1,
-        hint: 'They have a big square base and meet at a single top peak.'
+        hint: 'The wide square base makes a Square Pyramid super sturdy!'
       }
     ]
   },
@@ -1679,39 +2244,44 @@ const QUIZ_LEVELS = {
     title: 'Quiz 4: "Who Am I?" Riddles',
     questions: [
       {
-        text: '"I have no edges, no corners, and I can roll forever in any direction. Who am I?"',
-        visual: '🔮',
+        text: '"I have no straight edges, no sharp corners, and I can roll forever in any direction. Who am I?"',
+        visual: '⚽',
+        visualId: 'soccer',
         options: ['Sphere', 'Cube', 'Cone', 'Cylinder'],
         answer: 0,
-        hint: 'Think of marbles and soccer balls.'
+        hint: 'Soccer balls, basketballs, and marbles share my shape.'
       },
       {
-        text: '"I have 2 flat circles and 1 curved body. Stand me up and I stay still, push me on my side and I roll. Who am I?"',
+        text: '"I have 2 flat circular faces and 1 curved body. Stand me on my end and I stay still, roll me on my side. Who am I?"',
         visual: '🥫',
-        options: ['Cube', 'Cylinder', 'Pyramid', 'Cone'],
+        visualId: 'soda',
+        options: ['Cube', 'Cylinder', 'Square Pyramid', 'Cone'],
         answer: 1,
-        hint: 'A soup can or drinking glass.'
+        hint: 'Soup cans and soda cans are great examples.'
       },
       {
-        text: '"All 6 of my faces are squares of the exact same size. Who am I?"',
-        visual: '🎲',
-        options: ['Cube', 'Cuboid', 'Cylinder', 'Cone'],
-        answer: 0,
-        hint: 'Roll me in a board game to get lucky numbers!'
+        text: '"I have 4 vertices and 4 faces. Every single one of my faces is an equilateral triangle. Pyramid tea bags love me! Who am I?"',
+        visual: '🍵',
+        visualId: 'teabag',
+        options: ['Square Pyramid', 'Triangular Pyramid', 'Triangular Prism', 'Cube'],
+        answer: 1,
+        hint: 'A 4-faced pyramid is also known as a tetrahedron.'
       },
       {
-        text: '"I have 1 round circle base and a sharp pointy hat on top. Ice cream loves me! Who am I?"',
+        text: '"I have 1 flat circular base and 1 sharp pointy apex at the top. Ice cream cones and party hats are made in my shape! Who am I?"',
         visual: '🍦',
-        options: ['Cylinder', 'Cone', 'Prism', 'Sphere'],
+        visualId: 'waffle_cone',
+        options: ['Cylinder', 'Cone', 'Hexagonal Prism', 'Sphere'],
         answer: 1,
         hint: 'Waffle cones hold ice cream deliciously.'
       },
       {
-        text: '"I am round like a marble and have no corners at all. Who am I?"',
-        visual: '🔮',
-        options: ['Sphere', 'Cube', 'Cone', 'Cylinder'],
+        text: '"I have 2 hexagon faces connected by 6 flat rectangle sides. Wooden pencils use my shape so they don’t roll off your desk. Who am I?"',
+        visual: '✏️',
+        visualId: 'hexagonal_prism',
+        options: ['Hexagonal Prism', 'Triangular Prism', 'Rectangular Prism', 'Cylinder'],
         answer: 0,
-        hint: 'A sphere has no corners and rolls smoothly!'
+        hint: 'Count the 6 rectangular sides connecting the two hexagon ends.'
       }
     ]
   }
@@ -1745,7 +2315,8 @@ function renderQuizQuestion() {
   const pct = (currentQuestionIndex / quiz.questions.length) * 100;
   document.getElementById('quizProgressFill').style.width = `${pct}%`;
 
-  document.getElementById('questionVisual').textContent = q.visual;
+  // Render dedicated high-quality vector illustration
+  document.getElementById('questionVisual').innerHTML = getShapeOrObjectSvg(q.visualId || q.visual, 80);
   document.getElementById('questionText').textContent = q.text;
 
   const optContainer = document.getElementById('quizOptions');
@@ -1860,48 +2431,56 @@ const SORTER_GAMES = {
   1: {
     id: 1,
     title: 'Game 1: Can It Roll or Stack?',
-    instructions: 'Sort shapes into their movement baskets: Roll, Stack & Slide, or Both!',
+    instructions: 'Sort items into their movement baskets: Roll Only, Roll & Stack/Slide, or Stack & Slide Only!',
     bins: [
-      { id: 'roll', label: 'Can Roll Only', sub: 'Curved Surface', color: '#3B82F6', icon: '🌀' },
-      { id: 'both', label: 'Can Roll & Stack', sub: 'Curved + Flat', color: '#10B981', icon: '🔄' },
-      { id: 'stack', label: 'Can Stack & Slide Only', sub: 'Flat Faces', color: '#8B5CF6', icon: '🧱' }
+      { id: 'roll', label: 'Can Roll Only', sub: 'Curved Surface Only', color: '#3B82F6', icon: '🌀' },
+      { id: 'both', label: 'Can Roll & Stack / Slide', sub: 'Curved + Flat Faces', color: '#10B981', icon: '🔄' },
+      { id: 'stack', label: 'Can Stack & Slide Only', sub: 'Flat Faces Only', color: '#8B5CF6', icon: '🧱' }
     ],
     items: [
-      { id: 'sphere', name: 'Sphere', icon: '⚽', bin: 'roll', hint: 'A sphere has only 1 curved surface—it rolls in any direction!' },
-      { id: 'cylinder', name: 'Cylinder', icon: '🥫', bin: 'both', hint: 'Rolls on its curved side, and stacks on its flat circular ends!' },
-      { id: 'cube', name: 'Cube', icon: '🎲', bin: 'stack', hint: 'With 6 flat square faces, cubes stack perfectly without rolling!' },
-      { id: 'cone', name: 'Cone', icon: '🍦', bin: 'both', hint: 'Rolls in circles on its side, and stands on its flat circular base!' },
-      { id: 'cuboid', name: 'Rectangular Prism', icon: '🧱', bin: 'stack', hint: 'Flat rectangle faces make great stacks like bricks!' },
-      { id: 'tri_prism', name: 'Triangular Prism', icon: '⛺', bin: 'stack', hint: 'Flat triangles and rectangles slide and stack!' },
-      { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'stack', hint: '4 flat triangular faces slide and stack firmly!' },
-      { id: 'drum', name: 'Snare Drum', icon: '🥁', bin: 'both', hint: 'Rolls on its round side and stacks on flat drum heads!' },
-      { id: 'juice', name: 'Juice Carton', icon: '🧃', bin: 'stack', hint: 'Flat rectangular box faces stack neatly on grocery shelves!' },
-      { id: 'bball', name: 'Basketball', icon: '🏀', bin: 'roll', hint: 'A spherical ball rolls freely in every direction!' },
-      { id: 'pencil', name: 'Wooden Pencil', icon: '✏️', bin: 'both', hint: 'Flat ends can stack, hexagonal body can roll or slide!' }
+      { id: 'soccer', name: 'Soccer Ball (Sphere)', icon: '⚽', bin: 'roll', hint: 'A sphere has only 1 smooth curved surface—it rolls in any direction!' },
+      { id: 'bball', name: 'Basketball (Sphere)', icon: '🏀', bin: 'roll', hint: 'A sphere rolls freely because it has no flat faces!' },
+      { id: 'marble', name: 'Glass Marble (Sphere)', icon: '🔮', bin: 'roll', hint: 'Smooth spherical marble rolls continuously!' },
+      { id: 'soda', name: 'Soda Can (Cylinder)', icon: '🥫', bin: 'both', hint: 'Rolls on its round curved side, and stacks on its flat circular ends!' },
+      { id: 'drum', name: 'Snare Drum (Cylinder)', icon: '🥁', bin: 'both', hint: 'Rolls on its side and stacks flat on drumheads!' },
+      { id: 'traffic_cone', name: 'Traffic Cone (Cone)', icon: '🚧', bin: 'both', hint: 'Rolls in circles on its slanted side, and stands stable on its flat circular base!' },
+      { id: 'partyhat', name: 'Party Hat (Cone)', icon: '🎉', bin: 'both', hint: 'Stands on its flat round opening and rolls in a loop on its side!' },
+      { id: 'waffle_cone', name: 'Waffle Cone (Cone)', icon: '🍦', bin: 'both', hint: 'Rolls on its conical side and stands on its flat opening!' },
+      { id: 'dice', name: 'Playing Dice (Cube)', icon: '🎲', bin: 'stack', hint: 'With 6 flat square faces, cubes stack and slide without rolling!' },
+      { id: 'rubiks', name: 'Rubik\'s Cube (Cube)', icon: '🧩', bin: 'stack', hint: 'Flat square faces make it slide and stack easily!' },
+      { id: 'juice', name: 'Juice Box (Rectangular Prism)', icon: '🧃', bin: 'stack', hint: 'Flat rectangle faces stack neatly on pantry shelves!' },
+      { id: 'brick', name: 'Building Brick (Rectangular Prism)', icon: '🧱', bin: 'stack', hint: '6 flat rectangular faces stack strongly in brick walls!' },
+      { id: 'tent', name: 'Camping Tent (Triangular Prism)', icon: '⛺', bin: 'stack', hint: 'Flat triangles and rectangular sides slide and sit flat on the ground!' },
+      { id: 'giza', name: 'Egyptian Pyramid (Square Pyramid)', icon: '🏜️', bin: 'stack', hint: 'Wide flat square base sits firmly on the desert sand!' },
+      { id: 'teabag', name: 'Pyramid Tea Bag (Triangular Pyramid)', icon: '🍵', bin: 'stack', hint: '4 flat equilateral triangle faces sit flat and slide!' },
+      { id: 'pencil', name: 'Wooden Pencil (Hexagonal Prism)', icon: '✏️', bin: 'stack', hint: 'Flat hexagon ends and 6 flat rectangular facets resist rolling!' }
     ]
   },
   2: {
     id: 2,
-    title: 'Game 2: Face Shape Matcher',
-    instructions: 'Look at the flat faces of each 3D shape and sort them by face geometry!',
+    title: 'Game 2: Flat Faces vs. Curved Surfaces',
+    instructions: 'Sort shapes by their surface geometry: Flat Faces Only, Both, or Curved Only!',
     bins: [
-      { id: 'circle', label: 'Has Circular Faces', sub: 'Circle Bases', color: '#06B6D4', icon: '⚪' },
-      { id: 'triangle', label: 'Has Triangular Faces', sub: 'Triangle Facets', color: '#F59E0B', icon: '🔺' },
-      { id: 'rect_square', label: 'Has Square / Rectangle Faces', sub: '4-Sided Faces', color: '#4F46E5', icon: '🔲' }
+      { id: 'flat_only', label: 'Flat Faces Only', sub: '0 Curved Surfaces', color: '#8B5CF6', icon: '🔲' },
+      { id: 'both_surfaces', label: 'Flat & Curved Surfaces', sub: 'Flat Bases + Curved Body', color: '#10B981', icon: '🔄' },
+      { id: 'curved_only', label: 'Curved Surface Only', sub: '0 Flat Faces', color: '#06B6D4', icon: '🔵' }
     ],
     items: [
-      { id: 'cylinder', name: 'Cylinder', icon: '🥫', bin: 'circle', hint: 'Its 2 flat bases are perfect circles!' },
-      { id: 'square_pyr', name: 'Square Pyramid', icon: '🏛️', bin: 'triangle', hint: 'Has 4 triangular faces that slope to the top apex!' },
-      { id: 'cube', name: 'Cube', icon: '🎲', bin: 'rect_square', hint: 'Every single face is an identical flat square!' },
-      { id: 'cone', name: 'Cone', icon: '🍦', bin: 'circle', hint: 'Has 1 flat circular base at the bottom!' },
-      { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'triangle', hint: 'All 4 faces are flat triangles!' },
-      { id: 'cuboid', name: 'Rectangular Prism', icon: '🧃', bin: 'rect_square', hint: 'Has 6 flat rectangular faces!' },
-      { id: 'tent', name: 'Camping Tent', icon: '⛺', bin: 'triangle', hint: 'Its entrance and back doors are triangular faces!' },
-      { id: 'cereal', name: 'Cereal Box', icon: '🥣', bin: 'rect_square', hint: 'All 6 sides are flat rectangles!' },
-      { id: 'drum', name: 'Snare Drum', icon: '🥁', bin: 'circle', hint: 'Top and bottom drum skins are flat circles!' },
-      { id: 'teabag', name: 'Pyramid Tea Bag', icon: '🍵', bin: 'triangle', hint: 'Has 4 triangular mesh sides!' },
-      { id: 'traffic_cone', name: 'Traffic Cone', icon: '🚧', bin: 'circle', hint: 'Its bottom opening base is a circle!' },
-      { id: 'block', name: 'Toy Building Block', icon: '🧱', bin: 'rect_square', hint: 'Flat square and rectangle faces!' }
+      { id: 'cube_item', name: 'Playing Dice (Cube)', icon: '🎲', bin: 'flat_only', hint: 'Has 6 flat square faces and 0 curved surfaces!' },
+      { id: 'rubiks_item', name: 'Rubik\'s Cube (Cube)', icon: '🧩', bin: 'flat_only', hint: 'All 6 faces are completely flat squares!' },
+      { id: 'juice_item', name: 'Juice Box (Rectangular Prism)', icon: '🧃', bin: 'flat_only', hint: 'Has 6 flat rectangular faces!' },
+      { id: 'brick_item', name: 'Building Brick (Rectangular Prism)', icon: '🧱', bin: 'flat_only', hint: 'Every single face of a cuboid is a flat rectangle!' },
+      { id: 'tent_item', name: 'Camping Tent (Triangular Prism)', icon: '⛺', bin: 'flat_only', hint: 'Has 2 flat triangles and 3 flat rectangles!' },
+      { id: 'giza_item', name: 'Egyptian Pyramid (Square Pyramid)', icon: '🏜️', bin: 'flat_only', hint: 'Has 1 flat square base and 4 flat triangles!' },
+      { id: 'teabag_item', name: 'Pyramid Tea Bag (Triangular Pyramid)', icon: '🍵', bin: 'flat_only', hint: 'All 4 faces are flat equilateral triangles!' },
+      { id: 'pencil_item', name: 'Wooden Pencil (Hexagonal Prism)', icon: '✏️', bin: 'flat_only', hint: 'Has 2 flat hexagons and 6 flat rectangles!' },
+      { id: 'soda_item', name: 'Soda Can (Cylinder)', icon: '🥫', bin: 'both_surfaces', hint: 'Has 2 flat circular bases AND 1 smooth curved body!' },
+      { id: 'drum_item', name: 'Snare Drum (Cylinder)', icon: '🥁', bin: 'both_surfaces', hint: 'Flat top/bottom heads with a curved cylinder body!' },
+      { id: 'traffic_item', name: 'Traffic Cone (Cone)', icon: '🚧', bin: 'both_surfaces', hint: 'Has 1 flat circular base AND 1 curved sloped surface!' },
+      { id: 'hat_item', name: 'Party Hat (Cone)', icon: '🎉', bin: 'both_surfaces', hint: 'Has a flat circular opening and 1 curved cone surface!' },
+      { id: 'waffle_item', name: 'Waffle Cone (Cone)', icon: '🍦', bin: 'both_surfaces', hint: 'Flat round top with curved conical wrap!' },
+      { id: 'soccer_item', name: 'Soccer Ball (Sphere)', icon: '⚽', bin: 'curved_only', hint: 'Has only 1 continuous curved surface and 0 flat faces!' },
+      { id: 'orange_item', name: 'Fresh Orange (Sphere)', icon: '🍊', bin: 'curved_only', hint: 'Completely curved sphere with zero flat faces!' }
     ]
   },
   3: {
@@ -1909,49 +2488,84 @@ const SORTER_GAMES = {
     title: 'Game 3: Pointy vs. Smooth',
     instructions: 'Does the shape have sharp corner vertices, or is it completely smooth (0 vertices)?',
     bins: [
-      { id: 'pointy', label: 'Has Sharp Vertices', sub: 'Pointy Corners', color: '#EC4899', icon: '✨' },
-      { id: 'smooth', label: '0 Vertices (Smooth)', sub: 'Zero Sharp Corners', color: '#0EA5E9', icon: '🌊' }
+      { id: 'pointy', label: 'Has Sharp Vertices', sub: 'Corner Points or Apex', color: '#EC4899', icon: '✨' },
+      { id: 'smooth', label: '0 Vertices (Smooth)', sub: 'Zero Corner Points', color: '#0EA5E9', icon: '🌊' }
     ],
     items: [
-      { id: 'cube', name: 'Cube', icon: '🎲', bin: 'pointy', hint: 'Has 8 sharp corner vertices!' },
-      { id: 'sphere', name: 'Sphere', icon: '⚽', bin: 'smooth', hint: 'Completely round and smooth, zero corners!' },
-      { id: 'cone', name: 'Cone', icon: '🎉', bin: 'pointy', hint: 'The pointy tip at the top is a vertex!' },
-      { id: 'cylinder', name: 'Cylinder', icon: '🥫', bin: 'smooth', hint: 'Has 2 curved edges, but zero sharp corners!' },
-      { id: 'tri_pyr', name: 'Triangular Pyramid', icon: '🔺', bin: 'pointy', hint: 'Has 4 sharp corner vertices!' },
-      { id: 'square_pyr', name: 'Square Pyramid', icon: '🏛️', bin: 'pointy', hint: '4 base corners + 1 apex = 5 vertices!' },
-      { id: 'tri_prism', name: 'Triangular Prism', icon: '⛺', bin: 'pointy', hint: 'Has 6 sharp corner vertices (3 at each end)!' },
-      { id: 'hex_prism', name: 'Hexagonal Prism', icon: '✏️', bin: 'pointy', hint: 'Has 12 corner vertices (6 top + 6 bottom)!' },
-      { id: 'globe', name: 'Earth Globe', icon: '🌍', bin: 'smooth', hint: 'Completely spherical with zero sharp corners!' },
-      { id: 'orange', name: 'Fresh Orange', icon: '🍊', bin: 'smooth', hint: 'Round sphere fruit with zero corners!' }
+      { id: 'dice_v', name: 'Playing Dice (Cube)', icon: '🎲', bin: 'pointy', hint: 'A cube has 8 sharp corner vertices!' },
+      { id: 'rubiks_v', name: 'Rubik\'s Cube (Cube)', icon: '🧩', bin: 'pointy', hint: 'Has 8 corner vertices!' },
+      { id: 'juice_v', name: 'Juice Box (Rectangular Prism)', icon: '🧃', bin: 'pointy', hint: 'A rectangular prism has 8 sharp corner vertices!' },
+      { id: 'brick_v', name: 'Building Brick (Rectangular Prism)', icon: '🧱', bin: 'pointy', hint: 'Has 8 corner vertices!' },
+      { id: 'cone_v', name: 'Traffic Cone (Cone)', icon: '🚧', bin: 'pointy', hint: 'The pointy tip at the top of a cone is an apex vertex!' },
+      { id: 'hat_v', name: 'Party Hat (Cone)', icon: '🎉', bin: 'pointy', hint: 'Has 1 sharp apex vertex at the very top!' },
+      { id: 'tent_v', name: 'Camping Tent (Triangular Prism)', icon: '⛺', bin: 'pointy', hint: 'Has 6 sharp corner vertices (3 at each triangle end)!' },
+      { id: 'giza_v', name: 'Egyptian Pyramid (Square Pyramid)', icon: '🏜️', bin: 'pointy', hint: 'Has 5 vertices: 4 at the square base + 1 apex on top!' },
+      { id: 'tea_v', name: 'Pyramid Tea Bag (Triangular Pyramid)', icon: '🍵', bin: 'pointy', hint: 'Has 4 sharp corner vertices!' },
+      { id: 'pencil_v', name: 'Wooden Pencil (Hexagonal Prism)', icon: '✏️', bin: 'pointy', hint: 'Has 12 corner vertices (6 on each hexagon base)!' },
+      { id: 'soccer_v', name: 'Soccer Ball (Sphere)', icon: '⚽', bin: 'smooth', hint: 'A sphere is completely round with 0 sharp corners!' },
+      { id: 'bball_v', name: 'Basketball (Sphere)', icon: '🏀', bin: 'smooth', hint: '0 vertices—smooth all around!' },
+      { id: 'orange_v', name: 'Fresh Orange (Sphere)', icon: '🍊', bin: 'smooth', hint: 'Round spherical fruit with zero corners!' },
+      { id: 'soda_v', name: 'Soda Can (Cylinder)', icon: '🥫', bin: 'smooth', hint: 'A cylinder has 2 curved edges but 0 sharp corner points!' },
+      { id: 'drum_v', name: 'Snare Drum (Cylinder)', icon: '🥁', bin: 'smooth', hint: 'Smooth circular rims with zero sharp vertices!' }
     ]
   },
   4: {
     id: 4,
-    title: 'Game 4: Real-World Sorter',
-    instructions: 'Match everyday real-world items into their 3D solid shape baskets!',
+    title: 'Game 4: Real-World Sorter (Part 1)',
+    instructions: 'Match everyday objects to Cube, Rectangular Prism, Cylinder, Cone, and Sphere!',
     bins: [
-      { id: 'cube', label: 'Cube Basket', sub: 'Dice, Boxes', color: '#6366F1', icon: '🎲' },
-      { id: 'sphere', label: 'Sphere Basket', sub: 'Balls, Fruit', color: '#10B981', icon: '⚽' },
-      { id: 'cylinder', label: 'Cylinder Basket', sub: 'Cans, Rolls', color: '#F59E0B', icon: '🥫' },
-      { id: 'cone', label: 'Cone Basket', sub: 'Hats, Funnels', color: '#EC4899', icon: '🍦' }
+      { id: 'cube', label: 'Cube Basket', sub: '6 Equal Squares', color: '#6366F1', icon: '🎲' },
+      { id: 'cuboid', label: 'Rectangular Prism', sub: '6 Rectangles', color: '#EC4899', icon: '🧃' },
+      { id: 'cylinder', label: 'Cylinder Basket', sub: '2 Circles + Curved', color: '#10B981', icon: '🥫' },
+      { id: 'cone', label: 'Cone Basket', sub: '1 Circle + Apex Tip', color: '#F59E0B', icon: '🚧' },
+      { id: 'sphere', label: 'Sphere Basket', sub: 'Round Ball Shape', color: '#3B82F6', icon: '⚽' }
     ],
     items: [
-      { id: 'dice', name: 'Playing Dice', icon: '🎲', bin: 'cube', hint: 'Dice have 6 square faces—a true cube!' },
-      { id: 'bball', name: 'Basketball', icon: '🏀', bin: 'sphere', hint: 'A basketball is completely round in all directions!' },
-      { id: 'soda', name: 'Soda Can', icon: '🥤', bin: 'cylinder', hint: 'Two circular ends with a curved body!' },
-      { id: 'icecream', name: 'Waffle Cone', icon: '🍦', bin: 'cone', hint: 'Pointy tip with a circular opening!' },
-      { id: 'orange', name: 'Fresh Orange', icon: '🍊', bin: 'sphere', hint: 'Round like a sphere!' },
-      { id: 'partyhat', name: 'Party Hat', icon: '🎉', bin: 'cone', hint: 'A classic pointy cone!' },
-      { id: 'rubiks', name: 'Rubik\'s Cube', icon: '🧩', bin: 'cube', hint: 'A 3x3 puzzle cube!' },
-      { id: 'soupcan', name: 'Canned Soup', icon: '🥫', bin: 'cylinder', hint: 'A sturdy cylinder can!' },
-      { id: 'giftbox', name: 'Gift Box', icon: '🎁', bin: 'cube', hint: 'A square package box is a cube!' },
-      { id: 'soccer', name: 'Soccer Ball', icon: '⚽', bin: 'sphere', hint: 'Spherical ball that rolls in any direction!' },
-      { id: 'drum', name: 'Snare Drum', icon: '🥁', bin: 'cylinder', hint: 'Round drum body with circular top and bottom!' },
-      { id: 'traffic_cone', name: 'Traffic Cone', icon: '🚧', bin: 'cone', hint: 'Pointy safety cone!' },
-      { id: 'icecube', name: 'Ice Cube', icon: '🧊', bin: 'cube', hint: 'Square frozen ice cube!' },
-      { id: 'globe', name: 'Earth Globe', icon: '🌍', bin: 'sphere', hint: 'Spherical planetary globe!' },
-      { id: 'battery', name: 'AA Battery', icon: '🔋', bin: 'cylinder', hint: 'Cylindrical metal battery cell!' },
-      { id: 'megaphone', name: 'Megaphone Funnel', icon: '📢', bin: 'cone', hint: 'Conical sound cone!' }
+      { id: 'dice_rw', name: 'Playing Dice', icon: '🎲', bin: 'cube', hint: '6 equal square faces make a cube!' },
+      { id: 'rubiks_rw', name: 'Rubik\'s Cube', icon: '🧩', bin: 'cube', hint: 'A 3x3 puzzle cube!' },
+      { id: 'icecube_rw', name: 'Frozen Ice Cube', icon: '🧊', bin: 'cube', hint: 'Square frozen ice cube!' },
+      { id: 'giftbox_rw', name: 'Gift Box', icon: '🎁', bin: 'cube', hint: 'A square package box is a cube!' },
+      { id: 'juice_rw', name: 'Juice Box', icon: '🧃', bin: 'cuboid', hint: '6 rectangle faces make a rectangular prism!' },
+      { id: 'brick_rw', name: 'Building Brick', icon: '🧱', bin: 'cuboid', hint: 'A brick is a classic rectangular prism (cuboid)!' },
+      { id: 'book_rw', name: 'Textbook', icon: '📚', bin: 'cuboid', hint: 'A book has 6 flat rectangular faces!' },
+      { id: 'eraser_rw', name: 'Chalkboard Eraser', icon: '🧽', bin: 'cuboid', hint: 'Box-shaped rectangular prism!' },
+      { id: 'soda_rw', name: 'Soda Can', icon: '🥫', bin: 'cylinder', hint: '2 circular ends and a curved body = cylinder!' },
+      { id: 'drum_rw', name: 'Snare Drum', icon: '🥁', bin: 'cylinder', hint: 'Round body with flat circular heads is a cylinder!' },
+      { id: 'roll_rw', name: 'Paper Towel Roll', icon: '🧻', bin: 'cylinder', hint: 'A round roll is a cylinder!' },
+      { id: 'battery_rw', name: 'AA Battery', icon: '🔋', bin: 'cylinder', hint: 'Cylindrical metal battery cell!' },
+      { id: 'traffic_rw', name: 'Traffic Cone', icon: '🚧', bin: 'cone', hint: 'Pointy safety cone with a circular base!' },
+      { id: 'partyhat_rw', name: 'Birthday Party Hat', icon: '🎉', bin: 'cone', hint: 'Pointy party hat is a classic cone!' },
+      { id: 'waffle_rw', name: 'Waffle Cone', icon: '🍦', bin: 'cone', hint: 'Cone shape holding delicious ice cream!' },
+      { id: 'soccer_rw', name: 'Soccer Ball', icon: '⚽', bin: 'sphere', hint: 'Completely round ball that rolls in any direction!' },
+      { id: 'bball_rw', name: 'Basketball', icon: '🏀', bin: 'sphere', hint: 'A basketball is a perfect sphere!' },
+      { id: 'orange_rw', name: 'Fresh Orange', icon: '🍊', bin: 'sphere', hint: 'Round sphere fruit!' },
+      { id: 'globe_rw', name: 'Earth Globe', icon: '🌍', bin: 'sphere', hint: 'Spherical planetary globe!' }
+    ]
+  },
+  5: {
+    id: 5,
+    title: 'Game 5: Real-World Sorter (Part 2)',
+    instructions: 'Match everyday objects to Triangular Prism, Square Pyramid, Triangular Pyramid, and Hexagonal Prism!',
+    bins: [
+      { id: 'tri_prism', label: 'Triangular Prism', sub: '2 Triangles + 3 Rectangles', color: '#8B5CF6', icon: '⛺' },
+      { id: 'square_pyr', label: 'Square Pyramid', sub: '1 Square Base + 4 Triangles', color: '#14B8A6', icon: '🏛️' },
+      { id: 'tri_pyr', label: 'Triangular Pyramid', sub: '4 Triangles (Tetrahedron)', color: '#EC4899', icon: '🔺' },
+      { id: 'hex_prism', label: 'Hexagonal Prism', sub: '2 Hexagons + 6 Rectangles', color: '#EAB308', icon: '✏️' }
+    ],
+    items: [
+      { id: 'tent_p', name: 'Camping Tent', icon: '⛺', bin: 'tri_prism', hint: 'Triangular ends with rectangular floor and roof!' },
+      { id: 'roof_p', name: 'House Roof', icon: '🏠', bin: 'tri_prism', hint: 'Triangular prism shape lets rain glide off!' },
+      { id: 'toblerone_p', name: 'Toblerone Chocolate', icon: '🍫', bin: 'tri_prism', hint: 'Famous Swiss triangular prism chocolate bar!' },
+      { id: 'cheese_p', name: 'Cheese Wedge', icon: '🧀', bin: 'tri_prism', hint: 'Wedge of cheese is a triangular prism!' },
+      { id: 'giza_p', name: 'Great Pyramid of Giza', icon: '🏜️', bin: 'square_pyr', hint: 'Wide square base with 4 triangular faces!' },
+      { id: 'teepee_p', name: 'Teepee Tent', icon: '🛖', bin: 'square_pyr', hint: 'Pyramid tent with 4 triangular walls!' },
+      { id: 'lantern_p', name: 'Lantern Cover', icon: '🏮', bin: 'square_pyr', hint: 'Square base pyramid lantern!' },
+      { id: 'teabag_p', name: 'Pyramid Tea Bag', icon: '🍵', bin: 'tri_pyr', hint: 'Has 4 equilateral triangle sides—a true tetrahedron!' },
+      { id: 'pyraminx_p', name: 'Pyraminx Puzzle', icon: '🔺', bin: 'tri_pyr', hint: 'Triangle puzzle pyramid with 4 triangular faces!' },
+      { id: 'die4_p', name: '4-Sided Die', icon: '🎲', bin: 'tri_pyr', hint: 'Tetrahedral 4-sided gaming die!' },
+      { id: 'pencil_p', name: 'Wooden Pencil', icon: '✏️', bin: 'hex_prism', hint: 'Has 2 hexagon ends and 6 rectangular sides!' },
+      { id: 'hexnut_p', name: 'Hex Nut / Bolt', icon: '🔩', bin: 'hex_prism', hint: '6-sided hexagonal prism metal nut!' },
+      { id: 'honeycomb_p', name: 'Honeycomb Cell', icon: '🍯', bin: 'hex_prism', hint: 'Bee honeycombs are hexagonal prisms!' }
     ]
   }
 };
@@ -2013,7 +2627,7 @@ function renderSorterBoard() {
 
     binEl.innerHTML = `
       <div class="bin-header" style="background: ${bin.color}15; border-color: ${bin.color}40;">
-        <span class="bin-icon">${bin.icon}</span>
+        <span class="bin-icon">${getShapeOrObjectSvg(bin.id, 28)}</span>
         <div class="bin-titles">
           <h4>${bin.label}</h4>
           <span class="bin-subtitle">${bin.sub}</span>
@@ -2023,7 +2637,7 @@ function renderSorterBoard() {
       <div class="bin-drop-zone" id="dropzone-${bin.id}">
         ${sorterSortedItems[bin.id].map(item => `
           <div class="sorted-chip" title="${item.name}">
-            <span class="chip-emoji">${item.icon}</span>
+            <span class="chip-emoji">${getShapeOrObjectSvg(item.id, 24)}</span>
             <span class="chip-name-sub">${item.name}</span>
           </div>
         `).join('')}
@@ -2069,7 +2683,7 @@ function renderSorterBoard() {
 
       card.innerHTML = `
         <div class="item-visual-frame">
-          <span class="item-visual">${item.icon}</span>
+          <span class="item-visual">${getShapeOrObjectSvg(item.id, 52)}</span>
         </div>
         <span class="item-name">${item.name}</span>
       `;
@@ -2125,7 +2739,7 @@ function attemptDropItem(itemId, targetBinId) {
     draggedItemId = null;
 
     feedback.className = 'quiz-feedback correct';
-    feedback.innerHTML = `🌟 <strong>Correct!</strong> ${item.icon} <strong>${item.name}</strong> fits here! <small>${item.hint}</small>`;
+    feedback.innerHTML = `🌟 <strong>Correct!</strong> <span class="feedback-mini-icon">${getShapeOrObjectSvg(item.id, 24)}</span> <strong>${item.name}</strong> fits here! <small>${item.hint}</small>`;
 
     if (typeof confetti === 'function') {
       confetti({ particleCount: 35, spread: 50, origin: { y: 0.7 } });
@@ -2141,7 +2755,7 @@ function attemptDropItem(itemId, targetBinId) {
     // WRONG DROP!
     sound.playWrong();
     feedback.className = 'quiz-feedback wrong';
-    feedback.innerHTML = `💡 Not quite! <strong>${item.icon} ${item.name}</strong> doesn't belong in this basket. Hint: ${item.hint}`;
+    feedback.innerHTML = `💡 Not quite! <span class="feedback-mini-icon">${getShapeOrObjectSvg(item.id, 24)}</span> <strong>${item.name}</strong> doesn't belong in this basket. Hint: ${item.hint}`;
 
     const binEl = document.getElementById(`bin-${targetBinId}`);
     if (binEl) {
