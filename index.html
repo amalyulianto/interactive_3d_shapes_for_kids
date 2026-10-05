@@ -3,30 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Math Studio - Alapakadala Studio</title>
+  <title>Interactive Math Studio - Elementary Geometry Suite</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="hub.css">
 </head>
 <body>
 
-  <!-- Studio Header -->
+  <!-- Clean, Reassuring Studio Header -->
   <header class="hub-header">
     <div class="brand">
-      <div class="brand-logo">✨📐🪞</div>
+      <div class="brand-logo" aria-hidden="true">✨📐🪞</div>
       <div class="brand-text">
         <h1>Interactive Math Studio</h1>
         <span class="studio-badge">By Alapakadala Studio</span>
       </div>
     </div>
 
+    <!-- Parent & Navigation Controls -->
     <div class="hub-header-actions">
-      <button id="btnHeaderBackGrades" class="hub-nav-btn hidden" onclick="showGradesView()" title="Change Grade Level">
+      <div class="parent-safety-tag">
+        <span class="shield-icon">🛡️</span>
+        <span>Kid-Safe • Ad-Free</span>
+      </div>
+
+      <button id="btnHeaderBackGrades" class="hub-nav-btn hidden" onclick="showGradesView()" title="Return to Grade Selection">
         ⬅️ Change Grade
       </button>
+
       <div class="hub-grade-chip" id="hubGradeChip">
-        🎒 Select Your Grade
+        🎒 Select Grade
       </div>
     </div>
   </header>
@@ -34,36 +41,40 @@
   <!-- Main Content Hub -->
   <main class="hub-main">
 
-    <!-- VIEW 1: GRADE SELECTION LISTVIEW -->
+    <!-- ================= VIEW 1: GRADE SELECTION SCREEN ================= -->
     <section id="gradesView" class="hub-view-panel">
 
-      <!-- Hero Greeting for Grade Choice -->
+      <!-- Hero Header for Parents & Kids -->
       <section class="hub-hero">
-        <div class="hero-tag">🎒 Elementary Math Pathway</div>
-        <h2>Choose Your Grade Level 🚀</h2>
+        <div class="hero-tag">
+          <span class="tag-icon">🎒</span>
+          <span>Elementary Math Pathway</span>
+        </div>
+        <h2>Select Your Child's Grade Level 🚀</h2>
         <p>
-          Select your grade level to discover interactive 3D geometry adventures, 
-          hands-on symmetry labs, and fun curriculum-aligned math challenges!
+          Curriculum-aligned spatial geometry and interactive math adventures designed for elementary learners. 
+          Hands-on 3D manipulation, self-paced challenges, and joyful feedback.
         </p>
 
+        <!-- Reassuring Feature Highlights for Parents -->
         <div class="hero-highlights-row">
-          <span class="highlight-pill">🎒 Elementary Curricula</span>
-          <span class="highlight-pill">📐 3D Interactive Models</span>
-          <span class="highlight-pill">🎮 Hands-on Puzzles</span>
-          <span class="highlight-pill">🏆 Star Quizzes & Badges</span>
+          <span class="highlight-pill">📘 Common Core Aligned</span>
+          <span class="highlight-pill">🎮 100% Hands-On Manipulatives</span>
+          <span class="highlight-pill">⭐ Self-Paced Star Quizzes</span>
+          <span class="highlight-pill">🚫 Zero Ads or Accounts</span>
         </div>
       </section>
 
-      <!-- Grade Listview Container -->
+      <!-- Grade Selection Listview -->
       <section class="grade-listview-wrapper">
         <div class="grade-listview-header">
-          <h3>Available Grades</h3>
-          <span class="grade-count-badge">1 Grade Available</span>
+          <h3>Choose Grade Level</h3>
+          <span class="grade-count-badge">Grade 2 Available</span>
         </div>
 
         <div class="grade-listview">
-          <!-- Grade 2 Active List Item -->
-          <div class="grade-list-item active" onclick="selectGrade('grade-2')" tabindex="0" role="button" aria-label="Explore Grade 2 Math Lessons">
+          <!-- Grade 2 Active Card -->
+          <div class="grade-list-item active" onclick="selectGrade('grade-2')" tabindex="0" role="button" aria-label="Open Grade 2 Elementary Geometry Lessons">
             <div class="grade-item-left">
               <div class="grade-item-avatar">
                 <span class="grade-avatar-icon">🎒</span>
@@ -72,23 +83,23 @@
               <div class="grade-item-details">
                 <div class="grade-item-title-row">
                   <h4>Grade 2 Mathematics</h4>
-                  <span class="grade-status-pill available">Available Now 🌟</span>
+                  <span class="grade-status-pill available">✨ Ready to Explore</span>
                 </div>
                 <p class="grade-item-desc">
-                  Elementary Geometry Suite • Spatial 3D Solids, Faces, Edges, Vertices & Lines of Symmetry
+                  Elementary Spatial Geometry Suite • 3D Solid Shapes, Faces, Edges, Vertices & Lines of Symmetry with real-world sorting and paper folding.
                 </p>
                 <div class="grade-item-meta">
-                  <span class="meta-tag">📚 2 Interactive Adventures</span>
-                  <span class="meta-tag">🎲 9 3D Solid Models</span>
-                  <span class="meta-tag">🪞 5 Symmetry Tools</span>
-                  <span class="meta-tag">🏆 5 Star Quizzes</span>
+                  <span class="meta-tag">🎲 9 Interactive 3D Solids</span>
+                  <span class="meta-tag">🪞 5 Symmetry Activities</span>
+                  <span class="meta-tag">🧺 Hands-on Sorter Lab</span>
+                  <span class="meta-tag">🏆 9 Mastery Quizzes</span>
                 </div>
               </div>
             </div>
 
             <div class="grade-item-right">
               <button class="grade-enter-btn" tabindex="-1">
-                <span>Explore Lessons</span>
+                <span>View Lessons</span>
                 <span class="arrow-icon">➔</span>
               </button>
             </div>
@@ -96,56 +107,86 @@
         </div>
       </section>
 
+      <!-- Parent Assurance Strip -->
+      <section class="parent-assurance-grid">
+        <div class="assurance-card">
+          <div class="assurance-icon">📐</div>
+          <div class="assurance-text">
+            <h5>Spatial Intuition First</h5>
+            <p>Children rotate real 3D solids and fold virtual paper instead of memorizing abstract formulas.</p>
+          </div>
+        </div>
+
+        <div class="assurance-card">
+          <div class="assurance-icon">🔊</div>
+          <div class="assurance-text">
+            <h5>Positive Sensory Feedback</h5>
+            <p>Procedural chimes, gentle hints, and confetti encourage growth without stressful penalties.</p>
+          </div>
+        </div>
+
+        <div class="assurance-card">
+          <div class="assurance-icon">🔒</div>
+          <div class="assurance-text">
+            <h5>Safe & Private</h5>
+            <p>Zero trackers, zero popups, zero student data collected. Everything runs locally in the browser.</p>
+          </div>
+        </div>
+      </section>
+
     </section>
 
-    <!-- VIEW 2: GRADE 2 LESSONS LIST -->
+    <!-- ================= VIEW 2: GRADE 2 LESSONS LIST ================= -->
     <section id="lessonsView" class="hub-view-panel hidden">
 
       <!-- Breadcrumb Navigation Bar -->
-      <div class="lessons-nav-bar">
-        <button class="lessons-back-btn" onclick="showGradesView()" title="Back to Grade Selection">
-          ⬅️ Back to Grade Selection
+      <nav class="lessons-nav-bar" aria-label="Breadcrumb">
+        <button class="lessons-back-btn" onclick="showGradesView()" title="Change grade level">
+          ⬅️ Change Grade Level
         </button>
         <div class="current-grade-badge">
           <span>Current Level:</span>
           <strong>Grade 2 Elementary Geometry</strong>
         </div>
-      </div>
+      </nav>
 
-      <!-- Hero Greeting for Grade 2 -->
+      <!-- Grade 2 Hero Banner -->
       <section class="hub-hero">
-        <div class="hero-tag">🌟 Grade 2 Learning Adventure</div>
+        <div class="hero-tag">
+          <span class="tag-icon">🌟</span>
+          <span>Grade 2 Geometry Adventures</span>
+        </div>
         <h2>Welcome to Grade 2 Math Adventures! 🚀</h2>
         <p>
-          Explore geometry in interactive 3D, discover the magic of mirror reflections, 
-          and master elementary math concepts through play, puzzles, and quizzes!
+          Select a lesson below to begin exploring 3D solids and mirror reflections with interactive tools, 
+          playful sorting challenges, and celebratory quizzes!
         </p>
 
         <div class="hero-highlights-row">
-          <span class="highlight-pill">🎮 Hands-on Puzzles</span>
-          <span class="highlight-pill">📐 3D Interactive Models</span>
-          <span class="highlight-pill">🪞 Reflection & Symmetry</span>
-          <span class="highlight-pill">🏆 Instant Star Quizzes</span>
-          <span class="highlight-pill">🎉 Confetti Rewards</span>
+          <span class="highlight-pill">🎮 Active Play</span>
+          <span class="highlight-pill">🔍 Visual Detective</span>
+          <span class="highlight-pill">🎨 Pixel Painter</span>
+          <span class="highlight-pill">⭐ Confetti Celebrations</span>
         </div>
       </section>
 
       <!-- Available Lessons Grid -->
       <section class="lessons-grid">
 
-        <!-- LESSON 1 CARD: 3D SHAPES -->
-        <a href="shapes.html" class="lesson-card shapes">
-          <div>
+        <!-- LESSON 1 CARD: 3D SOLID SHAPES -->
+        <a href="shapes.html" class="lesson-card shapes" aria-label="Start Lesson 1: 3D Solid Shapes Adventure">
+          <div class="lesson-card-content">
             <div class="lesson-card-top">
               <span class="lesson-number-badge">Lesson 1</span>
               <span class="lesson-badge-pill">9 3D Solids</span>
             </div>
 
-            <div class="lesson-visual-banner">
-              <span>🎲</span>
-              <span>🥫</span>
-              <span>🍦</span>
-              <span>⚽</span>
+            <!-- Playful Mascot Banner -->
+            <div class="lesson-visual-banner shapes-banner">
+              <span class="floating-icon icon-1">🎲</span>
+              <span class="floating-icon icon-2">🥫</span>
+              <span class="floating-icon icon-3">🍦</span>
+              <span class="floating-icon icon-4">⚽</span>
             </div>
 
             <div class="lesson-title-block">
@@ -154,82 +195,87 @@
             </div>
 
             <p class="lesson-desc">
-              Rotate and zoom real 3D solid shapes, explode surfaces to count faces, 
-              explore everyday objects, sort shapes in the lab, and test your skills in fun quizzes!
+              Rotate real 3D solids in 360°, explode surfaces to count flat and curved faces, 
+              test real-world textures (soda can, juice box, dice), and sort shapes in the lab!
             </p>
 
-            <ul class="lesson-features-list">
-              <li><span class="feature-check">✓</span> <strong>Interactive 3D Stage</strong> with 360° rotation & zoom</li>
-              <li><span class="feature-check">✓</span> <strong>Explode Faces Slider</strong> to see inner surfaces</li>
-              <li><span class="feature-check">✓</span> <strong>Real-World Textures</strong> (Soda can, Juice box, Dice)</li>
-              <li><span class="feature-check">✓</span> <strong>Shape Sorter Lab</strong> (Roll vs. Stack, Pointy vs. Smooth)</li>
-              <li><span class="feature-check">✓</span> <strong>4 Grade 2 Shape Quizzes</strong> with instant rewards</li>
-            </ul>
+            <!-- Parent Quick Feature Highlights -->
+            <div class="lesson-features-tags">
+              <span class="feat-pill">🎮 360° 3D Stage</span>
+              <span class="feat-pill">💥 Face Exploder</span>
+              <span class="feat-pill">🧺 Sorter Lab</span>
+              <span class="feat-pill">🏆 4 Quizzes</span>
+            </div>
           </div>
 
-          <button class="lesson-cta-btn">
-            <span>Start 3D Shapes Adventure</span>
-            <span>➔</span>
-          </button>
+          <div class="lesson-card-footer">
+            <div class="lesson-cta-btn">
+              <span>Start 3D Shapes Adventure</span>
+              <span class="cta-arrow">➔</span>
+            </div>
+          </div>
         </a>
 
-        <!-- LESSON 2 CARD: SYMMETRY -->
-        <a href="symmetry.html" class="lesson-card symmetry">
-          <div>
+        <!-- LESSON 2 CARD: LINES OF SYMMETRY -->
+        <a href="symmetry.html" class="lesson-card symmetry" aria-label="Start Lesson 2: Lines of Symmetry Studio">
+          <div class="lesson-card-content">
             <div class="lesson-card-top">
               <span class="lesson-number-badge">Lesson 2</span>
               <span class="lesson-badge-pill">5 Activities</span>
             </div>
 
-            <div class="lesson-visual-banner">
-              <span>🦋</span>
-              <span>🪞</span>
-              <span>🎨</span>
-              <span>🥪</span>
+            <!-- Playful Mascot Banner -->
+            <div class="lesson-visual-banner symmetry-banner">
+              <span class="floating-icon icon-1">🦋</span>
+              <span class="floating-icon icon-2">🪞</span>
+              <span class="floating-icon icon-3">🎨</span>
+              <span class="floating-icon icon-4">🥪</span>
             </div>
 
             <div class="lesson-title-block">
               <h3>Lines of Symmetry Studio</h3>
-              <p class="lesson-subtitle">Reflections, Folding & Mirror Patterns</p>
+              <p class="lesson-subtitle">Mirror Reflections, Paper Folding & Symmetry Detective</p>
             </div>
 
             <p class="lesson-desc">
-              Fold 3D paper sheets to see if halves match, hunt vertical and horizontal 
-              symmetry lines, paint symmetrical 8×8 artwork, and pick the true mirror reflection!
+              Fold 3D virtual paper sheets to see if halves match up, uncover symmetry traps on everyday items, 
+              paint 8×8 bilateral pixel art, and speed-match true reflections!
             </p>
 
-            <ul class="lesson-features-list">
-              <li><span class="feature-check">✓</span> <strong>3D Fold & Reveal</strong> (Vertical, Horizontal & Diagonal)</li>
-              <li><span class="feature-check">✓</span> <strong>Line Detective</strong> with real-world objects & trap cuts</li>
-              <li><span class="feature-check">✓</span> <strong>8×8 Mirror Painter</strong> (Guided Puzzles & Free-Draw)</li>
-              <li><span class="feature-check">✓</span> <strong>Mirror Match Arena</strong> (Identify true reflections)</li>
-              <li><span class="feature-check">✓</span> <strong>Symmetry Champion Quiz</strong> tailored for Grade 2</li>
-            </ul>
+            <!-- Parent Quick Feature Highlights -->
+            <div class="lesson-features-tags">
+              <span class="feat-pill">📄 3D Paper Fold</span>
+              <span class="feat-pill">🔍 Line Detective</span>
+              <span class="feat-pill">🎨 Pixel Painter</span>
+              <span class="feat-pill">🏆 5 Quizzes</span>
+            </div>
           </div>
 
-          <button class="lesson-cta-btn">
-            <span>Start Symmetry Studio</span>
-            <span>➔</span>
-          </button>
+          <div class="lesson-card-footer">
+            <div class="lesson-cta-btn">
+              <span>Start Symmetry Studio</span>
+              <span class="cta-arrow">➔</span>
+            </div>
+          </div>
         </a>
 
       </section>
 
-      <!-- Why Kids Love It Feature Strip -->
+      <!-- Why Parents & Kids Love It Strip -->
       <section class="benefits-card">
         <div class="benefit-item">
           <div class="benefit-icon">👆</div>
           <div class="benefit-info">
-            <h4>100% Hands-On</h4>
-            <p>Every concept is interactive—kids rotate, fold, sort, paint, and discover math naturally.</p>
+            <h4>100% Active Manipulation</h4>
+            <p>Children rotate, explode, fold, and paint rather than passively reading textbook pages.</p>
           </div>
         </div>
 
         <div class="benefit-item">
-          <div class="benefit-icon">🔊</div>
+          <div class="benefit-icon">💡</div>
           <div class="benefit-info">
-            <h4>Playful Audio</h4>
-            <p>Chimes, pops, folding paper effects, and fanfare sounds guide and reward learners.</p>
+            <h4>Encouraging Feedback</h4>
+            <p>Mistakes provide helpful clues and geometric hints rather than frustrating red marks.</p>
           </div>
         </div>
 
@@ -237,7 +283,7 @@
           <div class="benefit-icon">⭐</div>
           <div class="benefit-info">
             <h4>Grade 2 Aligned</h4>
-            <p>Carefully calibrated for elementary school curriculum standards with kid-friendly terms.</p>
+            <p>Specifically calibrated to elementary school curriculum standards with kid-friendly terms.</p>
           </div>
         </div>
       </section>
@@ -246,10 +292,12 @@
 
   </main>
 
-  <!-- Studio Footer -->
+  <!-- Clean Studio Footer -->
   <footer class="hub-footer">
-    <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary School Geometry Learning</p>
-    <p class="copyright">© 2026 Alapakadala Studio • Making Math Engaging, Visual & Interactive!</p>
+    <div class="footer-content">
+      <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary Geometry & Math Learning</p>
+      <p class="copyright">© 2026 Alapakadala Studio • Zero-Build Educational Platform • Grade 2 Curriculum</p>
+    </div>
   </footer>
 
   <!-- View Switching Navigation Script -->
@@ -258,7 +306,7 @@
       if (gradeId === 'grade-2') {
         document.getElementById('gradesView').classList.add('hidden');
         document.getElementById('lessonsView').classList.remove('hidden');
-        document.getElementById('hubGradeChip').innerHTML = '🎒 Grade 2 Geometry Suite';
+        document.getElementById('hubGradeChip').innerHTML = '🎒 Grade 2 Geometry';
         document.getElementById('btnHeaderBackGrades').classList.remove('hidden');
         window.location.hash = 'grade-2';
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -268,7 +316,7 @@
     function showGradesView() {
       document.getElementById('lessonsView').classList.add('hidden');
       document.getElementById('gradesView').classList.remove('hidden');
-      document.getElementById('hubGradeChip').innerHTML = '🎒 Select Your Grade';
+      document.getElementById('hubGradeChip').innerHTML = '🎒 Select Grade';
       document.getElementById('btnHeaderBackGrades').classList.add('hidden');
       if (window.location.hash) {
         history.pushState(null, null, ' ');
