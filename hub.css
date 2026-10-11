@@ -462,6 +462,10 @@ body {
   border-color: #F472B6;
 }
 
+.lesson-card.patterns:hover {
+  border-color: #F59E0B;
+}
+
 .lesson-card-header {
   margin-bottom: 12px;
 }
@@ -494,6 +498,12 @@ body {
   border: 1px solid #FBCFE8;
 }
 
+.lesson-card.patterns .lesson-number-badge {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
 .lesson-icon-preview {
   font-size: 1.15rem;
   letter-spacing: 2px;
@@ -515,6 +525,10 @@ body {
 
 .lesson-card.symmetry .lesson-subtitle {
   color: #BE185D;
+}
+
+.lesson-card.patterns .lesson-subtitle {
+  color: #B45309;
 }
 
 .lesson-desc {
@@ -549,6 +563,11 @@ body {
   box-shadow: 0 2px 8px rgba(236, 72, 153, 0.2);
 }
 
+.lesson-card.patterns .lesson-cta-btn {
+  background: linear-gradient(135deg, #D97706, #F59E0B);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+}
+
 .lesson-card:hover .lesson-cta-btn {
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
@@ -556,6 +575,10 @@ body {
 
 .lesson-card.symmetry:hover .lesson-cta-btn {
   box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
+}
+
+.lesson-card.patterns:hover .lesson-cta-btn {
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
 }
 
 .cta-arrow {

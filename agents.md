@@ -34,6 +34,9 @@ d:\coding\interactive_math\
 ├── symmetry.css                # Lesson 2 stylesheet (3D paper sheet, painter grid, mirror cards)
 ├── symmetry.js                 # Legacy bundle / fallback reference (kept for 100% backward compatibility)
 │
+├── patterns.html               # Lesson 3: Shape & Solid Patterns Studio
+├── patterns.css                # Lesson 3 stylesheet (sequence tracks, repeating rings, tiles)
+│
 ├── js/
 │   ├── common/
 │   │   ├── sound.js            # Unified Web Audio API synthesizer singleton (window.sound)
@@ -55,6 +58,15 @@ d:\coding\interactive_math\
 │       ├── mirror-match.js     # Activity 4: Mirror Match speed reflection challenge
 │       ├── symmetry-quiz.js    # Activity 5: 4 Grade 2 Symmetry Mastery Quizzes
 │       └── symmetry-main.js    # Main coordinator, activity tab switcher & bootstrapper
+│   │
+│   └── patterns/
+│       ├── patterns-svg.js     # 2D & 3D oriented/sized pattern vector illustrations
+│       ├── patterns-data.js    # Worksheets 1, 2, 3 datasets, presets & quizzes
+│       ├── unit-detective.js   # Activity 1: Spot & ring the repeating unit
+│       ├── missing-pattern.js  # Activity 2: Blanks A & B pattern solver
+│       ├── tessellation.js     # Activity 3: Zero gaps & overlaps tiling studio
+│       ├── patterns-quiz.js    # Activity 4: 4 graded curriculum mastery quizzes
+│       └── patterns-main.js    # Main coordinator, mode switcher & bootstrapper
 │
 └── agents.md                   # This architectural guide and developer manual
 ```
@@ -109,6 +121,25 @@ d:\coding\interactive_math\
 <script src="js/symmetry/symmetry-main.js"></script>
 ```
 
+#### For `patterns.html`:
+```html
+<!-- 1. Common Audio & Utilities -->
+<script src="js/common/sound.js"></script>
+<script src="js/common/utils.js"></script>
+
+<!-- 2. Pattern Vectors & Curated Datasets -->
+<script src="js/patterns/patterns-svg.js"></script>
+<script src="js/patterns/patterns-data.js"></script>
+
+<!-- 3. The 3 Interactive Activities -->
+<script src="js/patterns/unit-detective.js"></script>
+<script src="js/patterns/missing-pattern.js"></script>
+<script src="js/patterns/patterns-quiz.js"></script>
+
+<!-- 4. Application Coordinator -->
+<script src="js/patterns/patterns-main.js"></script>
+```
+
 ---
 
 ## 4. Subsystem Details
@@ -151,6 +182,11 @@ d:\coding\interactive_math\
 3. **Mirror Painter**: 8×8 interactive pixel grid with Guided Challenge mode (color right half to mirror locked left half) and Free-Draw Magic mode (real-time bilateral symmetry).
 4. **Mirror Match**: Rapid visual discrimination distinguishing true reflection from identical (unflipped), upside-down, and rotated trap cards.
 5. **Symmetry Challenge Quizzes**: 4 graded 5-question quizzes covering everyday objects, orientation, letters, and 2D polygons.
+
+### 4.6 Patterns Studio Activities (`js/patterns/`)
+1. **Ring Repeating Group** (`unit-detective.js`): Interactive repeating ring tool allowing children to enclose the repeating core unit of newly learned polygons (pentagon, hexagon, octagon) and 3D solids (Solve this! 1a, 1b, 2a).
+2. **Missing 2D Shapes & 3D Solids Builder** (`missing-pattern.js`): Curriculum-matched track solving blanks A & B with 2D shapes (pentagons, hexagons, octagons, triangles) and 3D solids (tilted cylinders, inverted cones, square pyramids, tall vs. short cylinders).
+3. **Pattern Mastery Quizzes** (`patterns-quiz.js`): 4 graded 5-question levels testing 2D polygons, 3D solid sequences, orientation/size traps, and master challenges with celebratory confetti and Web Audio API feedback.
 
 ---
 
@@ -232,5 +268,5 @@ When modifying, extending, or maintaining this codebase, adhere strictly to the 
    - Keep audio synthesizer in `sound.js`.
    - Keep DOM coordinators in `*-main.js`.
 6. **Strict Two-Tier Navigation Hierarchy**:
-   - From lesson-level pages (`shapes.html`, `symmetry.html`), back navigation must route to the grade's lesson list page (`index.html#grade-2`), NOT to the root grade selection screen.
+   - From lesson-level pages (`shapes.html`, `symmetry.html`, `patterns.html`), back navigation must route to the grade's lesson list page (`index.html#grade-2`), NOT to the root grade selection screen.
    - From the grade's lesson list page (`#lessonsView` in `index.html`), provide explicit back navigation to the grades selection screen (`#gradesView` / `showGradesView()`).
