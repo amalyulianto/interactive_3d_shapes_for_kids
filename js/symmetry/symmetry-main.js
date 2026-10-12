@@ -25,6 +25,7 @@ function switchSymmetryMode(mode) {
     fold: document.getElementById('tabFold'),
     detective: document.getElementById('tabDetective'),
     painter: document.getElementById('tabPainter'),
+    'color-mirror': document.getElementById('tabColorMirror'),
     match: document.getElementById('tabMatch'),
     quiz: document.getElementById('tabQuiz')
   };
@@ -37,6 +38,7 @@ function switchSymmetryMode(mode) {
     fold: document.getElementById('foldView'),
     detective: document.getElementById('detectiveView'),
     painter: document.getElementById('painterView'),
+    'color-mirror': document.getElementById('colorMirrorView'),
     match: document.getElementById('matchView'),
     quiz: document.getElementById('quizView')
   };
@@ -46,6 +48,8 @@ function switchSymmetryMode(mode) {
 
   if (mode === 'painter' && typeof renderPainterGrid === 'function') {
     renderPainterGrid();
+  } else if (mode === 'color-mirror' && typeof initColorMirror === 'function') {
+    initColorMirror();
   } else if (mode === 'match' && typeof initMirrorMatch === 'function') {
     initMirrorMatch();
   } else if (mode === 'quiz' && typeof startSymmQuiz === 'function') {
@@ -57,6 +61,7 @@ function bootSymmetryApp() {
   if (typeof initFoldActivity === 'function') initFoldActivity();
   if (typeof initDetectiveActivity === 'function') initDetectiveActivity();
   if (typeof initPainterActivity === 'function') initPainterActivity();
+  if (typeof initColorMirror === 'function') initColorMirror();
   if (typeof initMirrorMatch === 'function') initMirrorMatch();
   if (typeof renderSymmQuizLevelSelect === 'function') renderSymmQuizLevelSelect();
 }

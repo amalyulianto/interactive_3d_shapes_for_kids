@@ -110,10 +110,11 @@ d:\coding\interactive_math\
 <!-- 2. Symmetry Datasets -->
 <script src="js/symmetry/symmetry-data.js"></script>
 
-<!-- 3. The 5 Interactive Activities -->
+<!-- 3. The Interactive Activities -->
 <script src="js/symmetry/fold-reveal.js"></script>
 <script src="js/symmetry/detective.js"></script>
 <script src="js/symmetry/painter.js"></script>
+<script src="js/symmetry/color-mirror.js"></script>
 <script src="js/symmetry/mirror-match.js"></script>
 <script src="js/symmetry/symmetry-quiz.js"></script>
 
@@ -180,8 +181,9 @@ d:\coding\interactive_math\
 1. **Fold & Reveal**: 3D CSS `rotateY`, `rotateX`, and `rotate3d(1, 1, 0, deg)` paper folding physics showing real-time overlap alignment with automatic animated folding.
 2. **Line Detective**: Interactive guideline testing directly inside SVGs with touch pins and mathematical trap detection (off-center cuts, asymmetrical features).
 3. **Mirror Painter**: 8×8 interactive pixel grid with Guided Challenge mode (color right half to mirror locked left half) and Free-Draw Magic mode (real-time bilateral symmetry).
-4. **Mirror Match**: Rapid visual discrimination distinguishing true reflection from identical (unflipped), upside-down, and rotated trap cards.
-5. **Symmetry Challenge Quizzes**: 4 graded 5-question quizzes covering everyday objects, orientation, letters, and 2D polygons.
+4. **Colour Mirror Patterns (Chapter 4)**: Direct curriculum alignment for 4×4 vertical axis and 6×4 horizontal axis exercises (1a–1f, 2a–2c) with 5 curriculum colors + eraser, plus Section 3 free design mode with auto-mirroring.
+5. **Mirror Match**: Rapid visual discrimination distinguishing true reflection from identical (unflipped), upside-down, and rotated trap cards.
+6. **Symmetry Challenge Quizzes**: 4 graded 5-question quizzes covering everyday objects, orientation, letters, and 2D polygons.
 
 ### 4.6 Patterns Studio Activities (`js/patterns/`)
 1. **Ring Repeating Group** (`unit-detective.js`): Interactive repeating ring tool allowing children to enclose the repeating core unit of newly learned polygons (pentagon, hexagon, octagon) and 3D solids (Solve this! 1a, 1b, 2a).

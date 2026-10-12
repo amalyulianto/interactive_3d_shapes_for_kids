@@ -42,6 +42,9 @@
         <button id="tabPainter" class="tab-btn" onclick="switchSymmetryMode('painter')">
           <span class="tab-icon">🎨</span> Mirror Painter
         </button>
+        <button id="tabColorMirror" class="tab-btn" onclick="switchSymmetryMode('color-mirror')">
+          <span class="tab-icon">🌈</span> Colour Mirror
+        </button>
         <button id="tabMatch" class="tab-btn" onclick="switchSymmetryMode('match')">
           <span class="tab-icon">🪞</span> Mirror Match
         </button>
@@ -328,6 +331,88 @@
       </div>
     </section>
 
+    <!-- ACTIVITY: COLOUR MIRROR PATTERNS (CHAPTER 4) -->
+    <section id="colorMirrorView" class="view-panel">
+      <!-- Exercise Shelf Carousel (Consistent with Fold & Reveal and Line Detective) -->
+      <div class="shelf-wrapper" id="cmShelfWrapper">
+        <div class="shelf-scroll" id="cmChallengeChips">
+          <!-- Dynamically populated with .shelf-chip -->
+        </div>
+      </div>
+
+      <div class="color-mirror-container">
+        
+        <!-- Header Controls & Submode Switcher -->
+        <div class="cm-header-card">
+          <div class="cm-header-top">
+            <div class="cm-title-block">
+              <span class="source-tag">Chapter 4: Colour Mirror Patterns</span>
+              <h2 id="cmTitle">1. Complete the patterns: 1a: Vertical Mirror</h2>
+            </div>
+            <div class="cm-submode-tabs">
+              <button id="cmBtnSubmodeGuided" class="tab-btn active" onclick="switchColorMirrorSubmode('guided')">
+                📋 Worksheet Challenges
+              </button>
+              <button id="cmBtnSubmodeFree" class="tab-btn" onclick="switchColorMirrorSubmode('free')">
+                🎨 Design Your Own
+              </button>
+            </div>
+          </div>
+
+          <div class="pattern-clue-banner" id="cmHint">
+            💡 <strong>Mirror Rule:</strong> Use the dotted line as the line of symmetry. Colour the squares to complete each pattern!
+          </div>
+
+          <!-- Controls for Section 3: Design Your Own -->
+          <div id="cmFreeControls" class="cm-free-bar hidden">
+            <div class="cm-presets-group">
+              <span class="cm-chips-label">Grid Style:</span>
+              <button class="cm-preset-btn active" data-preset="4x4_vertical" onclick="setFreePreset('4x4_vertical')">
+                4×4 Vertical Axis (↕)
+              </button>
+              <button class="cm-preset-btn" data-preset="6x4_horizontal" onclick="setFreePreset('6x4_horizontal')">
+                6×4 Horizontal Axis (↔)
+              </button>
+            </div>
+            <button id="cmBtnAutoMirror" class="cm-toggle-btn active" onclick="toggleAutoMirror()">
+              ✨ Auto-Mirror: ON
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Grid & Interactive Palette -->
+        <div class="cm-stage-card">
+          <div class="cm-board-wrapper">
+            <div class="cm-grid-board" id="cmGridBoard"></div>
+          </div>
+
+          <!-- Color Palette & Action Buttons -->
+          <div class="cm-tools-panel">
+            <div class="cm-palette-box">
+              <span class="cm-tools-label">Choose Colour:</span>
+              <div class="cm-swatches-row" id="cmSwatches"></div>
+            </div>
+
+            <div class="cm-actions-row">
+              <button id="cmBtnCheck" class="primary-big-btn" onclick="checkGuidedPattern()">
+                Check Mirror Reflection 🪞
+              </button>
+              <button class="secondary-big-btn" onclick="clearStudentSquares()">
+                Clear My Squares 🔄
+              </button>
+              <button id="cmBtnNext" class="secondary-big-btn hidden" onclick="nextChallenge()">
+                Next Exercise ➔
+              </button>
+            </div>
+
+            <!-- Feedback Alert -->
+            <div id="cmFeedback" class="cm-feedback hidden"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
     <!-- ACTIVITY 4: MIRROR MATCH -->
     <section id="matchView" class="view-panel">
       <div class="match-stage-container">
@@ -490,6 +575,7 @@
   <script src="js/symmetry/fold-reveal.js"></script>
   <script src="js/symmetry/detective.js"></script>
   <script src="js/symmetry/painter.js"></script>
+  <script src="js/symmetry/color-mirror.js"></script>
   <script src="js/symmetry/mirror-match.js"></script>
   <script src="js/symmetry/symmetry-quiz.js"></script>
   <script src="js/symmetry/symmetry-main.js"></script>

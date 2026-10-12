@@ -899,6 +899,156 @@ const SYMM_QUIZ_LEVELS = [
   }
 ];
 
+// ================= ACTIVITY 6: COLOUR MIRROR PATTERNS (CHAPTER 4) =================
+const COLOR_MIRROR_PALETTE = [
+  { name: 'Red', color: '#EF4444' },
+  { name: 'Blue', color: '#3B82F6' },
+  { name: 'Green', color: '#22C55E' },
+  { name: 'Yellow', color: '#FACC15' },
+  { name: 'Purple', color: '#9333EA' }
+];
+
+const COLOR_MIRROR_CHALLENGES = [
+  {
+    id: '1a',
+    section: '1. Complete the patterns',
+    label: '1a: Vertical Mirror',
+    axis: 'vertical',
+    rows: 4,
+    cols: 4,
+    givenHalf: 'left',
+    givenCells: [
+      { r: 0, c: 1, color: '#EF4444' },
+      { r: 1, c: 0, color: '#3B82F6' }, { r: 1, c: 1, color: '#3B82F6' },
+      { r: 2, c: 1, color: '#22C55E' },
+      { r: 3, c: 0, color: '#FACC15' }
+    ],
+    hint: 'Mirror across the dotted vertical line: Col 1 mirrors onto Col 2, and Col 0 mirrors onto Col 3!'
+  },
+  {
+    id: '1b',
+    section: '1. Complete the patterns',
+    label: '1b: Vertical Mirror',
+    axis: 'vertical',
+    rows: 4,
+    cols: 4,
+    givenHalf: 'left',
+    givenCells: [
+      { r: 0, c: 1, color: '#FACC15' },
+      { r: 1, c: 0, color: '#3B82F6' },
+      { r: 2, c: 1, color: '#EF4444' },
+      { r: 3, c: 0, color: '#22C55E' }
+    ],
+    hint: 'Squares touching the center mirror line stay right next to the line on the other side!'
+  },
+  {
+    id: '1c',
+    section: '1. Complete the patterns',
+    label: '1c: Vertical Mirror',
+    axis: 'vertical',
+    rows: 4,
+    cols: 4,
+    givenHalf: 'left',
+    givenCells: [
+      { r: 0, c: 0, color: '#FACC15' },
+      { r: 1, c: 0, color: '#22C55E' },
+      { r: 2, c: 1, color: '#9333EA' },
+      { r: 3, c: 0, color: '#FACC15' }
+    ],
+    hint: 'Col 0 is on the far outside edge, so its mirror reflection is on the far right outside edge (Col 3)!'
+  },
+  {
+    id: '1d',
+    section: '1. Complete the patterns',
+    label: '1d: Horizontal Mirror (↔)',
+    axis: 'horizontal',
+    rows: 4,
+    cols: 6,
+    givenHalf: 'top',
+    givenCells: [
+      { r: 0, c: 0, color: '#EF4444' }, { r: 0, c: 2, color: '#3B82F6' },
+      { r: 1, c: 1, color: '#22C55E' }, { r: 1, c: 3, color: '#22C55E' }
+    ],
+    hint: 'Mirror across the dotted horizontal line: Row 1 mirrors onto Row 2, and Row 0 mirrors onto Row 3!'
+  },
+  {
+    id: '1e',
+    section: '1. Complete the patterns',
+    label: '1e: Horizontal Mirror (↔)',
+    axis: 'horizontal',
+    rows: 4,
+    cols: 6,
+    givenHalf: 'top',
+    givenCells: [
+      { r: 0, c: 2, color: '#FACC15' },
+      { r: 1, c: 0, color: '#EF4444' }, { r: 1, c: 2, color: '#3B82F6' }, { r: 1, c: 4, color: '#EF4444' }
+    ],
+    hint: 'Squares touching the center horizontal line flip straight down into Row 2!'
+  },
+  {
+    id: '1f',
+    section: '1. Complete the patterns',
+    label: '1f: Horizontal Mirror (↔)',
+    axis: 'horizontal',
+    rows: 4,
+    cols: 6,
+    givenHalf: 'top',
+    givenCells: [
+      { r: 0, c: 0, color: '#22C55E' }, { r: 0, c: 2, color: '#3B82F6' }, { r: 0, c: 4, color: '#22C55E' },
+      { r: 1, c: 1, color: '#EF4444' }, { r: 1, c: 3, color: '#EF4444' }
+    ],
+    hint: 'Each column reflects straight across the line: top row mirrors to the very bottom row!'
+  },
+  {
+    id: '2a',
+    section: '2. Create the other half',
+    label: '2a: Create the Other Half',
+    axis: 'vertical',
+    rows: 4,
+    cols: 4,
+    givenHalf: 'left',
+    givenCells: [
+      { r: 0, c: 0, color: '#9333EA' },
+      { r: 1, c: 1, color: '#FACC15' },
+      { r: 2, c: 0, color: '#22C55E' },
+      { r: 3, c: 1, color: '#9333EA' }
+    ],
+    hint: 'Notice the zig-zag pattern: outside, inside, outside, inside!'
+  },
+  {
+    id: '2b',
+    section: '2. Create the other half',
+    label: '2b: Create the Other Half',
+    axis: 'vertical',
+    rows: 4,
+    cols: 4,
+    givenHalf: 'left',
+    givenCells: [
+      { r: 0, c: 0, color: '#3B82F6' },
+      { r: 1, c: 0, color: '#EF4444' },
+      { r: 2, c: 0, color: '#3B82F6' },
+      { r: 3, c: 0, color: '#FACC15' }
+    ],
+    hint: 'All colored squares are in Col 0 (outer left). Their reflections will all be in Col 3 (outer right)!'
+  },
+  {
+    id: '2c',
+    section: '2. Create the other half',
+    label: '2c: Create the Other Half',
+    axis: 'vertical',
+    rows: 4,
+    cols: 4,
+    givenHalf: 'left',
+    givenCells: [
+      { r: 0, c: 0, color: '#FACC15' },
+      { r: 1, c: 1, color: '#22C55E' },
+      { r: 2, c: 0, color: '#22C55E' },
+      { r: 3, c: 0, color: '#EF4444' }
+    ],
+    hint: 'Col 1 green square reflects right next to the line in Col 2!'
+  }
+];
+
 // Attach to window
 window.FOLD_ITEMS = FOLD_ITEMS;
 window.DETECTIVE_SHAPES = DETECTIVE_SHAPES;
@@ -907,3 +1057,5 @@ window.GUIDED_PATTERNS = GUIDED_PATTERNS;
 window.FREE_DRAW_INSPIRATIONS = FREE_DRAW_INSPIRATIONS;
 window.MIRROR_MATCH_ITEMS = MIRROR_MATCH_ITEMS;
 window.SYMM_QUIZ_LEVELS = SYMM_QUIZ_LEVELS;
+window.COLOR_MIRROR_PALETTE = COLOR_MIRROR_PALETTE;
+window.COLOR_MIRROR_CHALLENGES = COLOR_MIRROR_CHALLENGES;

@@ -2004,3 +2004,325 @@ input[type="range"] {
     font-size: 0.85rem;
   }
 }
+
+/* ==========================================================================
+   Activity 6: Colour Mirror Patterns (Chapter 4: Shapes and Solids)
+   ========================================================================== */
+
+.color-mirror-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cm-header-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cm-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cm-title-block h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-top: 4px;
+}
+
+.cm-submode-tabs {
+  display: flex;
+  gap: 8px;
+  background: #F1F5F9;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+}
+
+.cm-submode-tabs .tab-btn {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.cm-submode-tabs .tab-btn.active {
+  background: white;
+  color: var(--primary);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+
+.cm-free-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #F8FAFC;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-light);
+}
+
+.cm-presets-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cm-preset-btn {
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background: white;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cm-preset-btn.active {
+  background: #E0E7FF;
+  color: var(--primary);
+  border-color: #818CF8;
+}
+
+.cm-toggle-btn {
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  border-radius: var(--radius-pill);
+  border: 1px solid #10B981;
+  background: #ECFDF5;
+  color: #047857;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cm-toggle-btn:not(.active) {
+  border-color: #CBD5E1;
+  background: #F1F5F9;
+  color: #64748B;
+}
+
+/* Stage & Grid Board */
+.cm-stage-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.cm-board-wrapper {
+  padding: 16px;
+  background: #F8FAFC;
+  border-radius: var(--radius-lg);
+  border: 2px solid #E2E8F0;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.cm-grid-board {
+  display: grid;
+  gap: 3px;
+  background: #CBD5E1;
+  padding: 3px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.cm-grid-cell {
+  width: 52px;
+  height: 52px;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+  position: relative;
+}
+
+.cm-grid-cell:hover:not(.locked) {
+  transform: scale(0.96);
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.cm-grid-cell:active:not(.locked) {
+  transform: scale(0.92);
+}
+
+/* Locked / given half styling */
+.cm-grid-cell.locked {
+  cursor: default;
+}
+
+.cm-grid-cell.locked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+/* Symmetry Axis Indicators */
+.cm-grid-cell.axis-vertical-right {
+  border-right: 4px dashed #0F172A !important;
+}
+
+.cm-grid-cell.axis-horizontal-bottom {
+  border-bottom: 4px dashed #0F172A !important;
+}
+
+/* Palette & Tools */
+.cm-tools-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.cm-palette-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F1F5F9;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+}
+
+.cm-tools-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.cm-swatches-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.cm-color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cm-color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.cm-color-swatch.active {
+  transform: scale(1.22);
+  box-shadow: 0 0 0 3px var(--primary), 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.cm-color-swatch.eraser-swatch {
+  background: white;
+  font-size: 1.1rem;
+}
+
+.cm-actions-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cm-feedback {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  animation: fadeIn 0.25s ease;
+}
+
+.cm-feedback.success {
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  color: #14532D;
+}
+
+.cm-feedback.error {
+  background: #FEE2E2;
+  border: 1px solid #FCA5A5;
+  color: #7F1D1D;
+}
+
+.cm-feedback.warning {
+  background: #FEF3C7;
+  border: 1px solid #FDE047;
+  color: #78350F;
+}
+
+.cm-feedback.hidden {
+  display: none;
+}
+
+.feedback-icon {
+  font-size: 1.6rem;
+}
+
+.feedback-text strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.feedback-text p {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.95;
+}
+
+@media (max-width: 600px) {
+  .cm-grid-cell {
+    width: 44px;
+    height: 44px;
+  }
+  .cm-palette-box {
+    flex-direction: column;
+    gap: 8px;
+    border-radius: var(--radius-md);
+  }
+}
+
