@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Pairs to Multiples of 10 - Interactive Math Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="pairs-tens.css">
+  <!-- Canvas Confetti for Celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header" id="mainHeader">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">✨🧮💯</div>
+      <div class="brand-text">
+        <h1>Multiples of 10 Studio</h1>
+        <span class="studio-badge">Chapter 5 • Lesson 2</span>
+      </div>
+    </div>
+
+    <!-- Navigation between Grade 2 lessons -->
+    <div class="lesson-switcher">
+      <a href="index.html#grade-2" class="lesson-chip home" title="Back to Grade 2 Lessons">← Grade 2 Lessons</a>
+      <span class="lesson-label">Lesson:</span>
+      <a href="bonds-20.html" class="lesson-chip link" title="Go to Lesson 1: Bonds to 20">🔟 Bonds to 20</a>
+      <span class="lesson-chip active" title="Current Lesson">🧮 Multiples of 10</span>
+      <a href="add-2digit.html" class="lesson-chip link" title="Go to Lesson 3: 2-Digit Addition">🧱 2-Digit Addition</a>
+    </div>
+
+    <div class="nav-controls">
+      <nav class="mode-tabs">
+        <button id="tabBtn_rods" class="tab-btn active" onclick="switchTensMode('rods')">
+          <span class="tab-icon">🧮</span> 100-Rods Rack
+        </button>
+        <button id="tabBtn_hopper" class="tab-btn" onclick="switchTensMode('hopper')">
+          <span class="tab-icon">🐸</span> Next-Ten Hopper
+        </button>
+        <button id="tabBtn_matcher" class="tab-btn" onclick="switchTensMode('matcher')">
+          <span class="tab-icon">🎯</span> Target Matcher
+        </button>
+        <button id="tabBtn_quiz" class="tab-btn" onclick="switchTensMode('quiz')">
+          <span class="tab-icon">🏆</span> Mastery Quiz
+        </button>
+      </nav>
+      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Application Container -->
+  <main class="app-container" id="appContainer">
+
+    <!-- ================= VIEW 1: 100-RODS VISUALIZER ================= -->
+    <section id="view_rods" class="view-panel active">
+      <div class="tens-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🧮 Base-10 100-Rods Rack</h2>
+            <p>10 rods of 10 make 100! See how pairs of 10 directly create pairs of 100.</p>
+          </div>
+          <span class="badge-pill">Interactive Manipulative</span>
+        </div>
+
+        <div class="tip-banner">
+          💡 <strong>Teacher Tip:</strong> Just like 3 ones + 7 ones = 10 ones, 3 tens + 7 tens = 10 tens (100)!
+        </div>
+
+        <!-- Big Live Equation Card -->
+        <div class="rods-equation-card">
+          <div class="rods-top-link" id="rodsTopLink">
+            🌟 Look: 3 + 7 = 10 ➔ 30 + 70 = 100
+          </div>
+          <div class="rods-equation-main">
+            <span class="tens-val cyan" id="rodsEqCyan">30</span>
+            <span class="eq-sign">+</span>
+            <span class="tens-val amber" id="rodsEqAmber">70</span>
+            <span class="eq-sign">=</span>
+            <span class="tens-val total">100</span>
+          </div>
+        </div>
+
+        <!-- The 10 Base-10 Rods -->
+        <div class="rods-rack" id="rodsRack"></div>
+
+        <!-- Controls Bar -->
+        <div class="controls-bar">
+          <div class="stepper-row">
+            <button class="step-btn" onclick="adjustRodsCount(-1)" title="Remove 10">-10</button>
+            <input type="range" min="0" max="10" value="3" class="tens-slider" id="tensSlider" oninput="onTensSliderChange(this.value)">
+            <button class="step-btn" onclick="adjustRodsCount(1)" title="Add 10">+10</button>
+          </div>
+        </div>
+
+        <!-- Presets Row -->
+        <div class="presets-container" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">⚡ Pairs that make 100:</span>
+          <div class="presets-chips">
+            <button class="preset-chip" data-val="10" onclick="setRodsCount(10)">100 + 0</button>
+            <button class="preset-chip" data-val="9" onclick="setRodsCount(9)">90 + 10</button>
+            <button class="preset-chip" data-val="8" onclick="setRodsCount(8)">80 + 20</button>
+            <button class="preset-chip" data-val="7" onclick="setRodsCount(7)">70 + 30</button>
+            <button class="preset-chip" data-val="6" onclick="setRodsCount(6)">60 + 40</button>
+            <button class="preset-chip" data-val="5" onclick="setRodsCount(5)">50 + 50 (Half!)</button>
+            <button class="preset-chip" data-val="4" onclick="setRodsCount(4)">40 + 60</button>
+            <button class="preset-chip" data-val="3" onclick="setRodsCount(3)">30 + 70</button>
+            <button class="preset-chip" data-val="2" onclick="setRodsCount(2)">20 + 80</button>
+            <button class="preset-chip" data-val="1" onclick="setRodsCount(1)">10 + 90</button>
+            <button class="preset-chip" data-val="0" onclick="setRodsCount(0)">0 + 100</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: NEXT-TEN HOPPER ================= -->
+    <section id="view_hopper" class="view-panel">
+      <div class="tens-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🐸 Next-Ten Hopper</h2>
+            <p>Hop on the number line to reach the nearest multiple of ten!</p>
+          </div>
+          <span class="badge-pill">Number Line Studio</span>
+        </div>
+
+        <div class="tip-banner">
+          💡 <strong>Hopper Secret:</strong> Check the ones digit! If it is 4, you need 6 to reach the next ten ($4 + 6 = 10$).
+        </div>
+
+        <div class="hopper-container">
+          <!-- Equation Display -->
+          <div class="hopper-target-card">
+            <div class="hopper-equation">
+              <span id="hopperStartVal">34</span>
+              <span class="hopper-jump-badge" id="hopperJumpVal">+6</span>
+              <span class="eq-sign">=</span>
+              <span id="hopperTargetVal">40</span>
+            </div>
+          </div>
+
+          <!-- Interactive Number Line Track -->
+          <div class="number-line-box">
+            <div class="frog-marker" id="frogMarker">🐸</div>
+            <div class="nl-ticks-row" id="nlTicksRow"></div>
+          </div>
+
+          <!-- Educational Clue -->
+          <div class="hopper-clue-box" id="hopperClueText"></div>
+
+          <!-- Action Buttons -->
+          <div class="hopper-actions-row">
+            <button class="action-btn" onclick="hopFrog()">🦘 Hop to Next Ten!</button>
+            <button class="action-btn secondary" onclick="randomizeHopper()">🎲 Try New Number</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: TARGET MATCHER ================= -->
+    <section id="view_matcher" class="view-panel">
+      <div class="tens-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🎯 Multiples Target Matcher</h2>
+            <p>Select a target multiple of 10 and pair up the cards that add to it!</p>
+          </div>
+          <div class="target-select-row">
+            <button class="target-badge-btn" data-target="30" onclick="setupMatcher(30)">Target 30</button>
+            <button class="target-badge-btn" data-target="40" onclick="setupMatcher(40)">Target 40</button>
+            <button class="target-badge-btn active" data-target="50" onclick="setupMatcher(50)">Target 50</button>
+            <button class="target-badge-btn" data-target="60" onclick="setupMatcher(60)">Target 60</button>
+            <button class="target-badge-btn" data-target="70" onclick="setupMatcher(70)">Target 70</button>
+            <button class="target-badge-btn" data-target="80" onclick="setupMatcher(80)">Target 80</button>
+            <button class="target-badge-btn" data-target="100" onclick="setupMatcher(100)">Target 100</button>
+          </div>
+        </div>
+
+        <div class="matcher-container">
+          <div class="ppw-prompt" id="matcherPrompt" style="font-size:1.15rem; font-weight:700; color:#115E59;">
+            Find two cards that add up to <strong>50</strong>!
+          </div>
+
+          <!-- Number Cards Grid -->
+          <div class="cards-match-grid" id="cardsMatchGrid"></div>
+
+          <!-- Feedback Banner -->
+          <div class="quiz-feedback-banner" id="matcherFeedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: MASTERY QUIZ ================= -->
+    <section id="view_quiz" class="view-panel">
+      <div class="tens-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🏆 Multiples of 10 Mastery Quiz</h2>
+            <p>Challenge yourself across 4 levels of number bonds to multiples of 10!</p>
+          </div>
+          <div class="quiz-level-selector">
+            <button class="level-btn active" data-level="1" onclick="startQuiz(1)">Level 1: Tens to 100</button>
+            <button class="level-btn" data-level="2" onclick="startQuiz(2)">Level 2: Hop to Next Ten</button>
+            <button class="level-btn" data-level="3" onclick="startQuiz(3)">Level 3: Multiples Target</button>
+            <button class="level-btn" data-level="4" onclick="startQuiz(4)">Level 4: Speed Tens</button>
+          </div>
+        </div>
+
+        <!-- Quiz Container Card -->
+        <div class="quiz-card">
+          <div class="quiz-progress-bar">
+            <span class="quiz-counter" id="quizQCount">Question 1 of 5</span>
+            <span class="quiz-score-pill" id="quizScore">Score: 0</span>
+          </div>
+
+          <div class="quiz-question-box">
+            <h3 class="quiz-question-prompt" id="quizPrompt">What pairs with 30 to make 100?</h3>
+            <div class="quiz-question-visual" id="quizVisual">30 + [ ? ] = 100</div>
+          </div>
+
+          <div class="quiz-options-grid" id="quizOptions"></div>
+
+          <div class="quiz-feedback-banner" id="quizFeedback"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Clean Studio Footer -->
+  <footer class="hub-footer" style="background:#FFF; border-top:1.5px solid #E2E8F0; padding:20px; text-align:center; margin-top:auto;">
+    <p>Crafted by <strong>Alapakadala Studio</strong> • Grade 2 Chapter 5: Addition &amp; Subtraction</p>
+    <p style="font-size:0.8rem; color:#64748B; margin-top:4px;">Zero-Build Educational Platform • CCSS.MATH.CONTENT.2.NBT.B.8</p>
+  </footer>
+
+  <!-- Scripts in Clean Dependency Order -->
+  <script src="js/common/sound.js"></script>
+  <script src="js/common/utils.js"></script>
+  <script src="js/ch5/pairs-tens.js"></script>
+
+</body>
+</html>

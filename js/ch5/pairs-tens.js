@@ -1,0 +1,467 @@
+/**
+ * Lesson 2: Number Pairs to Multiples of Ten
+ * 100-Rods Base-10 Visualizer, Next-Ten Hopper, Target Matcher, and Mastery Quiz
+ * Zero-Build Architecture - Alapakadala Studio
+ */
+
+(function () {
+  'use strict';
+
+  // State Management
+  const state = {
+    currentMode: 'rods', // 'rods' | 'hopper' | 'matcher' | 'quiz'
+    rods: {
+      cyanCount: 3 // 3 rods (30) + 7 rods (70) = 100
+    },
+    hopper: {
+      startNum: 34,
+      hopped: false
+    },
+    matcher: {
+      target: 50,
+      cards: [],
+      selectedId: null,
+      pairsFound: 0
+    },
+    quiz: {
+      level: 1,
+      qIndex: 0,
+      score: 0,
+      answered: false,
+      questions: []
+    }
+  };
+
+  /* ================= MODE SWITCHING ================= */
+  window.switchTensMode = function (mode) {
+    state.currentMode = mode;
+    if (window.sound) window.sound.playPop();
+
+    // Update Tab Buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.getElementById(`tabBtn_${mode}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // Update Panels
+    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+    const activePanel = document.getElementById(`view_${mode}`);
+    if (activePanel) activePanel.classList.add('active');
+
+    // Trigger Initial Renders
+    if (mode === 'rods') renderRods();
+    if (mode === 'hopper') renderHopper();
+    if (mode === 'matcher') setupMatcher(state.matcher.target);
+    if (mode === 'quiz') startQuiz(state.quiz.level);
+  };
+
+  /* ================= AUDIO TOGGLE ================= */
+  window.toggleAudio = function () {
+    if (window.sound) {
+      window.sound.enabled = !window.sound.enabled;
+      const btn = document.getElementById('soundToggle');
+      if (btn) btn.innerHTML = window.sound.enabled ? '🔊' : '🔇';
+    }
+  };
+
+  /* ================= MODULE 1: 100-RODS VISUALIZER ================= */
+  function renderRods() {
+    const cyan = state.rods.cyanCount;
+    const amber = 10 - cyan;
+    const valCyan = cyan * 10;
+    const valAmber = amber * 10;
+
+    const eqLink = document.getElementById('rodsTopLink');
+    const eqCyan = document.getElementById('rodsEqCyan');
+    const eqAmber = document.getElementById('rodsEqAmber');
+    const slider = document.getElementById('tensSlider');
+    const rack = document.getElementById('rodsRack');
+
+    if (eqLink) eqLink.innerHTML = `🌟 Look: <strong>${cyan}</strong> + <strong>${amber}</strong> = <strong>10</strong> &nbsp;➔&nbsp; <strong>${valCyan}</strong> + <strong>${valAmber}</strong> = <strong>100</strong>`;
+    if (eqCyan) eqCyan.textContent = valCyan;
+    if (eqAmber) eqAmber.textContent = valAmber;
+    if (slider) slider.value = cyan;
+
+    if (rack) {
+      rack.innerHTML = '';
+      for (let r = 0; r < 10; r++) {
+        const rod = document.createElement('div');
+        const isCyan = r < cyan;
+        rod.className = `rod-item ${isCyan ? 'cyan' : 'amber'}`;
+        rod.title = `Rod ${r + 1} (Value: 10)`;
+        rod.onclick = () => setRodsCount(r + 1);
+
+        // 10 blocks per rod
+        for (let b = 0; b < 10; b++) {
+          const block = document.createElement('div');
+          block.className = 'rod-block';
+          rod.appendChild(block);
+        }
+
+        const lbl = document.createElement('div');
+        lbl.className = 'rod-label';
+        lbl.textContent = '10';
+        rod.appendChild(lbl);
+
+        rack.appendChild(rod);
+      }
+    }
+
+    // Highlight active preset chip
+    document.querySelectorAll('.preset-chip').forEach(chip => {
+      const chipVal = parseInt(chip.dataset.val, 10);
+      chip.classList.toggle('active', chipVal === cyan);
+    });
+  }
+
+  window.setRodsCount = function (n) {
+    if (n < 0) n = 0;
+    if (n > 10) n = 10;
+    state.rods.cyanCount = n;
+    if (window.sound) window.sound.playPop();
+    renderRods();
+  };
+
+  window.adjustRodsCount = function (delta) {
+    window.setRodsCount(state.rods.cyanCount + delta);
+  };
+
+  window.onTensSliderChange = function (val) {
+    window.setRodsCount(parseInt(val, 10));
+  };
+
+  /* ================= MODULE 2: NEXT-TEN HOPPER ================= */
+  function renderHopper() {
+    const start = state.hopper.startNum;
+    const baseTen = Math.floor(start / 10) * 10;
+    const nextTen = baseTen === start ? start + 10 : baseTen + 10;
+    const jump = nextTen - start;
+    const onesDigit = start % 10;
+
+    const startEl = document.getElementById('hopperStartVal');
+    const jumpEl = document.getElementById('hopperJumpVal');
+    const targetEl = document.getElementById('hopperTargetVal');
+    const clueEl = document.getElementById('hopperClueText');
+    const ticksRow = document.getElementById('nlTicksRow');
+    const frog = document.getElementById('frogMarker');
+
+    if (startEl) startEl.textContent = start;
+    if (jumpEl) jumpEl.textContent = `+${jump}`;
+    if (targetEl) targetEl.textContent = nextTen;
+
+    if (clueEl) {
+      clueEl.innerHTML = `
+        💡 <strong>The Secret of the Ones Digit:</strong><br>
+        In <strong>${start}</strong>, the ones digit is <strong>${onesDigit}</strong>.<br>
+        What pairs with <strong>${onesDigit}</strong> to make 10? Answer: <strong>${jump}</strong>!<br>
+        So, <strong>${start} + ${jump} = ${nextTen}</strong>!
+      `;
+    }
+
+    // Render Number Line Ticks (from baseTen to nextTen)
+    if (ticksRow) {
+      ticksRow.innerHTML = '';
+      for (let v = baseTen; v <= nextTen; v++) {
+        const tick = document.createElement('div');
+        const isTen = (v % 10 === 0);
+        const isStart = (v === start);
+        const isTarget = (v === nextTen);
+
+        tick.className = `nl-tick ${isTen ? 'is-ten' : ''} ${isStart ? 'is-start' : ''} ${isTarget ? 'is-target' : ''}`;
+        tick.innerHTML = `
+          <div class="nl-tick-mark"></div>
+          <span class="nl-tick-val">${v}</span>
+        `;
+        ticksRow.appendChild(tick);
+      }
+    }
+
+    // Position Frog
+    if (frog && ticksRow) {
+      const totalSteps = nextTen - baseTen;
+      const currentStep = state.hopper.hopped ? totalSteps : (start - baseTen);
+      const percent = (currentStep / totalSteps) * 100;
+      frog.style.left = `${percent}%`;
+    }
+  }
+
+  window.hopFrog = function () {
+    state.hopper.hopped = true;
+    if (window.sound) window.sound.playCorrect();
+    if (window.AppUtils) window.AppUtils.confetti({ particleCount: 30 });
+    renderHopper();
+
+    setTimeout(() => {
+      state.hopper.hopped = false;
+      renderHopper();
+    }, 1800);
+  };
+
+  window.randomizeHopper = function () {
+    // Pick random number from 11 to 89 not ending in 0
+    let rand;
+    do {
+      rand = Math.floor(Math.random() * 80) + 11;
+    } while (rand % 10 === 0);
+
+    state.hopper.startNum = rand;
+    state.hopper.hopped = false;
+    if (window.sound) window.sound.playPop();
+    renderHopper();
+  };
+
+  /* ================= MODULE 3: TARGET MATCHER ================= */
+  const MATCHER_PRESETS = {
+    30: [[12, 18], [25, 5], [10, 20]],
+    40: [[26, 14], [31, 9], [20, 20]],
+    50: [[32, 18], [45, 5], [24, 26]],
+    60: [[42, 18], [35, 25], [15, 45]],
+    70: [[54, 16], [48, 22], [30, 40]],
+    80: [[63, 17], [55, 25], [42, 38]],
+    100: [[30, 70], [45, 55], [18, 82]]
+  };
+
+  window.setupMatcher = function (target) {
+    state.matcher.target = target;
+    state.matcher.selectedId = null;
+    state.matcher.pairsFound = 0;
+
+    document.querySelectorAll('.target-badge-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.target, 10) === target);
+    });
+
+    const pairs = MATCHER_PRESETS[target] || MATCHER_PRESETS[50];
+    let cards = [];
+    pairs.forEach((pair, pairIdx) => {
+      cards.push({ id: `c_${pairIdx}_a`, val: pair[0], pairId: pairIdx });
+      cards.push({ id: `c_${pairIdx}_b`, val: pair[1], pairId: pairIdx });
+    });
+
+    // Shuffle cards
+    state.matcher.cards = cards.sort(() => Math.random() - 0.5);
+    renderMatcher();
+  };
+
+  function renderMatcher() {
+    const grid = document.getElementById('cardsMatchGrid');
+    const feedback = document.getElementById('matcherFeedback');
+    const prompt = document.getElementById('matcherPrompt');
+
+    if (prompt) {
+      prompt.innerHTML = `Find two cards that add up to <strong>${state.matcher.target}</strong>!`;
+    }
+
+    if (grid) {
+      grid.innerHTML = state.matcher.cards.map(c => `
+        <div class="match-number-card ${c.paired ? 'paired' : ''} ${c.id === state.matcher.selectedId ? 'selected' : ''}" 
+             id="${c.id}" 
+             onclick="onCardClick('${c.id}')">
+          ${c.val}
+        </div>
+      `).join('');
+    }
+
+    if (feedback) {
+      if (state.matcher.pairsFound === 3) {
+        feedback.className = 'quiz-feedback-banner correct';
+        feedback.style.display = 'block';
+        feedback.innerHTML = `🎉 Superb! All pairs to ${state.matcher.target} completed!`;
+      } else {
+        feedback.style.display = 'none';
+      }
+    }
+  }
+
+  window.onCardClick = function (cardId) {
+    const card = state.matcher.cards.find(c => c.id === cardId);
+    if (!card || card.paired) return;
+
+    if (!state.matcher.selectedId) {
+      // First card selected
+      state.matcher.selectedId = cardId;
+      if (window.sound) window.sound.playPop();
+      renderMatcher();
+    } else if (state.matcher.selectedId === cardId) {
+      // Deselect
+      state.matcher.selectedId = null;
+      if (window.sound) window.sound.playPop();
+      renderMatcher();
+    } else {
+      // Second card selected! Check sum!
+      const firstCard = state.matcher.cards.find(c => c.id === state.matcher.selectedId);
+      const sum = firstCard.val + card.val;
+
+      if (sum === state.matcher.target) {
+        // MATCH!
+        firstCard.paired = true;
+        card.paired = true;
+        state.matcher.selectedId = null;
+        state.matcher.pairsFound++;
+
+        if (window.sound) window.sound.playCorrect();
+        if (window.AppUtils) window.AppUtils.confetti({ particleCount: 35 });
+        renderMatcher();
+
+        if (state.matcher.pairsFound === 3) {
+          if (window.sound) window.sound.playFanfare();
+          if (window.AppUtils) window.AppUtils.confetti({ particleCount: 80, spread: 80 });
+        }
+      } else {
+        // MISMATCH!
+        if (window.sound) window.sound.playWrong();
+        const fb = document.getElementById('matcherFeedback');
+        if (fb) {
+          fb.className = 'quiz-feedback-banner wrong';
+          fb.style.display = 'block';
+          fb.innerHTML = `💭 ${firstCard.val} + ${card.val} = ${sum}. Not ${state.matcher.target}! Try again!`;
+        }
+        state.matcher.selectedId = null;
+        renderMatcher();
+      }
+    }
+  };
+
+  /* ================= MODULE 4: MASTERY QUIZ ================= */
+  const QUIZ_LEVEL_PRESETS = {
+    1: [
+      { q: "What pairs with 30 to make 100?", visual: "30 + [ ? ] = 100", correct: 70, options: [60, 70, 80, 90], exp: "3 tens + 7 tens = 10 tens (100)!" },
+      { q: "What pairs with 80 to make 100?", visual: "80 + [ ? ] = 100", correct: 20, options: [10, 20, 30, 40], exp: "80 + 20 = 100" },
+      { q: "Fill in the blank:", visual: "50 + [ ? ] = 100", correct: 50, options: [40, 50, 60, 100], exp: "50 + 50 = 100 (Half of 100!)" },
+      { q: "What pairs with 10 to make 100?", visual: "10 + [ ? ] = 100", correct: 90, options: [80, 90, 95, 100], exp: "10 + 90 = 100" },
+      { q: "What is 100 - 40?", visual: "100 - 40 = [ ? ]", correct: 60, options: [50, 60, 70, 80], exp: "100 - 40 = 60 (Since 40 + 60 = 100)" }
+    ],
+    2: [
+      { q: "Hop to the next ten! What makes 30?", visual: "24 + [ ? ] = 30", correct: 6, options: [4, 6, 8, 16], exp: "The ones digit is 4. Since 4 + 6 = 10, 24 + 6 = 30!" },
+      { q: "Hop to the next ten! What makes 50?", visual: "47 + [ ? ] = 50", correct: 3, options: [2, 3, 7, 13], exp: "7 + 3 = 10, so 47 + 3 = 50!" },
+      { q: "Hop to the next ten! What makes 80?", visual: "72 + [ ? ] = 80", correct: 8, options: [6, 7, 8, 12], exp: "2 + 8 = 10, so 72 + 8 = 80!" },
+      { q: "What is the jump from 65 to 70?", visual: "65 + [ ? ] = 70", correct: 5, options: [3, 5, 10, 15], exp: "5 + 5 = 10, so 65 + 5 = 70!" },
+      { q: "What is the jump from 89 to 90?", visual: "89 + [ ? ] = 90", correct: 1, options: [1, 2, 9, 11], exp: "89 + 1 = 90" }
+    ],
+    3: [
+      { q: "Target multiple: What pairs with 35 to make 50?", visual: "35 + [ ? ] = 50", correct: 15, options: [10, 15, 20, 25], exp: "35 + 5 = 40, plus 10 = 50. Total +15!" },
+      { q: "Target multiple: What pairs with 22 to make 40?", visual: "22 + [ ? ] = 40", correct: 18, options: [12, 16, 18, 20], exp: "22 + 8 = 30, plus 10 = 40. Total +18!" },
+      { q: "Target multiple: What pairs with 45 to make 60?", visual: "45 + [ ? ] = 60", correct: 15, options: [10, 15, 25, 30], exp: "45 + 15 = 60" },
+      { q: "Target multiple: What pairs with 68 to make 80?", visual: "68 + [ ? ] = 80", correct: 12, options: [2, 12, 14, 22], exp: "68 + 2 = 70, plus 10 = 80. Total +12!" },
+      { q: "Target multiple: What pairs with 15 to make 30?", visual: "15 + [ ? ] = 30", correct: 15, options: [10, 15, 20, 25], exp: "Double 15 is 30!" }
+    ],
+    4: [
+      { q: "Speed Tens: Which pair does NOT make 100?", visual: "Spot the impostor!", correct: "35 + 75", options: ["20 + 80", "35 + 75", "45 + 55", "10 + 90"], exp: "35 + 75 = 110, not 100!" },
+      { q: "Speed Tens: What is 70 + 30?", visual: "70 + 30 = [ ? ]", correct: 100, options: [90, 100, 105, 110], exp: "70 + 30 = 100" },
+      { q: "Speed Tens: What pairs with 56 to make 60?", visual: "56 + [ ? ] = 60", correct: 4, options: [2, 4, 6, 14], exp: "6 + 4 = 10, so 56 + 4 = 60" },
+      { q: "Speed Tens: What pairs with 81 to make 90?", visual: "81 + [ ? ] = 90", correct: 9, options: [8, 9, 10, 19], exp: "1 + 9 = 10, so 81 + 9 = 90" },
+      { q: "Speed Tens: What is 100 - 15?", visual: "100 - 15 = [ ? ]", correct: 85, options: [75, 80, 85, 90], exp: "100 - 15 = 85 (since 85 + 15 = 100)" }
+    ]
+  };
+
+  window.startQuiz = function (level) {
+    state.quiz.level = level;
+    state.quiz.qIndex = 0;
+    state.quiz.score = 0;
+    state.quiz.answered = false;
+    state.quiz.questions = [...QUIZ_LEVEL_PRESETS[level]];
+
+    document.querySelectorAll('.level-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.level, 10) === level);
+    });
+
+    renderQuizQuestion();
+  };
+
+  function renderQuizQuestion() {
+    state.quiz.answered = false;
+    const q = state.quiz.questions[state.quiz.qIndex];
+    const total = state.quiz.questions.length;
+
+    const countEl = document.getElementById('quizQCount');
+    const scoreEl = document.getElementById('quizScore');
+    const promptEl = document.getElementById('quizPrompt');
+    const visualEl = document.getElementById('quizVisual');
+    const optionsContainer = document.getElementById('quizOptions');
+    const feedbackEl = document.getElementById('quizFeedback');
+
+    if (countEl) countEl.textContent = `Question ${state.quiz.qIndex + 1} of ${total}`;
+    if (scoreEl) scoreEl.textContent = `Score: ${state.quiz.score}`;
+    if (promptEl) promptEl.textContent = q.q;
+    if (visualEl) visualEl.textContent = q.visual;
+    if (feedbackEl) {
+      feedbackEl.style.display = 'none';
+      feedbackEl.className = 'quiz-feedback-banner';
+    }
+
+    if (optionsContainer) {
+      optionsContainer.innerHTML = q.options.map(opt => `
+        <button class="quiz-option-btn" onclick="submitQuizAnswer('${opt}')">${opt}</button>
+      `).join('');
+    }
+  }
+
+  window.submitQuizAnswer = function (selected) {
+    if (state.quiz.answered) return;
+    state.quiz.answered = true;
+
+    const q = state.quiz.questions[state.quiz.qIndex];
+    const isCorrect = String(selected) === String(q.correct);
+    const feedbackEl = document.getElementById('quizFeedback');
+
+    if (isCorrect) {
+      state.quiz.score += 20;
+      if (window.sound) window.sound.playCorrect();
+      if (window.AppUtils) window.AppUtils.confetti({ particleCount: 40 });
+      if (feedbackEl) {
+        feedbackEl.className = 'quiz-feedback-banner correct';
+        feedbackEl.innerHTML = `🌟 Brilliant! ${q.exp}`;
+      }
+    } else {
+      if (window.sound) window.sound.playWrong();
+      if (feedbackEl) {
+        feedbackEl.className = 'quiz-feedback-banner wrong';
+        feedbackEl.innerHTML = `💡 Good try! Correct answer: <strong>${q.correct}</strong> (${q.exp})`;
+      }
+    }
+
+    const scoreEl = document.getElementById('quizScore');
+    if (scoreEl) scoreEl.textContent = `Score: ${state.quiz.score}`;
+
+    setTimeout(() => {
+      if (state.quiz.qIndex < state.quiz.questions.length - 1) {
+        state.quiz.qIndex++;
+        renderQuizQuestion();
+      } else {
+        showQuizFinished();
+      }
+    }, 1800);
+  };
+
+  function showQuizFinished() {
+    if (window.sound) window.sound.playFanfare();
+    if (window.AppUtils) window.AppUtils.confetti({ particleCount: 90, spread: 80 });
+
+    const promptEl = document.getElementById('quizPrompt');
+    const visualEl = document.getElementById('quizVisual');
+    const optionsContainer = document.getElementById('quizOptions');
+    const feedbackEl = document.getElementById('quizFeedback');
+
+    if (promptEl) promptEl.textContent = "🏆 Quiz Complete!";
+    if (visualEl) visualEl.innerHTML = `⭐ Final Score: ${state.quiz.score} / 100 ⭐`;
+    if (feedbackEl) feedbackEl.style.display = 'none';
+
+    if (optionsContainer) {
+      optionsContainer.innerHTML = `
+        <button class="action-btn" onclick="startQuiz(${state.quiz.level})" style="grid-column: span 2;">
+          🔄 Play Again
+        </button>
+        <button class="action-btn secondary" onclick="startQuiz(${(state.quiz.level % 4) + 1})" style="grid-column: span 2;">
+          ⏩ Next Level (Level ${(state.quiz.level % 4) + 1})
+        </button>
+      `;
+    }
+  }
+
+  /* ================= BOOTSTRAP ================= */
+  window.addEventListener('DOMContentLoaded', () => {
+    renderRods();
+    renderHopper();
+    setupMatcher(50);
+    startQuiz(1);
+  });
+
+})();

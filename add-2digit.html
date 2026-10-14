@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adding Up to 2-Digit Numbers - Interactive Math Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="add-2digit.css">
+  <!-- Canvas Confetti for Celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header" id="mainHeader">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">✨🧱➕</div>
+      <div class="brand-text">
+        <h1>2-Digit Addition Studio</h1>
+        <span class="studio-badge">Chapter 5 • Lesson 3</span>
+      </div>
+    </div>
+
+    <!-- Navigation between Grade 2 lessons -->
+    <div class="lesson-switcher">
+      <a href="index.html#grade-2" class="lesson-chip home" title="Back to Grade 2 Lessons">← Grade 2 Lessons</a>
+      <span class="lesson-label">Lesson:</span>
+      <a href="bonds-20.html" class="lesson-chip link" title="Go to Lesson 1: Bonds to 20">🔟 Bonds to 20</a>
+      <a href="pairs-tens.html" class="lesson-chip link" title="Go to Lesson 2: Multiples of 10">🧮 Multiples of 10</a>
+      <span class="lesson-chip active" title="Current Lesson">🧱 2-Digit Addition</span>
+    </div>
+
+    <div class="nav-controls">
+      <nav class="mode-tabs">
+        <button id="tabBtn_single" class="tab-btn active" onclick="switchAddMode('single')">
+          <span class="tab-icon">➕</span> Add 1-Digit
+        </button>
+        <button id="tabBtn_tens" class="tab-btn" onclick="switchAddMode('tens')">
+          <span class="tab-icon">🔟</span> Add Whole Tens
+        </button>
+        <button id="tabBtn_split" class="tab-btn" onclick="switchAddMode('split')">
+          <span class="tab-icon">⚡</span> Split Strategy
+        </button>
+        <button id="tabBtn_quiz" class="tab-btn" onclick="switchAddMode('quiz')">
+          <span class="tab-icon">🏆</span> Mastery Quiz
+        </button>
+      </nav>
+      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Application Container -->
+  <main class="app-container" id="appContainer">
+
+    <!-- ================= VIEW 1: ADD 1-DIGIT & REGROUPING ================= -->
+    <section id="view_single" class="view-panel active">
+      <div class="add-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>➕ Adding a 1-Digit Number</h2>
+            <p>Add ones cubes to the place-value mat. When ones reach 10, snap them into a new Ten Rod!</p>
+          </div>
+          <span class="badge-pill">Base-10 Blocks Lab</span>
+        </div>
+
+        <div class="tip-banner">
+          💡 <strong>Teacher Tip:</strong> Add the ones first! If you get 10 or more ones, 10 of them trade for 1 Ten Rod (Regrouping).
+        </div>
+
+        <!-- Big Live Equation Card -->
+        <div class="add-equation-card">
+          <div class="add-equation-main">
+            <span class="val-box num1" id="singleEqNum1">27</span>
+            <span class="eq-sign">+</span>
+            <span class="val-box num2" id="singleEqNum2">5</span>
+            <span class="eq-sign">=</span>
+            <span class="val-box sum" id="singleEqSum">32</span>
+          </div>
+        </div>
+
+        <!-- Regrouping Action Banner -->
+        <div class="regroup-banner" id="regroupBanner"></div>
+
+        <!-- Place Value Mat -->
+        <div class="place-value-mat">
+          <!-- Tens Column -->
+          <div class="pv-column">
+            <div class="pv-header">
+              <span class="pv-title tens">Tens (Rods of 10)</span>
+              <span class="pv-count-badge tens" id="matTensCount">2 Tens (20)</span>
+            </div>
+            <div class="pv-content" id="matTensContent"></div>
+          </div>
+
+          <!-- Ones Column -->
+          <div class="pv-column">
+            <div class="pv-header">
+              <span class="pv-title ones">Ones (Loose Cubes)</span>
+              <span class="pv-count-badge ones" id="matOnesCount">12 Ones</span>
+            </div>
+            <div class="pv-content" id="matOnesContent"></div>
+          </div>
+        </div>
+
+        <!-- Presets Row -->
+        <div class="presets-container" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">⚡ Practice Problems:</span>
+          <div class="presets-chips">
+            <button class="preset-chip" onclick="setSingleProblem(24, 3)">24 + 3 (No Regroup)</button>
+            <button class="preset-chip" onclick="setSingleProblem(45, 4)">45 + 4 (No Regroup)</button>
+            <button class="preset-chip active" onclick="setSingleProblem(27, 5)">27 + 5 (Regroup!)</button>
+            <button class="preset-chip" onclick="setSingleProblem(38, 6)">38 + 6 (Regroup!)</button>
+            <button class="preset-chip" onclick="setSingleProblem(56, 7)">56 + 7 (Regroup!)</button>
+            <button class="preset-chip" onclick="randomizeSingleProblem()">🎲 New Problem</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: ADDING WHOLE TENS ================= -->
+    <section id="view_tens" class="view-panel">
+      <div class="add-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🔟 Adding Whole Tens</h2>
+            <p>Notice what happens when you add tens: only the tens digit increases!</p>
+          </div>
+          <span class="badge-pill">Place Value Focus</span>
+        </div>
+
+        <div class="tip-banner">
+          💡 <strong>Key Observation:</strong> Whole tens have 0 ones. So the ones column NEVER changes when you add tens!
+        </div>
+
+        <!-- Main Equation Display -->
+        <div class="focus-equation-row" id="tensMainEq">
+          <span class="digit-tens">3</span><span class="digit-ones">4</span> + <span class="digit-tens">20</span> = <span class="digit-tens">5</span><span class="digit-ones">4</span>
+        </div>
+
+        <!-- Breakdown Grid -->
+        <div class="tens-focus-grid">
+          <div class="tens-focus-panel highlight" id="tensRowVisual">
+            <!-- Populated via JS -->
+          </div>
+          <div class="tens-focus-panel" id="onesRowVisual">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Golden Rule Insight -->
+        <div class="tip-banner" id="tensInsightTip" style="background:#EFF6FF; border-color:#93C5FD; color:#1E3A8A;">
+          <!-- Populated via JS -->
+        </div>
+
+        <!-- Presets Row -->
+        <div class="presets-container" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">⚡ Practice Problems:</span>
+          <div class="presets-chips">
+            <button class="preset-chip active" onclick="setTensProblem(34, 20)">34 + 20</button>
+            <button class="preset-chip" onclick="setTensProblem(23, 30)">23 + 30</button>
+            <button class="preset-chip" onclick="setTensProblem(45, 20)">45 + 20</button>
+            <button class="preset-chip" onclick="setTensProblem(18, 40)">18 + 40</button>
+            <button class="preset-chip" onclick="setTensProblem(52, 30)">52 + 30</button>
+            <button class="preset-chip" onclick="randomizeTensProblem()">🎲 New Problem</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: SPLIT STRATEGY ================= -->
+    <section id="view_split" class="view-panel">
+      <div class="add-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>⚡ 2-Digit Split Strategy</h2>
+            <p>Decompose both numbers into tens and ones, add tens first, ones second, then combine!</p>
+          </div>
+          <span class="badge-pill">Mental Math Method</span>
+        </div>
+
+        <div class="tip-banner">
+          💡 <strong>Mental Math Secret:</strong> Split each number into Tens and Ones. Adding $30 + 20$ is easy, and adding $5 + 4$ is easy!
+        </div>
+
+        <!-- Big Live Equation Card -->
+        <div class="add-equation-card">
+          <div class="add-equation-main" id="splitMainEq">
+            35 + 24 = 59
+          </div>
+        </div>
+
+        <!-- Step-by-Step Cards -->
+        <div class="split-steps-wrapper">
+          <!-- Step 1 -->
+          <div class="split-step-card">
+            <div class="step-num-bubble">1</div>
+            <div class="step-content">
+              <div class="step-title">Split both numbers into Tens and Ones:</div>
+              <div class="step-math" id="step1Math">Split 35 ➔ (30 + 5) • Split 24 ➔ (20 + 4)</div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="split-step-card">
+            <div class="step-num-bubble">2</div>
+            <div class="step-content">
+              <div class="step-title">Add the Tens:</div>
+              <div class="step-math" id="step2Math">30 + 20 = 50</div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="split-step-card">
+            <div class="step-num-bubble">3</div>
+            <div class="step-content">
+              <div class="step-title">Add the Ones:</div>
+              <div class="step-math" id="step3Math">5 + 4 = 9</div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="split-step-card" style="border-color:#10B981; background:#F0FDF4;">
+            <div class="step-num-bubble" style="background:linear-gradient(135deg, #059669, #10B981);">4</div>
+            <div class="step-content">
+              <div class="step-title">Combine the Tens and Ones:</div>
+              <div class="step-math" id="step4Math">50 + 9 = 59 🎉</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Presets Row -->
+        <div class="presets-container" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">⚡ Practice Problems:</span>
+          <div class="presets-chips">
+            <button class="preset-chip active" onclick="setSplitProblem(35, 24)">35 + 24</button>
+            <button class="preset-chip" onclick="setSplitProblem(23, 14)">23 + 14</button>
+            <button class="preset-chip" onclick="setSplitProblem(42, 36)">42 + 36</button>
+            <button class="preset-chip" onclick="setSplitProblem(51, 27)">51 + 27</button>
+            <button class="preset-chip" onclick="setSplitProblem(63, 25)">63 + 25</button>
+            <button class="preset-chip" onclick="randomizeSplitProblem()">🎲 New Problem</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: MASTERY QUIZ ================= -->
+    <section id="view_quiz" class="view-panel">
+      <div class="add-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🏆 2-Digit Addition Mastery Quiz</h2>
+            <p>Put all your new addition skills to the test across 4 graded challenge levels!</p>
+          </div>
+          <div class="quiz-level-selector">
+            <button class="level-btn active" data-level="1" onclick="startQuiz(1)">Level 1: 1-Digit (No Regroup)</button>
+            <button class="level-btn" data-level="2" onclick="startQuiz(2)">Level 2: Adding Tens</button>
+            <button class="level-btn" data-level="3" onclick="startQuiz(3)">Level 3: 1-Digit Regrouping</button>
+            <button class="level-btn" data-level="4" onclick="startQuiz(4)">Level 4: 2-Digit Split</button>
+          </div>
+        </div>
+
+        <!-- Quiz Container Card -->
+        <div class="quiz-card">
+          <div class="quiz-progress-bar">
+            <span class="quiz-counter" id="quizQCount">Question 1 of 5</span>
+            <span class="quiz-score-pill" id="quizScore">Score: 0</span>
+          </div>
+
+          <div class="quiz-question-box">
+            <h3 class="quiz-question-prompt" id="quizPrompt">Add a 1-digit number:</h3>
+            <div class="quiz-question-visual" id="quizVisual">43 + 5 = [ ? ]</div>
+          </div>
+
+          <div class="quiz-options-grid" id="quizOptions"></div>
+
+          <div class="quiz-feedback-banner" id="quizFeedback"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Clean Studio Footer -->
+  <footer class="hub-footer" style="background:#FFF; border-top:1.5px solid #E2E8F0; padding:20px; text-align:center; margin-top:auto;">
+    <p>Crafted by <strong>Alapakadala Studio</strong> • Grade 2 Chapter 5: Addition &amp; Subtraction</p>
+    <p style="font-size:0.8rem; color:#64748B; margin-top:4px;">Zero-Build Educational Platform • CCSS.MATH.CONTENT.2.NBT.B.5</p>
+  </footer>
+
+  <!-- Scripts in Clean Dependency Order -->
+  <script src="js/common/sound.js"></script>
+  <script src="js/common/utils.js"></script>
+  <script src="js/ch5/add-2digit.js"></script>
+
+</body>
+</html>

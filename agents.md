@@ -34,8 +34,17 @@ d:\coding\interactive_math\
 ├── symmetry.css                # Lesson 2 stylesheet (3D paper sheet, painter grid, mirror cards)
 ├── symmetry.js                 # Legacy bundle / fallback reference (kept for 100% backward compatibility)
 │
-├── patterns.html               # Lesson 3: Shape & Solid Patterns Studio
-├── patterns.css                # Lesson 3 stylesheet (sequence tracks, repeating rings, tiles)
+├── patterns.html               # Chapter 4 Lesson 3: Shape & Solid Patterns Studio
+├── patterns.css                # Chapter 4 Lesson 3 stylesheet (sequence tracks, repeating rings, tiles)
+│
+├── bonds-20.html               # Chapter 5 Lesson 1: Number Pairs & Bonds to 20
+├── bonds-20.css                # Chapter 5 Lesson 1 stylesheet (dual 10-frames, part-part-whole tree)
+│
+├── pairs-tens.html             # Chapter 5 Lesson 2: Number Pairs to Multiples of 10
+├── pairs-tens.css              # Chapter 5 Lesson 2 stylesheet (100-rods rack, next-ten hopper)
+│
+├── add-2digit.html             # Chapter 5 Lesson 3: Adding Up to 2-Digit Numbers
+├── add-2digit.css              # Chapter 5 Lesson 3 stylesheet (base-10 regrouping, split strategy)
 │
 ├── js/
 │   ├── common/
@@ -64,9 +73,13 @@ d:\coding\interactive_math\
 │       ├── patterns-data.js    # Worksheets 1, 2, 3 datasets, presets & quizzes
 │       ├── unit-detective.js   # Activity 1: Spot & ring the repeating unit
 │       ├── missing-pattern.js  # Activity 2: Blanks A & B pattern solver
-│       ├── tessellation.js     # Activity 3: Zero gaps & overlaps tiling studio
-│       ├── patterns-quiz.js    # Activity 4: 4 graded curriculum mastery quizzes
+│       ├── patterns-quiz.js    # Activity 3: 4 graded curriculum mastery quizzes
 │       └── patterns-main.js    # Main coordinator, mode switcher & bootstrapper
+│   │
+│   └── ch5/
+│       ├── bonds-20.js         # Chapter 5 Lesson 1: Dual 10-frames, PPW tree, bridge to 10 & quiz
+│       ├── pairs-tens.js       # Chapter 5 Lesson 2: 100-rods rack, next-ten hopper & quiz
+│       └── add-2digit.js       # Chapter 5 Lesson 3: Base-10 regrouping mat, split strategy & quiz
 │
 └── agents.md                   # This architectural guide and developer manual
 ```

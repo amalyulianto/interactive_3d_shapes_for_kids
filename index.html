@@ -61,18 +61,18 @@
               </div>
               <div class="grade-item-details">
                 <div class="grade-item-title-row">
-                  <h4>Grade 2: Elementary Geometry</h4>
+                  <h4>Grade 2: Elementary Math Adventures</h4>
                   <span class="grade-status-pill available">✨ Ready</span>
                 </div>
                 <p class="grade-item-desc">
-                  Explore 3D solid shapes, faces, edges, vertices, and interactive lines of symmetry.
+                  Explore Chapter 4: Shapes &amp; Solids and Chapter 5: Addition &amp; Subtraction.
                 </p>
               </div>
             </div>
 
             <div class="grade-item-right">
               <button class="grade-enter-btn" tabindex="-1">
-                <span>View Lessons</span>
+                <span>View Chapters</span>
                 <span class="arrow-icon">➔</span>
               </button>
             </div>
@@ -92,89 +92,204 @@
         </button>
         <div class="current-grade-badge">
           <span>Current Level:</span>
-          <strong>Grade 2 Elementary Geometry</strong>
+          <strong>Grade 2 Elementary Math</strong>
         </div>
       </nav>
 
       <!-- Compact Hero Banner -->
       <section class="hub-hero">
         <h2>Grade 2 Math Adventures 🌟</h2>
-        <p>Select a lesson below to explore 3D solids and mirror reflections.</p>
+        <p>Explore chapters and interactive learning studios below.</p>
       </section>
 
-      <!-- Available Lessons Grid -->
-      <section class="lessons-grid">
+      <!-- Chapters Accordion Container -->
+      <div class="chapters-container">
 
-        <!-- LESSON 1 CARD: 3D SOLID SHAPES -->
-        <a href="shapes.html" class="lesson-card shapes" aria-label="Start Lesson 1: 3D Solid Shapes Adventure">
-          <div class="lesson-card-header">
-            <div class="lesson-card-badge-row">
-              <span class="lesson-number-badge">Lesson 1</span>
-              <span class="lesson-icon-preview">🎲 📐 🥫</span>
+        <!-- ================= CHAPTER 4: SHAPES AND SOLIDS ================= -->
+        <div class="chapter-accordion open" id="chapter-4">
+          <button class="chapter-header" onclick="toggleChapter('chapter-4')" aria-expanded="true" aria-controls="chapter-4-body">
+            <div class="chapter-header-left">
+              <span class="chapter-badge">Chapter 4</span>
+              <div class="chapter-title-group">
+                <h3 class="chapter-title">Shapes and Solids 🔷🎲</h3>
+                <span class="chapter-subtitle">3D Solids, Symmetry &amp; Patterns</span>
+              </div>
             </div>
-            <h3>3D Solid Shapes Adventure</h3>
-            <p class="lesson-subtitle">Spatial Geometry, Faces, Edges & Vertices</p>
-          </div>
-
-          <p class="lesson-desc">
-            Rotate 3D solids in 360°, explode surfaces to count faces, test everyday textures, and sort shapes in the lab!
-          </p>
-
-          <div class="lesson-card-footer">
-            <div class="lesson-cta-btn">
-              <span>Start Adventure</span>
-              <span class="cta-arrow">➔</span>
+            <div class="chapter-header-right">
+              <span class="chapter-lesson-count">3 Lessons</span>
+              <span class="chapter-chevron" aria-hidden="true">▼</span>
             </div>
-          </div>
-        </a>
+          </button>
 
-        <!-- LESSON 2 CARD: LINES OF SYMMETRY -->
-        <a href="symmetry.html" class="lesson-card symmetry" aria-label="Start Lesson 2: Lines of Symmetry Studio">
-          <div class="lesson-card-header">
-            <div class="lesson-card-badge-row">
-              <span class="lesson-number-badge">Lesson 2</span>
-              <span class="lesson-icon-preview">🦋 🪞 🎨</span>
+          <div class="chapter-body" id="chapter-4-body">
+            <section class="lessons-grid">
+
+              <!-- LESSON 1 CARD: 3D SOLID SHAPES -->
+              <a href="shapes.html" class="lesson-card shapes" aria-label="Start Lesson 1: 3D Solid Shapes Adventure">
+                <div class="lesson-card-header">
+                  <div class="lesson-card-badge-row">
+                    <span class="lesson-number-badge">Lesson 1</span>
+                    <span class="lesson-icon-preview">🎲 📐 🥫</span>
+                  </div>
+                  <h3>3D Solid Shapes Adventure</h3>
+                  <p class="lesson-subtitle">Spatial Geometry, Faces, Edges &amp; Vertices</p>
+                </div>
+
+                <p class="lesson-desc">
+                  Rotate 3D solids in 360°, explode surfaces to count faces, test everyday textures, and sort shapes in the lab!
+                </p>
+
+                <div class="lesson-card-footer">
+                  <div class="lesson-cta-btn">
+                    <span>Start Adventure</span>
+                    <span class="cta-arrow">➔</span>
+                  </div>
+                </div>
+              </a>
+
+              <!-- LESSON 2 CARD: LINES OF SYMMETRY -->
+              <a href="symmetry.html" class="lesson-card symmetry" aria-label="Start Lesson 2: Lines of Symmetry Studio">
+                <div class="lesson-card-header">
+                  <div class="lesson-card-badge-row">
+                    <span class="lesson-number-badge">Lesson 2</span>
+                    <span class="lesson-icon-preview">🦋 🪞 🎨</span>
+                  </div>
+                  <h3>Lines of Symmetry Studio</h3>
+                  <p class="lesson-subtitle">Mirror Reflections, Paper Folding &amp; Detective</p>
+                </div>
+
+                <p class="lesson-desc">
+                  Fold 3D paper sheets to test symmetry, spot tricky line traps, paint 8×8 bilateral pixel art, and speed-match reflections!
+                </p>
+
+                <div class="lesson-card-footer">
+                  <div class="lesson-cta-btn">
+                    <span>Start Studio</span>
+                    <span class="cta-arrow">➔</span>
+                  </div>
+                </div>
+              </a>
+
+              <!-- LESSON 3 CARD: SHAPE & SOLID PATTERNS -->
+              <a href="patterns.html" class="lesson-card patterns" aria-label="Start Lesson 3: Shape & Solid Patterns Studio">
+                <div class="lesson-card-header">
+                  <div class="lesson-card-badge-row">
+                    <span class="lesson-number-badge">Lesson 3</span>
+                    <span class="lesson-icon-preview">🔷 🎲 ⭕</span>
+                  </div>
+                  <h3>Shape &amp; Solid Patterns Studio</h3>
+                  <p class="lesson-subtitle">Repeating Groups, Blanks A &amp; B, Pentagons to Octagons &amp; 3D Solids</p>
+                </div>
+
+                <p class="lesson-desc">
+                  Ring repeating groups of shapes and solids, solve missing blanks A &amp; B with pentagons, hexagons, octagons, tilted cylinders, and inverted cones!
+                </p>
+
+                <div class="lesson-card-footer">
+                  <div class="lesson-cta-btn">
+                    <span>Start Patterns</span>
+                    <span class="cta-arrow">➔</span>
+                  </div>
+                </div>
+              </a>
+
+            </section>
+          </div>
+        </div>
+
+        <!-- ================= CHAPTER 5: ADDITION AND SUBTRACTION ================= -->
+        <div class="chapter-accordion open" id="chapter-5">
+          <button class="chapter-header" onclick="toggleChapter('chapter-5')" aria-expanded="true" aria-controls="chapter-5-body">
+            <div class="chapter-header-left">
+              <span class="chapter-badge chapter-5-badge">Chapter 5</span>
+              <div class="chapter-title-group">
+                <h3 class="chapter-title">Addition and Subtraction ➕➖</h3>
+                <span class="chapter-subtitle">Bonds to 20, Multiples of 10 &amp; 2-Digit Addition</span>
+              </div>
             </div>
-            <h3>Lines of Symmetry Studio</h3>
-            <p class="lesson-subtitle">Mirror Reflections, Paper Folding & Detective</p>
-          </div>
-
-          <p class="lesson-desc">
-            Fold 3D paper sheets to test symmetry, spot tricky line traps, paint 8×8 bilateral pixel art, and speed-match reflections!
-          </p>
-
-          <div class="lesson-card-footer">
-            <div class="lesson-cta-btn">
-              <span>Start Studio</span>
-              <span class="cta-arrow">➔</span>
+            <div class="chapter-header-right">
+              <span class="chapter-lesson-count">3 Lessons</span>
+              <span class="chapter-chevron" aria-hidden="true">▼</span>
             </div>
+          </button>
+
+          <div class="chapter-body" id="chapter-5-body">
+            <section class="lessons-grid">
+
+              <!-- LESSON 1 CARD: NUMBER PAIRS / BONDS TO 20 -->
+              <a href="bonds-20.html" class="lesson-card addition" aria-label="Start Lesson 1: Number Pairs &amp; Bonds to 20">
+                <div class="lesson-card-header">
+                  <div class="lesson-card-badge-row">
+                    <span class="lesson-number-badge">Lesson 1</span>
+                    <span class="lesson-icon-preview">🔟 🍒 🟢</span>
+                  </div>
+                  <h3>Number Pairs &amp; Bonds to 20</h3>
+                  <p class="lesson-subtitle">Dual 10-Frames, Part-Part-Whole &amp; Bridge to 10</p>
+                </div>
+
+                <p class="lesson-desc">
+                  Fill dual 10-frames to discover number pairs that make 20, solve part-part-whole bubbles, and bridge through 10!
+                </p>
+
+                <div class="lesson-card-footer">
+                  <div class="lesson-cta-btn">
+                    <span>Start Studio</span>
+                    <span class="cta-arrow">➔</span>
+                  </div>
+                </div>
+              </a>
+
+              <!-- LESSON 2 CARD: NUMBER PAIRS TO MULTIPLES OF TEN -->
+              <a href="pairs-tens.html" class="lesson-card addition" aria-label="Start Lesson 2: Number Pairs to Multiples of Ten">
+                <div class="lesson-card-header">
+                  <div class="lesson-card-badge-row">
+                    <span class="lesson-number-badge">Lesson 2</span>
+                    <span class="lesson-icon-preview">🧮 🎯 💯</span>
+                  </div>
+                  <h3>Number Pairs to Multiples of 10</h3>
+                  <p class="lesson-subtitle">Pairs to 100, Base-10 Rods &amp; Next-Ten Hopper</p>
+                </div>
+
+                <p class="lesson-desc">
+                  Explore how pairs to 10 power pairs to 100, make the next multiple of ten, and hop across interactive number lines!
+                </p>
+
+                <div class="lesson-card-footer">
+                  <div class="lesson-cta-btn">
+                    <span>Start Studio</span>
+                    <span class="cta-arrow">➔</span>
+                  </div>
+                </div>
+              </a>
+
+              <!-- LESSON 3 CARD: ADDING UP TO 2-DIGIT NUMBERS -->
+              <a href="add-2digit.html" class="lesson-card addition" aria-label="Start Lesson 3: Adding Up to 2-Digit Numbers">
+                <div class="lesson-card-header">
+                  <div class="lesson-card-badge-row">
+                    <span class="lesson-number-badge">Lesson 3</span>
+                    <span class="lesson-icon-preview">🧱 ⚡ ➕</span>
+                  </div>
+                  <h3>Adding Up to 2-Digit Numbers</h3>
+                  <p class="lesson-subtitle">Adding 1-Digit, Tens &amp; 2-Digit Regrouping</p>
+                </div>
+
+                <p class="lesson-desc">
+                  Master adding 1-digit numbers with block regrouping, add whole tens, and combine 2-digit numbers with the split strategy!
+                </p>
+
+                <div class="lesson-card-footer">
+                  <div class="lesson-cta-btn">
+                    <span>Start Studio</span>
+                    <span class="cta-arrow">➔</span>
+                  </div>
+                </div>
+              </a>
+
+            </section>
           </div>
-        </a>
+        </div>
 
-        <!-- LESSON 3 CARD: SHAPE & SOLID PATTERNS -->
-        <a href="patterns.html" class="lesson-card patterns" aria-label="Start Lesson 3: Shape & Solid Patterns Studio">
-          <div class="lesson-card-header">
-            <div class="lesson-card-badge-row">
-              <span class="lesson-number-badge">Lesson 3</span>
-              <span class="lesson-icon-preview">🔷 🎲 ⭕</span>
-            </div>
-            <h3>Shape & Solid Patterns Studio</h3>
-            <p class="lesson-subtitle">Repeating Groups, Blanks A & B, Pentagons to Octagons & 3D Solids</p>
-          </div>
-
-          <p class="lesson-desc">
-            Ring repeating groups of shapes and solids, solve missing blanks A & B with pentagons, hexagons, octagons, tilted cylinders, and inverted cones!
-          </p>
-
-          <div class="lesson-card-footer">
-            <div class="lesson-cta-btn">
-              <span>Start Patterns</span>
-              <span class="cta-arrow">➔</span>
-            </div>
-          </div>
-        </a>
-
-      </section>
+      </div>
 
     </section>
 
@@ -183,18 +298,31 @@
   <!-- Clean Studio Footer -->
   <footer class="hub-footer">
     <div class="footer-content">
-      <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary Geometry & Math Learning</p>
+      <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary Geometry &amp; Math Learning</p>
       <p class="copyright">© 2026 Alapakadala Studio • Zero-Build Educational Platform • Grade 2 Curriculum</p>
     </div>
   </footer>
 
   <!-- View Switching Navigation Script -->
   <script>
+    function toggleChapter(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const isOpen = el.classList.contains('open');
+      if (isOpen) {
+        el.classList.remove('open');
+        el.querySelector('.chapter-header').setAttribute('aria-expanded', 'false');
+      } else {
+        el.classList.add('open');
+        el.querySelector('.chapter-header').setAttribute('aria-expanded', 'true');
+      }
+    }
+
     function selectGrade(gradeId) {
       if (gradeId === 'grade-2') {
         document.getElementById('gradesView').classList.add('hidden');
         document.getElementById('lessonsView').classList.remove('hidden');
-        document.getElementById('hubGradeChip').innerHTML = '🎒 Grade 2 Geometry';
+        document.getElementById('hubGradeChip').innerHTML = '🎒 Grade 2 Math';
         document.getElementById('btnHeaderBackGrades').classList.remove('hidden');
         window.location.hash = 'grade-2';
         window.scrollTo({ top: 0, behavior: 'smooth' });

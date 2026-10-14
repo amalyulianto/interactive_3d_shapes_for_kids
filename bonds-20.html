@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Pairs & Bonds to 20 - Interactive Math Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="bonds-20.css">
+  <!-- Canvas Confetti for Celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header" id="mainHeader">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">✨🔟🍒</div>
+      <div class="brand-text">
+        <h1>Number Pairs to 20 Studio</h1>
+        <span class="studio-badge">Chapter 5 • Lesson 1</span>
+      </div>
+    </div>
+
+    <!-- Navigation between Grade 2 lessons -->
+    <div class="lesson-switcher">
+      <a href="index.html#grade-2" class="lesson-chip home" title="Back to Grade 2 Lessons">← Grade 2 Lessons</a>
+      <span class="lesson-label">Lesson:</span>
+      <span class="lesson-chip active" title="Current Lesson">🔟 Bonds to 20</span>
+      <a href="pairs-tens.html" class="lesson-chip link" title="Go to Lesson 2: Multiples of 10">🧮 Multiples of 10</a>
+      <a href="add-2digit.html" class="lesson-chip link" title="Go to Lesson 3: 2-Digit Addition">🧱 2-Digit Addition</a>
+    </div>
+
+    <div class="nav-controls">
+      <nav class="mode-tabs">
+        <button id="tabBtn_frames" class="tab-btn active" onclick="switchBondsMode('frames')">
+          <span class="tab-icon">🔟</span> Dual Ten-Frames
+        </button>
+        <button id="tabBtn_ppw" class="tab-btn" onclick="switchBondsMode('ppw')">
+          <span class="tab-icon">🍒</span> Part-Part-Whole
+        </button>
+        <button id="tabBtn_bridge" class="tab-btn" onclick="switchBondsMode('bridge')">
+          <span class="tab-icon">🌉</span> Bridge to 10
+        </button>
+        <button id="tabBtn_quiz" class="tab-btn" onclick="switchBondsMode('quiz')">
+          <span class="tab-icon">🏆</span> Mastery Quiz
+        </button>
+      </nav>
+      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Application Container -->
+  <main class="app-container" id="appContainer">
+
+    <!-- ================= VIEW 1: DUAL TEN-FRAMES ================= -->
+    <section id="view_frames" class="view-panel active">
+      <div class="bonds-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🔟 Dual Ten-Frames Visualizer</h2>
+            <p>Tap slots or slide the bar to see how 20 splits into two color teams!</p>
+          </div>
+          <span class="badge-pill">Interactive Manipulative</span>
+        </div>
+
+        <div class="tip-banner">
+          💡 <strong>Teacher Tip:</strong> Two full 10-frames make 20! Watch how red and yellow counters always add up to 20.
+        </div>
+
+        <!-- Big Live Equation Banner -->
+        <div class="equation-display-card">
+          <div class="equation-main">
+            <span class="eq-num red" id="eqRed">14</span>
+            <span class="eq-sign">+</span>
+            <span class="eq-num yellow" id="eqYellow">6</span>
+            <span class="eq-sign">=</span>
+            <span class="eq-num total">20</span>
+          </div>
+          <div class="equation-sub" id="eqSub">
+            10 (Full Frame) + 4 + 6 = 20 Total!
+          </div>
+        </div>
+
+        <!-- The Two 10-Frames -->
+        <div class="dual-ten-frames-wrapper">
+          <div class="frame-box">
+            <span class="frame-label">Frame 1 (Slots 1 - 10)</span>
+            <div class="ten-frame-grid" id="frameGrid1"></div>
+          </div>
+          <div class="frame-box">
+            <span class="frame-label">Frame 2 (Slots 11 - 20)</span>
+            <div class="ten-frame-grid" id="frameGrid2"></div>
+          </div>
+        </div>
+
+        <!-- Stepper & Slider Controls -->
+        <div class="controls-bar">
+          <div class="stepper-row">
+            <button class="step-btn" onclick="adjustFrameRed(-1)" title="Remove 1 Red Counter">➖</button>
+            <input type="range" min="0" max="20" value="14" class="split-slider" id="frameSlider" oninput="onFrameSliderChange(this.value)">
+            <button class="step-btn" onclick="adjustFrameRed(1)" title="Add 1 Red Counter">➕</button>
+          </div>
+        </div>
+
+        <!-- Quick Pair Presets -->
+        <div class="presets-container">
+          <span class="presets-label">⚡ Jump to Famous Pairs of 20:</span>
+          <div class="presets-chips">
+            <button class="preset-chip" data-val="20" onclick="setFrameRed(20)">20 + 0</button>
+            <button class="preset-chip" data-val="19" onclick="setFrameRed(19)">19 + 1</button>
+            <button class="preset-chip" data-val="18" onclick="setFrameRed(18)">18 + 2</button>
+            <button class="preset-chip" data-val="17" onclick="setFrameRed(17)">17 + 3</button>
+            <button class="preset-chip" data-val="16" onclick="setFrameRed(16)">16 + 4</button>
+            <button class="preset-chip" data-val="15" onclick="setFrameRed(15)">15 + 5</button>
+            <button class="preset-chip" data-val="14" onclick="setFrameRed(14)">14 + 6</button>
+            <button class="preset-chip" data-val="13" onclick="setFrameRed(13)">13 + 7</button>
+            <button class="preset-chip" data-val="12" onclick="setFrameRed(12)">12 + 8</button>
+            <button class="preset-chip" data-val="11" onclick="setFrameRed(11)">11 + 9</button>
+            <button class="preset-chip" data-val="10" onclick="setFrameRed(10)">10 + 10 (Half!)</button>
+            <button class="preset-chip" data-val="9" onclick="setFrameRed(9)">9 + 11</button>
+            <button class="preset-chip" data-val="8" onclick="setFrameRed(8)">8 + 12</button>
+            <button class="preset-chip" data-val="7" onclick="setFrameRed(7)">7 + 13</button>
+            <button class="preset-chip" data-val="6" onclick="setFrameRed(6)">6 + 14</button>
+            <button class="preset-chip" data-val="5" onclick="setFrameRed(5)">5 + 15</button>
+            <button class="preset-chip" data-val="4" onclick="setFrameRed(4)">4 + 16</button>
+            <button class="preset-chip" data-val="3" onclick="setFrameRed(3)">3 + 17</button>
+            <button class="preset-chip" data-val="2" onclick="setFrameRed(2)">2 + 18</button>
+            <button class="preset-chip" data-val="1" onclick="setFrameRed(1)">1 + 19</button>
+            <button class="preset-chip" data-val="0" onclick="setFrameRed(0)">0 + 20</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: PART-PART-WHOLE ================= -->
+    <section id="view_ppw" class="view-panel">
+      <div class="bonds-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🍒 Part-Part-Whole Tree</h2>
+            <p>Whole = 20. Find the two number partners that combine to make the whole!</p>
+          </div>
+          <div class="ppw-mode-pills">
+            <button id="ppwMode_mystery" class="ppw-mode-btn active" onclick="setPPWMode('mystery')">🕵️ Mystery Mode</button>
+            <button id="ppwMode_explore" class="ppw-mode-btn" onclick="setPPWMode('explore')">🔍 Free Explore</button>
+          </div>
+        </div>
+
+        <div class="tip-banner">
+          💡 <strong>Math Secret:</strong> If you know one part, subtract it from 20 to find the missing partner! ($20 - \text{Part} = \text{Other Part}$).
+        </div>
+
+        <!-- Interactive Tree Area (Rendered via JS) -->
+        <div class="ppw-container" id="ppwInteractiveArea"></div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: BRIDGE THROUGH 10 ================= -->
+    <section id="view_bridge" class="view-panel">
+      <div class="bonds-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🌉 Bridge Through 10 Comparison</h2>
+            <p>See how your known number pairs to 10 directly unlock pairs to 20!</p>
+          </div>
+          <span class="badge-pill" id="bridgeStepLabel">Pair 4 of 10</span>
+        </div>
+
+        <div class="tip-banner">
+          💡 <strong>The Bridge Rule:</strong> The ones digits behave exactly like bonds to 10! You just add 10 to one partner.
+        </div>
+
+        <!-- Comparison Cards -->
+        <div class="bridge-comparison-wrapper">
+          <!-- Left: Single Frame (Pairs to 10) -->
+          <div class="bridge-panel">
+            <div class="bridge-panel-header">
+              <h3>Bonds to 10</h3>
+              <span class="bridge-tag ten">1 Ten-Frame</span>
+            </div>
+            <div class="ten-frame-grid" id="bridgeLeftGrid" style="margin: 0 auto;"></div>
+            <div class="bridge-equation" id="bridgeLeftEq">4 + 6 = 10</div>
+          </div>
+
+          <!-- Right: Dual Frames (Pairs to 20) -->
+          <div class="bridge-panel focus">
+            <div class="bridge-panel-header">
+              <h3>Bonds to 20</h3>
+              <span class="bridge-tag twenty">2 Ten-Frames</span>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+              <div class="ten-frame-grid" id="bridgeRightGrid1" style="transform: scale(0.9);"></div>
+              <div class="ten-frame-grid" id="bridgeRightGrid2" style="transform: scale(0.9);"></div>
+            </div>
+            <div class="bridge-equation" id="bridgeRightEq">14 + 6 = 20</div>
+          </div>
+        </div>
+
+        <!-- Pattern Insight Note -->
+        <div class="bridge-insight-box" id="bridgeInsightText">
+          🌟 <strong>Pattern Secret:</strong> 4 and 6 make 10, so 14 and 6 make 20!
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="bridge-nav-row">
+          <button class="action-btn secondary" onclick="prevBridge()">⬅️ Previous Pair</button>
+          <button class="action-btn" onclick="nextBridge()">Next Pair ➡️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: MASTERY QUIZ ================= -->
+    <section id="view_quiz" class="view-panel">
+      <div class="bonds-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🏆 Number Bonds to 20 Mastery Quiz</h2>
+            <p>Test your intuition with 4 fun, progressive quiz levels!</p>
+          </div>
+          <div class="quiz-level-selector">
+            <button class="level-btn active" data-level="1" onclick="startQuiz(1)">Level 1: Missing Partners</button>
+            <button class="level-btn" data-level="2" onclick="startQuiz(2)">Level 2: Bridge to 10 Clues</button>
+            <button class="level-btn" data-level="3" onclick="startQuiz(3)">Level 3: Ten-Frame Eyes</button>
+            <button class="level-btn" data-level="4" onclick="startQuiz(4)">Level 4: Speed Master</button>
+          </div>
+        </div>
+
+        <!-- Quiz Container Card -->
+        <div class="quiz-card">
+          <div class="quiz-progress-bar">
+            <span class="quiz-counter" id="quizQCount">Question 1 of 5</span>
+            <span class="quiz-score-pill" id="quizScore">Score: 0</span>
+          </div>
+
+          <div class="quiz-question-box">
+            <h3 class="quiz-question-prompt" id="quizPrompt">What number pairs with 14 to make 20?</h3>
+            <div class="quiz-question-visual" id="quizVisual">14 + [ ? ] = 20</div>
+          </div>
+
+          <div class="quiz-options-grid" id="quizOptions"></div>
+
+          <div class="quiz-feedback-banner" id="quizFeedback"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Clean Studio Footer -->
+  <footer class="hub-footer" style="background:#FFF; border-top:1.5px solid #E2E8F0; padding:20px; text-align:center; margin-top:auto;">
+    <p>Crafted by <strong>Alapakadala Studio</strong> • Grade 2 Chapter 5: Addition &amp; Subtraction</p>
+    <p style="font-size:0.8rem; color:#64748B; margin-top:4px;">Zero-Build Educational Platform • CCSS.MATH.CONTENT.2.OA.B.2</p>
+  </footer>
+
+  <!-- Scripts in Clean Dependency Order -->
+  <script src="js/common/sound.js"></script>
+  <script src="js/common/utils.js"></script>
+  <script src="js/ch5/bonds-20.js"></script>
+
+</body>
+</html>

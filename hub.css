@@ -427,10 +427,149 @@ body {
   font-weight: 800;
 }
 
+/* ================= CHAPTER ACCORDIONS ================= */
+.chapters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chapter-accordion {
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #E2E8F0;
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chapter-accordion:hover {
+  border-color: #CBD5E1;
+  box-shadow: var(--shadow-sm);
+}
+
+.chapter-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+  border: none;
+  border-bottom: 1.5px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  user-select: none;
+}
+
+.chapter-accordion.open .chapter-header {
+  border-bottom-color: #E2E8F0;
+  background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+}
+
+.chapter-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.chapter-badge {
+  background: #EEF2FF;
+  color: var(--primary);
+  border: 1.5px solid #C7D2FE;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.chapter-badge.chapter-5-badge {
+  background: #ECFDF5;
+  color: #047857;
+  border-color: #A7F3D0;
+}
+
+.chapter-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chapter-title {
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chapter-subtitle {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.chapter-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chapter-lesson-count {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.chapter-chevron {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+  line-height: 1;
+}
+
+.chapter-accordion.open .chapter-chevron {
+  transform: rotate(0deg);
+}
+
+.chapter-accordion:not(.open) .chapter-chevron {
+  transform: rotate(-90deg);
+}
+
+.chapter-body {
+  padding: 20px;
+  background: #FAFAFC;
+  display: none;
+}
+
+.chapter-accordion.open .chapter-body {
+  display: block;
+  animation: fadeInAccordion 0.2s ease-out;
+}
+
+@keyframes fadeInAccordion {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ================= LESSONS CARDS GRID (COMPACT) ================= */
 .lessons-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 18px;
 }
 
@@ -464,6 +603,10 @@ body {
 
 .lesson-card.patterns:hover {
   border-color: #F59E0B;
+}
+
+.lesson-card.addition:hover {
+  border-color: #10B981;
 }
 
 .lesson-card-header {
@@ -504,6 +647,12 @@ body {
   border: 1px solid #FDE68A;
 }
 
+.lesson-card.addition .lesson-number-badge {
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+}
+
 .lesson-icon-preview {
   font-size: 1.15rem;
   letter-spacing: 2px;
@@ -529,6 +678,10 @@ body {
 
 .lesson-card.patterns .lesson-subtitle {
   color: #B45309;
+}
+
+.lesson-card.addition .lesson-subtitle {
+  color: #047857;
 }
 
 .lesson-desc {
@@ -568,6 +721,11 @@ body {
   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
 }
 
+.lesson-card.addition .lesson-cta-btn {
+  background: linear-gradient(135deg, #059669, #10B981);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+}
+
 .lesson-card:hover .lesson-cta-btn {
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
@@ -579,6 +737,10 @@ body {
 
 .lesson-card.patterns:hover .lesson-cta-btn {
   box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+
+.lesson-card.addition:hover .lesson-cta-btn {
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
 }
 
 .cta-arrow {
