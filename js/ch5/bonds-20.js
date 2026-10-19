@@ -48,6 +48,8 @@
   /* ================= MODE SWITCHING ================= */
   window.switchBondsMode = function (mode) {
     state.currentMode = mode;
+    const mobileSelect = document.getElementById('activitySelect');
+    if (mobileSelect) mobileSelect.value = mode;
     if (window.sound) window.sound.playPop();
 
     // Update Tab Buttons
@@ -216,18 +218,18 @@
       container.innerHTML = `
         <div class="ppw-tree-wrapper">
           <svg class="ppw-svg-lines" viewBox="0 0 320 240">
-            <line x1="160" y1="43" x2="53" y2="197" stroke="#059669" stroke-width="4" stroke-dasharray="6,6" />
-            <line x1="160" y1="43" x2="267" y2="197" stroke="#059669" stroke-width="4" stroke-dasharray="6,6" />
+            <line x1="160" y1="43" x2="59" y2="197" stroke="#059669" stroke-width="4" stroke-dasharray="6,6" />
+            <line x1="160" y1="43" x2="261" y2="197" stroke="#059669" stroke-width="4" stroke-dasharray="6,6" />
           </svg>
-          <div class="ppw-node whole">
+          <div class="ppw-node ppw-pos-whole theme-whole">
             <span class="ppw-node-val">20</span>
             <span class="ppw-node-lbl">Whole</span>
           </div>
-          <div class="ppw-node part1">
+          <div class="ppw-node ppw-pos-part1 theme-part1">
             <span class="ppw-node-val">${p1}</span>
             <span class="ppw-node-lbl">Part</span>
           </div>
-          <div class="ppw-node part2">
+          <div class="ppw-node ppw-pos-part2 theme-part2">
             <span class="ppw-node-val">${p2}</span>
             <span class="ppw-node-lbl">Part</span>
           </div>
@@ -269,18 +271,18 @@
       container.innerHTML = `
         <div class="ppw-tree-wrapper">
           <svg class="ppw-svg-lines" viewBox="0 0 320 240">
-            <line x1="160" y1="43" x2="53" y2="197" stroke="#059669" stroke-width="4" />
-            <line x1="160" y1="43" x2="267" y2="197" stroke="#059669" stroke-width="4" />
+            <line x1="160" y1="43" x2="59" y2="197" stroke="#059669" stroke-width="4" />
+            <line x1="160" y1="43" x2="261" y2="197" stroke="#059669" stroke-width="4" />
           </svg>
-          <div class="ppw-node whole">
+          <div class="ppw-node ppw-pos-whole theme-whole">
             <span class="ppw-node-val">20</span>
             <span class="ppw-node-lbl">Whole</span>
           </div>
-          <div class="ppw-node ${missingIdx === 1 ? 'mystery' : 'part1'}" id="nodePart1">
+          <div class="ppw-node ppw-pos-part1 theme-part1 ${missingIdx === 1 ? 'mystery' : ''}" id="nodePart1">
             <span class="ppw-node-val">${p1Val}</span>
             <span class="ppw-node-lbl">Part</span>
           </div>
-          <div class="ppw-node ${missingIdx === 2 ? 'mystery' : 'part2'}" id="nodePart2">
+          <div class="ppw-node ppw-pos-part2 theme-part2 ${missingIdx === 2 ? 'mystery' : ''}" id="nodePart2">
             <span class="ppw-node-val">${p2Val}</span>
             <span class="ppw-node-lbl">Part</span>
           </div>
@@ -483,6 +485,7 @@
     const visualEl = document.getElementById('quizVisual');
     const optionsContainer = document.getElementById('quizOptions');
     const feedbackEl = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNextContainer');
 
     if (countEl) countEl.textContent = `Question ${state.quiz.qIndex + 1} of ${total}`;
     if (scoreEl) scoreEl.textContent = `Score: ${state.quiz.score}`;
@@ -492,10 +495,13 @@
       feedbackEl.style.display = 'none';
       feedbackEl.className = 'quiz-feedback-banner';
     }
+    if (nextContainer) {
+      nextContainer.style.display = 'none';
+    }
 
     if (optionsContainer) {
       optionsContainer.innerHTML = q.options.map(opt => `
-        <button class="quiz-option-btn" onclick="submitQuizAnswer('${opt}')">${opt}</button>
+        <button class="quiz-option-btn" data-val="${opt}" onclick="submitQuizAnswer('${opt}')">${opt}</button>
       `).join('');
     }
   }
@@ -507,6 +513,19 @@
     const q = state.quiz.questions[state.quiz.qIndex];
     const isCorrect = String(selected) === String(q.correct);
     const feedbackEl = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNextContainer');
+    const nextBtn = document.getElementById('btnNextQuestion');
+
+    // Highlight options & lock buttons
+    document.querySelectorAll('.quiz-option-btn').forEach(btn => {
+      const val = btn.dataset.val;
+      btn.classList.add('opt-disabled');
+      if (String(val) === String(q.correct)) {
+        btn.classList.add('opt-correct');
+      } else if (String(val) === String(selected) && !isCorrect) {
+        btn.classList.add('opt-wrong');
+      }
+    });
 
     if (isCorrect) {
       state.quiz.score += 20;
@@ -527,14 +546,24 @@
     const scoreEl = document.getElementById('quizScore');
     if (scoreEl) scoreEl.textContent = `Score: ${state.quiz.score}`;
 
-    setTimeout(() => {
-      if (state.quiz.qIndex < state.quiz.questions.length - 1) {
-        state.quiz.qIndex++;
-        renderQuizQuestion();
-      } else {
-        showQuizFinished();
+    // Reveal Next Button instead of setTimeout
+    if (nextContainer) {
+      nextContainer.style.display = 'flex';
+      if (nextBtn) {
+        const isLast = (state.quiz.qIndex === state.quiz.questions.length - 1);
+        nextBtn.innerHTML = isLast ? 'See Results 🏆' : 'Next Question ➔';
       }
-    }, 1800);
+    }
+  };
+
+  window.goToNextQuestion = function () {
+    if (window.sound) window.sound.playPop();
+    if (state.quiz.qIndex < state.quiz.questions.length - 1) {
+      state.quiz.qIndex++;
+      renderQuizQuestion();
+    } else {
+      showQuizFinished();
+    }
   };
 
   function showQuizFinished() {
@@ -545,10 +574,12 @@
     const visualEl = document.getElementById('quizVisual');
     const optionsContainer = document.getElementById('quizOptions');
     const feedbackEl = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNextContainer');
 
     if (promptEl) promptEl.textContent = "🏆 Quiz Complete!";
     if (visualEl) visualEl.innerHTML = `⭐ Final Score: ${state.quiz.score} / 100 ⭐`;
     if (feedbackEl) feedbackEl.style.display = 'none';
+    if (nextContainer) nextContainer.style.display = 'none';
 
     if (optionsContainer) {
       optionsContainer.innerHTML = `

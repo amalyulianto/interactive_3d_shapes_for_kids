@@ -23,6 +23,9 @@
       if (btn) btn.classList.toggle('active', key === mode);
     });
 
+    const mobileSelect = document.getElementById('mobileActivitySelect');
+    if (mobileSelect) mobileSelect.value = mode;
+
     // Update view panels
     const viewMap = {
       ring: 'ringView',

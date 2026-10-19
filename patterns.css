@@ -819,18 +819,77 @@ body {
   display: none !important;
 }
 
+/* ================= MOBILE NAV DROPDOWNS ================= */
+.mobile-nav-dropdowns {
+  display: none;
+}
+
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
+  .lesson-switcher,
+  .mode-tabs {
+    display: none !important;
+  }
+
+  .mobile-nav-dropdowns {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .mobile-select-wrap {
+    display: flex;
+    align-items: center;
+    background: #F8FAFC;
+    border: 1.5px solid #CBD5E1;
+    border-radius: var(--radius-pill);
+    padding: 3px 12px;
+    width: 100%;
+    gap: 8px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .mobile-select-wrap:focus-within {
+    border-color: var(--primary);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+  }
+
+  .mobile-select-label {
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .mobile-select {
+    flex: 1;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #0F172A;
+    padding: 6px 0;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    padding-right: 22px;
+  }
+
   .main-header {
     padding: 10px 16px;
   }
 
   .brand-text h1 {
     font-size: 1.1rem;
-  }
-
-  .mode-tabs {
-    flex-wrap: wrap;
   }
 
   .pattern-card {

@@ -51,6 +51,36 @@
         🔊
       </button>
     </div>
+
+    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 768px) -->
+    <div class="mobile-nav-dropdowns">
+      <div class="mobile-select-wrap">
+        <label for="mobileLessonSelect" class="mobile-select-label">📚 Lesson:</label>
+        <select id="mobileLessonSelect" class="mobile-select" onchange="if(this.value) window.location.href=this.value;">
+          <option value="index.html#grade-2">← All Grade 2 Lessons</option>
+          <optgroup label="Chapter 4: Shapes &amp; Solids">
+            <option value="shapes.html">📐 Lesson 1: 3D Shapes</option>
+            <option value="symmetry.html">🪞 Lesson 2: Symmetry</option>
+            <option value="patterns.html" selected>🧩 Lesson 3: Patterns</option>
+          </optgroup>
+          <optgroup label="Chapter 5: Addition &amp; Subtraction">
+            <option value="bonds-20.html">🔟 Lesson 1: Bonds to 20</option>
+            <option value="pairs-tens.html">🧮 Lesson 2: Multiples of 10</option>
+            <option value="add-2digit.html">🧱 Lesson 3: 2-Digit Addition</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="mobile-select-wrap">
+        <label for="mobileActivitySelect" class="mobile-select-label">🎮 Activity:</label>
+        <select id="mobileActivitySelect" class="mobile-select" onchange="switchPatternMode(this.value)">
+          <option value="ring" selected>⭕ Ring Repeating Group</option>
+          <option value="shapes">🔷 Missing 2D Shapes</option>
+          <option value="solids">🎲 Missing 3D Solids</option>
+          <option value="quiz">🏆 Pattern Quizzes</option>
+        </select>
+      </div>
+    </div>
   </header>
 
   <!-- Main Application Body -->

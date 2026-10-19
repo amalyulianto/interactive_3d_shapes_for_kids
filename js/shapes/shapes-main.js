@@ -63,6 +63,9 @@ function switchMode(mode) {
   if (tabSorter) tabSorter.classList.toggle('active', isSorter);
   if (tabQuiz) tabQuiz.classList.toggle('active', isQuiz);
 
+  const mobileSelect = document.getElementById('mobileActivitySelect');
+  if (mobileSelect) mobileSelect.value = mode;
+
   if (isExplorer && typeof onWindowResize === 'function') {
     setTimeout(onWindowResize, 60);
   }

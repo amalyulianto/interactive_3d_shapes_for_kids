@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="pairs-tens.css">
+  <link rel="stylesheet" href="ch5-studio.css">
   <!-- Canvas Confetti for Celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
@@ -50,6 +51,35 @@
       <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
         🔊
       </button>
+    </div>
+    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 768px) -->
+    <div class="mobile-nav-dropdowns">
+      <div class="mobile-select-wrap">
+        <label for="lessonSelect" class="mobile-select-label">📚 Lesson:</label>
+        <select id="lessonSelect" class="mobile-select" onchange="if(this.value) window.location.href=this.value;">
+          <option value="index.html#grade-2">← All Grade 2 Lessons</option>
+          <optgroup label="Chapter 4: Shapes &amp; Solids">
+            <option value="shapes.html">📐 Lesson 1: 3D Shapes</option>
+            <option value="symmetry.html">🪞 Lesson 2: Symmetry</option>
+            <option value="patterns.html">🧩 Lesson 3: Patterns</option>
+          </optgroup>
+          <optgroup label="Chapter 5: Addition &amp; Subtraction">
+            <option value="bonds-20.html">🔟 Lesson 1: Bonds to 20</option>
+            <option value="pairs-tens.html" selected>🧮 Lesson 2: Multiples of 10</option>
+            <option value="add-2digit.html">🧱 Lesson 3: 2-Digit Addition</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="mobile-select-wrap">
+        <label for="activitySelect" class="mobile-select-label">🎮 Activity:</label>
+        <select id="activitySelect" class="mobile-select" onchange="switchTensMode(this.value)">
+          <option value="rods" selected>🧮 100-Rods Rack</option>
+          <option value="hopper">🐸 Next-Ten Hopper</option>
+          <option value="matcher">🎯 Target Matcher</option>
+          <option value="quiz">🏆 Mastery Quiz</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -225,6 +255,12 @@
           <div class="quiz-options-grid" id="quizOptions"></div>
 
           <div class="quiz-feedback-banner" id="quizFeedback"></div>
+
+          <div class="quiz-next-container" id="quizNextContainer" style="display: none;">
+            <button class="action-btn quiz-next-btn" id="btnNextQuestion" onclick="goToNextQuestion()">
+              Next Question ➔
+            </button>
+          </div>
         </div>
       </div>
     </section>

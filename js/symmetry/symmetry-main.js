@@ -46,6 +46,9 @@ function switchSymmetryMode(mode) {
     if (panels[k]) panels[k].classList.toggle('active', k === mode);
   });
 
+  const mobileSelect = document.getElementById('mobileActivitySelect');
+  if (mobileSelect) mobileSelect.value = mode;
+
   if (mode === 'painter' && typeof renderPainterGrid === 'function') {
     renderPainterGrid();
   } else if (mode === 'color-mirror' && typeof initColorMirror === 'function') {

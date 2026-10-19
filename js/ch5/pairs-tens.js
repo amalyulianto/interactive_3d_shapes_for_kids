@@ -35,6 +35,8 @@
   /* ================= MODE SWITCHING ================= */
   window.switchTensMode = function (mode) {
     state.currentMode = mode;
+    const mobileSelect = document.getElementById('activitySelect');
+    if (mobileSelect) mobileSelect.value = mode;
     if (window.sound) window.sound.playPop();
 
     // Update Tab Buttons
@@ -377,6 +379,7 @@
     const visualEl = document.getElementById('quizVisual');
     const optionsContainer = document.getElementById('quizOptions');
     const feedbackEl = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNextContainer');
 
     if (countEl) countEl.textContent = `Question ${state.quiz.qIndex + 1} of ${total}`;
     if (scoreEl) scoreEl.textContent = `Score: ${state.quiz.score}`;
@@ -386,10 +389,13 @@
       feedbackEl.style.display = 'none';
       feedbackEl.className = 'quiz-feedback-banner';
     }
+    if (nextContainer) {
+      nextContainer.style.display = 'none';
+    }
 
     if (optionsContainer) {
       optionsContainer.innerHTML = q.options.map(opt => `
-        <button class="quiz-option-btn" onclick="submitQuizAnswer('${opt}')">${opt}</button>
+        <button class="quiz-option-btn" data-val="${opt}" onclick="submitQuizAnswer('${opt}')">${opt}</button>
       `).join('');
     }
   }
@@ -401,6 +407,19 @@
     const q = state.quiz.questions[state.quiz.qIndex];
     const isCorrect = String(selected) === String(q.correct);
     const feedbackEl = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNextContainer');
+    const nextBtn = document.getElementById('btnNextQuestion');
+
+    // Highlight options & lock buttons
+    document.querySelectorAll('.quiz-option-btn').forEach(btn => {
+      const val = btn.dataset.val;
+      btn.classList.add('opt-disabled');
+      if (String(val) === String(q.correct)) {
+        btn.classList.add('opt-correct');
+      } else if (String(val) === String(selected) && !isCorrect) {
+        btn.classList.add('opt-wrong');
+      }
+    });
 
     if (isCorrect) {
       state.quiz.score += 20;
@@ -421,14 +440,24 @@
     const scoreEl = document.getElementById('quizScore');
     if (scoreEl) scoreEl.textContent = `Score: ${state.quiz.score}`;
 
-    setTimeout(() => {
-      if (state.quiz.qIndex < state.quiz.questions.length - 1) {
-        state.quiz.qIndex++;
-        renderQuizQuestion();
-      } else {
-        showQuizFinished();
+    // Reveal Next Button instead of setTimeout
+    if (nextContainer) {
+      nextContainer.style.display = 'flex';
+      if (nextBtn) {
+        const isLast = (state.quiz.qIndex === state.quiz.questions.length - 1);
+        nextBtn.innerHTML = isLast ? 'See Results 🏆' : 'Next Question ➔';
       }
-    }, 1800);
+    }
+  };
+
+  window.goToNextQuestion = function () {
+    if (window.sound) window.sound.playPop();
+    if (state.quiz.qIndex < state.quiz.questions.length - 1) {
+      state.quiz.qIndex++;
+      renderQuizQuestion();
+    } else {
+      showQuizFinished();
+    }
   };
 
   function showQuizFinished() {
@@ -439,10 +468,12 @@
     const visualEl = document.getElementById('quizVisual');
     const optionsContainer = document.getElementById('quizOptions');
     const feedbackEl = document.getElementById('quizFeedback');
+    const nextContainer = document.getElementById('quizNextContainer');
 
     if (promptEl) promptEl.textContent = "🏆 Quiz Complete!";
     if (visualEl) visualEl.innerHTML = `⭐ Final Score: ${state.quiz.score} / 100 ⭐`;
     if (feedbackEl) feedbackEl.style.display = 'none';
+    if (nextContainer) nextContainer.style.display = 'none';
 
     if (optionsContainer) {
       optionsContainer.innerHTML = `
