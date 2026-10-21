@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tug of War Math Duel | Grade 2 Chapter 5 | Alapakadala Studio</title>
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tug-of-war.css">
+</head>
+<body>
+
+  <!-- ================= TOP MAIN HEADER ================= -->
+  <header class="main-header">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">🏆</div>
+      <div class="brand-text">
+        <h1>Tug of War Math Duel</h1>
+        <span class="studio-badge">Chapter 5 Battle Arena</span>
+      </div>
+    </div>
+
+    <!-- Desktop Header Controls -->
+    <div class="header-controls">
+      <div class="match-selector-bar" role="group" aria-label="Select Match">
+        <button class="match-select-btn active" data-set="set1" onclick="startMatch('set1')">Match 1</button>
+        <button class="match-select-btn" data-set="set2" onclick="startMatch('set2')">Match 2</button>
+        <button class="match-select-btn" data-set="shuffle" onclick="startMatch('shuffle')">🎲 Shuffle All</button>
+      </div>
+
+      <a href="index.html#grade-2" class="back-hub-btn" title="Back to Grade 2 Hub">
+        ← Grade 2 Lessons
+      </a>
+
+      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 768px) -->
+    <div class="mobile-nav-dropdowns">
+      <div class="mobile-select-wrap">
+        <label for="mobileLessonSelect" class="mobile-select-label">📚 Lesson:</label>
+        <select id="mobileLessonSelect" class="mobile-select" onchange="if(this.value) window.location.href=this.value;">
+          <option value="index.html#grade-2">← All Grade 2 Lessons</option>
+          <optgroup label="Chapter 5: Addition &amp; Subtraction">
+            <option value="bonds-20.html">🔟 Lesson 1: Bonds to 20</option>
+            <option value="pairs-tens.html">🧮 Lesson 2: Multiples of 10</option>
+            <option value="add-2digit.html">🧱 Lesson 3: 2-Digit Addition</option>
+            <option value="tug-of-war.html" selected>🏆 Tug of War Duel</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="mobile-select-wrap">
+        <label for="mobileMatchSelect" class="mobile-select-label">⚔️ Match:</label>
+        <select id="mobileMatchSelect" class="mobile-select" onchange="startMatch(this.value)">
+          <option value="set1" selected>Match 1 (Curated 16 Qs)</option>
+          <option value="set2">Match 2 (Rematch 16 Qs)</option>
+          <option value="shuffle">🎲 Shuffle All Questions</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= ARENA CONTAINER ================= -->
+  <main class="arena-container">
+
+    <!-- Top Round & Turn HUD -->
+    <section class="match-top-hud">
+      <div class="round-badge" id="currentRoundBadge">Round 1 / 8</div>
+      <div class="active-turn-banner lions-turn" id="activeTurnBanner">
+        <span class="banner-icon">🦁</span>
+        <span><strong>TEAM LIONS' TURN</strong> (Question 1/8)</span>
+      </div>
+    </section>
+
+    <!-- Stadium Field Card -->
+    <section class="stadium-card" aria-label="Tug of War Field">
+      <div class="stadium-field">
+
+        <!-- Team Lions (Left) -->
+        <div class="team-podium lion-side active-turn" id="lionPodium">
+          <div class="team-mascot lion normal" id="lionMascot" aria-hidden="true">🦁</div>
+          <div class="team-name">LIONS</div>
+          <div class="team-score-badge" id="lionsScore">0</div>
+          <div class="team-pulls-label" id="lionsPulls">0 PULLS</div>
+        </div>
+
+        <!-- Center Tug Track -->
+        <div class="tug-track-wrapper">
+          <div class="mud-pit-ground">
+            <div class="mud-puddle"></div>
+            <div class="center-line-flag">🚩</div>
+            
+            <div class="rope-track-area">
+              <div class="rope-graphic" id="ropeGraphic">
+                <div class="center-ribbon" id="centerRibbon">⚡</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="meter-scale-bar">
+            <span class="lion-zone">◀ LIONS WIN</span>
+            <span class="center-marker">MUD PIT</span>
+            <span class="wolf-zone">WOLVES WIN ▶</span>
+          </div>
+        </div>
+
+        <!-- Team Wolves (Right) -->
+        <div class="team-podium wolf-side" id="wolfPodium">
+          <div class="team-mascot wolf normal" id="wolfMascot" aria-hidden="true">🐺</div>
+          <div class="team-name">WOLVES</div>
+          <div class="team-score-badge" id="wolvesScore">0</div>
+          <div class="team-pulls-label" id="wolvesPulls">0 PULLS</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Question Duel Card -->
+    <section class="question-duel-card" aria-live="polite">
+      <div class="question-topic-pill lions-pill" id="questionTopic">
+        🎯 Bonds to 20 • Team Lions
+      </div>
+
+      <h2 class="question-prompt" id="questionPrompt">What makes 20?</h2>
+
+      <div class="question-equation-box" id="questionEquation">
+        14 + ___ = 20
+      </div>
+
+      <div class="duel-options-grid" id="questionOptionsGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Turn Feedback Banner -->
+      <div class="turn-feedback-banner hidden" id="turnFeedbackBanner">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Next Turn Button Container -->
+      <div class="next-turn-container hidden" id="nextTurnContainer">
+        <button class="next-turn-btn" id="nextTurnBtn" onclick="advanceTurn()">
+          Next Turn ➔
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= VICTORY MODAL ================= -->
+  <div class="victory-modal-overlay" id="victoryModal">
+    <div class="victory-card">
+      <div class="victory-mascot-wrap" id="victoryMascotWrap">
+        <span class="big-victory-mascot">🦁</span>
+        <span class="trophy-badge">🏆</span>
+      </div>
+      <h2 class="victory-title" id="victoryTitle">🦁 TEAM LIONS WINS!</h2>
+      <p class="victory-msg" id="victoryMsg">
+        Incredible tug of war! The Lions pulled the rope with tremendous teamwork!
+      </p>
+
+      <div class="victory-scores-row" id="victoryScores">
+        <div class="final-score-pill lion-pill">🦁 Lions: 6 / 8</div>
+        <div class="final-score-pill wolf-pill">🐺 Wolves: 4 / 8</div>
+      </div>
+
+      <div class="victory-actions">
+        <button class="victory-btn primary" onclick="startMatch('set2')">
+          ⚔️ Play Match 2 (Rematch!)
+        </button>
+        <button class="victory-btn secondary" onclick="startMatch('set1')">
+          🔄 Play Match 1 Again
+        </button>
+        <button class="victory-btn secondary" onclick="startMatch('shuffle')">
+          🎲 Shuffle All Questions
+        </button>
+        <a href="index.html#grade-2" class="victory-btn secondary">
+          ← Back to Grade 2 Hub
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common Utilities & Audio Engine -->
+  <script src="js/common/sound.js"></script>
+  <script src="js/common/utils.js"></script>
+
+  <!-- Tug of War Controller -->
+  <script src="js/ch5/tug-of-war.js"></script>
+</body>
+</html>

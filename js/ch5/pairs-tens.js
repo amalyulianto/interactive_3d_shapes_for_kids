@@ -1,6 +1,6 @@
 /**
  * Lesson 2: Number Pairs to Multiples of Ten
- * 100-Rods Base-10 Visualizer, Next-Ten Hopper, Target Matcher, and Mastery Quiz
+ * 100-Rods Base-10 Visualizer, Next-Ten Hopper, 10x Magic Lens, Basketball 80 Target, Target Matcher, and Mastery Quiz
  * Zero-Build Architecture - Alapakadala Studio
  */
 
@@ -9,13 +9,28 @@
 
   // State Management
   const state = {
-    currentMode: 'rods', // 'rods' | 'hopper' | 'matcher' | 'quiz'
+    currentMode: 'rods', // 'rods' | 'hopper' | 'lens' | 'hoop' | 'matcher' | 'quiz'
     rods: {
       cyanCount: 3 // 3 rods (30) + 7 rods (70) = 100
     },
     hopper: {
       startNum: 34,
       hopped: false
+    },
+    lens: {
+      mode: 'tens', // 'ones' | 'tens'
+      partA: 6,
+      partB: 2
+    },
+    hoop: {
+      target: 80, // 80 or 100
+      activePlayerIndex: 0,
+      players: [
+        { name: 'Vera', emoji: '👧', start: 60, current: 60 },
+        { name: 'Mei', emoji: '👧', start: 50, current: 50 },
+        { name: 'Tim', emoji: '👦', start: 40, current: 40 },
+        { name: 'Cyrus', emoji: '👦', start: 70, current: 70 }
+      ]
     },
     matcher: {
       target: 50,
@@ -52,6 +67,8 @@
     // Trigger Initial Renders
     if (mode === 'rods') renderRods();
     if (mode === 'hopper') renderHopper();
+    if (mode === 'lens') renderLens();
+    if (mode === 'hoop') renderHoop();
     if (mode === 'matcher') setupMatcher(state.matcher.target);
     if (mode === 'quiz') startQuiz(state.quiz.level);
   };
@@ -109,7 +126,7 @@
     }
 
     // Highlight active preset chip
-    document.querySelectorAll('.preset-chip').forEach(chip => {
+    document.querySelectorAll('#view_rods .preset-chip').forEach(chip => {
       const chipVal = parseInt(chip.dataset.val, 10);
       chip.classList.toggle('active', chipVal === cyan);
     });
@@ -159,7 +176,7 @@
       `;
     }
 
-    // Render Number Line Ticks (from baseTen to nextTen)
+    // Render Number Line Ticks
     if (ticksRow) {
       ticksRow.innerHTML = '';
       for (let v = baseTen; v <= nextTen; v++) {
@@ -199,7 +216,6 @@
   };
 
   window.randomizeHopper = function () {
-    // Pick random number from 11 to 89 not ending in 0
     let rand;
     do {
       rand = Math.floor(Math.random() * 80) + 11;
@@ -211,7 +227,243 @@
     renderHopper();
   };
 
-  /* ================= MODULE 3: TARGET MATCHER ================= */
+  /* ================= MODULE 3: 10× MAGIC LENS ================= */
+  function renderLens() {
+    const isTens = state.lens.mode === 'tens';
+    const a = state.lens.partA;
+    const b = state.lens.partB;
+    const sum = a + b;
+
+    const displayValA = isTens ? a * 10 : a;
+    const displayValB = isTens ? b * 10 : b;
+    const displaySum = isTens ? sum * 10 : sum;
+
+    const btnOnes = document.getElementById('btnLensOnes');
+    const btnTens = document.getElementById('btnLensTens');
+    const noteEl = document.getElementById('lensConceptNote');
+    const valAEl = document.getElementById('lensValA');
+    const valBEl = document.getElementById('lensValB');
+    const sumEl = document.getElementById('lensValSum');
+    const tray = document.getElementById('lensManipulativesTray');
+    const slider = document.getElementById('lensSlider');
+
+    if (btnOnes) btnOnes.classList.toggle('active', !isTens);
+    if (btnTens) btnTens.classList.toggle('active', isTens);
+    if (slider) slider.value = a;
+
+    if (valAEl) valAEl.textContent = displayValA;
+    if (valBEl) valBEl.textContent = displayValB;
+    if (sumEl) sumEl.textContent = displaySum;
+
+    if (noteEl) {
+      if (isTens) {
+        noteEl.innerHTML = `🔬 <strong>10× Lens:</strong> ${a} tens + ${b} tens = ${sum} tens (<strong>${displayValA} + ${displayValB} = ${displaySum}</strong>)`;
+      } else {
+        noteEl.innerHTML = `🔍 <strong>1× Ones Lens:</strong> ${a} ones + ${b} ones = <strong>${sum} ones</strong>`;
+      }
+    }
+
+    if (tray) {
+      tray.innerHTML = '';
+      const container = document.createElement('div');
+      container.className = `lens-blocks-wrapper ${isTens ? 'mode-tens' : 'mode-ones'}`;
+
+      // Group A (Cyan)
+      const groupA = document.createElement('div');
+      groupA.className = 'lens-group cyan';
+      for (let i = 0; i < a; i++) {
+        const item = document.createElement('div');
+        item.className = isTens ? 'lens-rod' : 'lens-cube';
+        if (isTens) {
+          for (let k = 0; k < 10; k++) item.appendChild(document.createElement('i'));
+          const tag = document.createElement('span');
+          tag.textContent = '10';
+          item.appendChild(tag);
+        } else {
+          item.textContent = '1';
+        }
+        groupA.appendChild(item);
+      }
+
+      // Plus Sign Divider
+      const plusDivider = document.createElement('div');
+      plusDivider.className = 'lens-plus-divider';
+      plusDivider.textContent = '+';
+
+      // Group B (Amber)
+      const groupB = document.createElement('div');
+      groupB.className = 'lens-group amber';
+      for (let j = 0; j < b; j++) {
+        const item = document.createElement('div');
+        item.className = isTens ? 'lens-rod' : 'lens-cube';
+        if (isTens) {
+          for (let k = 0; k < 10; k++) item.appendChild(document.createElement('i'));
+          const tag = document.createElement('span');
+          tag.textContent = '10';
+          item.appendChild(tag);
+        } else {
+          item.textContent = '1';
+        }
+        groupB.appendChild(item);
+      }
+
+      container.appendChild(groupA);
+      container.appendChild(plusDivider);
+      container.appendChild(groupB);
+      tray.appendChild(container);
+    }
+  }
+
+  window.setLensMode = function (m) {
+    state.lens.mode = m;
+    if (window.sound) window.sound.playPop();
+    renderLens();
+  };
+
+  window.setLensBridge = function (a, b) {
+    state.lens.partA = a;
+    state.lens.partB = b;
+
+    document.querySelectorAll('#view_lens .preset-chip').forEach(c => c.classList.remove('active'));
+    const chip = document.getElementById(`lensChip_${a}_${b}`);
+    if (chip) chip.classList.add('active');
+
+    if (window.sound) window.sound.playPop();
+    renderLens();
+  };
+
+  window.adjustLensPartA = function (delta) {
+    const next = Math.max(1, Math.min(9, state.lens.partA + delta));
+    state.lens.partA = next;
+    if (window.sound) window.sound.playPop();
+    renderLens();
+  };
+
+  window.onLensSliderChange = function (val) {
+    state.lens.partA = parseInt(val, 10);
+    renderLens();
+  };
+
+  /* ================= MODULE 4: BASKETBALL TARGET 80 & 100 ================= */
+  function renderHoop() {
+    const target = state.hoop.target;
+    const activeIdx = state.hoop.activePlayerIndex;
+    const player = state.hoop.players[activeIdx];
+    const current = player.current;
+    const needed = Math.max(0, target - current);
+
+    const btn80 = document.getElementById('btnHoopTarget80');
+    const btn100 = document.getElementById('btnHoopTarget100');
+    const kidsRow = document.getElementById('hoopKidsRow');
+    const playerInfo = document.getElementById('hoopPlayerInfo');
+    const neededInfo = document.getElementById('hoopNeededInfo');
+    const progressBar = document.getElementById('courtProgressBar');
+    const progressLabel = document.getElementById('courtProgressLabel');
+    const ballsTrack = document.getElementById('hoopBallsTrack');
+    const eqText = document.getElementById('hoopEquationText');
+    const shootBtn = document.getElementById('btnShootHoop');
+
+    if (btn80) btn80.classList.toggle('active', target === 80);
+    if (btn100) btn100.classList.toggle('active', target === 100);
+
+    // Render 4 Player Cards
+    if (kidsRow) {
+      kidsRow.innerHTML = state.hoop.players.map((p, idx) => {
+        const isSelected = idx === activeIdx;
+        return `
+          <div class="hoop-kid-card ${isSelected ? 'active' : ''}" onclick="selectHoopPlayer(${idx})">
+            <div class="kid-avatar">${p.emoji}</div>
+            <div class="kid-name">${p.name}</div>
+            <div class="kid-score">${p.current} pts</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (playerInfo) {
+      playerInfo.innerHTML = `${player.emoji} <strong>${player.name}</strong> (Starting score: ${player.start} pts)`;
+    }
+
+    if (neededInfo) {
+      if (needed === 0) {
+        neededInfo.innerHTML = `🎉 <strong>Target ${target} Achieved!</strong>`;
+      } else {
+        neededInfo.innerHTML = `Needs <strong>${needed} more pts</strong> (${needed / 10} baskets) to reach ${target}`;
+      }
+    }
+
+    if (progressBar) {
+      const pct = Math.min(100, (current / target) * 100);
+      progressBar.style.width = `${pct}%`;
+    }
+
+    if (progressLabel) {
+      progressLabel.textContent = `${current} / ${target} pts`;
+    }
+
+    // Render 10-point Basketball Tokens
+    if (ballsTrack) {
+      ballsTrack.innerHTML = '';
+      const totalBalls = target / 10;
+      const filledBalls = current / 10;
+
+      for (let i = 0; i < totalBalls; i++) {
+        const ball = document.createElement('div');
+        const isScored = i < filledBalls;
+        ball.className = `court-ball ${isScored ? 'scored' : 'empty'}`;
+        ball.textContent = '🏀';
+        ball.title = `10 Points (Basket ${i + 1})`;
+        ballsTrack.appendChild(ball);
+      }
+    }
+
+    if (shootBtn) {
+      shootBtn.disabled = (current >= target);
+    }
+
+    if (eqText) {
+      eqText.innerHTML = `
+        <strong>${player.start}</strong> + <strong>${target - player.start}</strong> = <strong>${target}</strong>
+        &nbsp;•&nbsp;
+        <strong>${target}</strong> − <strong>${player.start}</strong> = <strong>${target - player.start}</strong>
+      `;
+    }
+  }
+
+  window.setHoopTarget = function (t) {
+    state.hoop.target = t;
+    if (window.sound) window.sound.playPop();
+    renderHoop();
+  };
+
+  window.selectHoopPlayer = function (idx) {
+    state.hoop.activePlayerIndex = idx;
+    if (window.sound) window.sound.playPop();
+    renderHoop();
+  };
+
+  window.shootHoopBall = function () {
+    const player = state.hoop.players[state.hoop.activePlayerIndex];
+    if (player.current < state.hoop.target) {
+      player.current += 10;
+      if (player.current >= state.hoop.target) {
+        if (window.sound) window.sound.playFanfare();
+        if (window.AppUtils) window.AppUtils.confetti({ particleCount: 50, spread: 80 });
+      } else {
+        if (window.sound) window.sound.playCorrect();
+      }
+      renderHoop();
+    }
+  };
+
+  window.resetHoopPlayer = function () {
+    const player = state.hoop.players[state.hoop.activePlayerIndex];
+    player.current = player.start;
+    if (window.sound) window.sound.playPop();
+    renderHoop();
+  };
+
+  /* ================= MODULE 5: TARGET MATCHER ================= */
   const MATCHER_PRESETS = {
     30: [[12, 18], [25, 5], [10, 20]],
     40: [[26, 14], [31, 9], [20, 20]],
@@ -238,7 +490,6 @@
       cards.push({ id: `c_${pairIdx}_b`, val: pair[1], pairId: pairIdx });
     });
 
-    // Shuffle cards
     state.matcher.cards = cards.sort(() => Math.random() - 0.5);
     renderMatcher();
   };
@@ -278,22 +529,18 @@
     if (!card || card.paired) return;
 
     if (!state.matcher.selectedId) {
-      // First card selected
       state.matcher.selectedId = cardId;
       if (window.sound) window.sound.playPop();
       renderMatcher();
     } else if (state.matcher.selectedId === cardId) {
-      // Deselect
       state.matcher.selectedId = null;
       if (window.sound) window.sound.playPop();
       renderMatcher();
     } else {
-      // Second card selected! Check sum!
       const firstCard = state.matcher.cards.find(c => c.id === state.matcher.selectedId);
       const sum = firstCard.val + card.val;
 
       if (sum === state.matcher.target) {
-        // MATCH!
         firstCard.paired = true;
         card.paired = true;
         state.matcher.selectedId = null;
@@ -308,7 +555,6 @@
           if (window.AppUtils) window.AppUtils.confetti({ particleCount: 80, spread: 80 });
         }
       } else {
-        // MISMATCH!
         if (window.sound) window.sound.playWrong();
         const fb = document.getElementById('matcherFeedback');
         if (fb) {
@@ -322,7 +568,7 @@
     }
   };
 
-  /* ================= MODULE 4: MASTERY QUIZ ================= */
+  /* ================= MODULE 6: MASTERY QUIZ ================= */
   const QUIZ_LEVEL_PRESETS = {
     1: [
       { q: "What pairs with 30 to make 100?", visual: "30 + [ ? ] = 100", correct: 70, options: [60, 70, 80, 90], exp: "3 tens + 7 tens = 10 tens (100)!" },
@@ -410,7 +656,6 @@
     const nextContainer = document.getElementById('quizNextContainer');
     const nextBtn = document.getElementById('btnNextQuestion');
 
-    // Highlight options & lock buttons
     document.querySelectorAll('.quiz-option-btn').forEach(btn => {
       const val = btn.dataset.val;
       btn.classList.add('opt-disabled');
@@ -440,7 +685,6 @@
     const scoreEl = document.getElementById('quizScore');
     if (scoreEl) scoreEl.textContent = `Score: ${state.quiz.score}`;
 
-    // Reveal Next Button instead of setTimeout
     if (nextContainer) {
       nextContainer.style.display = 'flex';
       if (nextBtn) {
@@ -491,6 +735,8 @@
   window.addEventListener('DOMContentLoaded', () => {
     renderRods();
     renderHopper();
+    renderLens();
+    renderHoop();
     setupMatcher(50);
     startQuiz(1);
   });

@@ -1,6 +1,6 @@
 /**
  * Lesson 1: Number Pairs & Bonds to 20
- * Interactive Dual Ten-Frames, Part-Part-Whole Tree, Bridge Through 10, and Mastery Quiz
+ * Dual Ten-Frames, Part-Part-Whole Tree, Bridge Through 10, 4-in-1 Story Machine, 3-Part Combiner, and Mastery Quiz
  * Zero-Build Architecture - Alapakadala Studio
  */
 
@@ -9,7 +9,7 @@
 
   // State Management
   const state = {
-    currentMode: 'frames', // 'frames' | 'ppw' | 'bridge' | 'quiz'
+    currentMode: 'frames', // 'frames' | 'ppw' | 'bridge' | 'story' | 'threepart' | 'quiz'
     frames: {
       redCount: 14
     },
@@ -22,6 +22,23 @@
     },
     bridge: {
       currentIndex: 3 // Index in BRIDGE_DATA (e.g. 4+6 -> 14+6)
+    },
+    story: {
+      partA: 17,
+      swapped: false,
+      poured: null // 'A' | 'B' | null
+    },
+    threepart: {
+      presets: [
+        [12, 3, 5],
+        [8, 7, 5],
+        [10, 6, 4],
+        [9, 9, 2],
+        [1, 2, 17]
+      ],
+      presetIndex: 0,
+      nums: [12, 3, 5],
+      selectedBags: [] // indices of selected bags (0, 1, or 2)
     },
     quiz: {
       level: 1,
@@ -66,6 +83,8 @@
     if (mode === 'frames') renderDualFrames();
     if (mode === 'ppw') renderPPW();
     if (mode === 'bridge') renderBridge();
+    if (mode === 'story') renderStoryMachine();
+    if (mode === 'threepart') renderThreePart();
     if (mode === 'quiz') startQuiz(state.quiz.level);
   };
 
@@ -157,7 +176,7 @@
     }
 
     // Highlight active preset chip
-    document.querySelectorAll('.preset-chip').forEach(chip => {
+    document.querySelectorAll('#view_frames .preset-chip').forEach(chip => {
       const chipVal = parseInt(chip.dataset.val, 10);
       chip.classList.toggle('active', chipVal === red);
     });
@@ -197,10 +216,8 @@
 
   function nextMysteryPPW() {
     state.ppw.answered = false;
-    // Pick random part from 0 to 20
     const part1 = Math.floor(Math.random() * 21);
     state.ppw.givenPart = part1;
-    // Randomly choose whether missing part is part 1 or part 2
     state.ppw.missingPartIndex = Math.random() < 0.5 ? 1 : 2;
     renderPPW();
   }
@@ -211,7 +228,6 @@
     if (!container) return;
 
     if (!isMystery) {
-      // Explore Mode: User can tap any number 0 to 20
       const p1 = state.ppw.exploreVal;
       const p2 = 20 - p1;
 
@@ -248,12 +264,10 @@
         </div>
       `;
     } else {
-      // Mystery Mode
       const given = state.ppw.givenPart;
       const targetMissing = 20 - given;
       const missingIdx = state.ppw.missingPartIndex;
 
-      // 4 choices
       const choicesSet = new Set([targetMissing]);
       while (choicesSet.size < 4) {
         let fake = targetMissing + (Math.floor(Math.random() * 7) - 3);
@@ -348,7 +362,6 @@
     const rightTwentyFrame1 = document.getElementById('bridgeRightGrid1');
     const rightTwentyFrame2 = document.getElementById('bridgeRightGrid2');
 
-    // Populate Left 10-frame (a + b = 10)
     if (leftTenFrame) {
       leftTenFrame.innerHTML = '';
       for (let i = 0; i < 10; i++) {
@@ -367,12 +380,10 @@
       }
     }
 
-    // Populate Right 20-frame ((10 + a) + b = 20)
     if (rightTwentyFrame1 && rightTwentyFrame2) {
       rightTwentyFrame1.innerHTML = '';
       rightTwentyFrame2.innerHTML = '';
 
-      // Frame 1 is completely red (10 red)
       for (let i = 0; i < 10; i++) {
         const cell = document.createElement('div');
         cell.className = 'frame-cell';
@@ -383,7 +394,6 @@
         rightTwentyFrame1.appendChild(cell);
       }
 
-      // Frame 2 has 'a' red and 'b' yellow
       for (let i = 0; i < 10; i++) {
         const cell = document.createElement('div');
         cell.className = 'frame-cell';
@@ -400,7 +410,6 @@
       }
     }
 
-    // Equations
     const leftEq = document.getElementById('bridgeLeftEq');
     const rightEq = document.getElementById('bridgeRightEq');
     const insight = document.getElementById('bridgeInsightText');
@@ -428,7 +437,288 @@
     }
   };
 
-  /* ================= MODULE 4: MASTERY QUIZ ================= */
+  /* ================= MODULE 4: 4-IN-1 STORY MACHINE ================= */
+  function renderStoryMachine() {
+    const partA = state.story.partA;
+    const partB = 20 - partA;
+    const swapped = state.story.swapped;
+    const poured = state.story.poured;
+
+    const bagTray = document.getElementById('storyBagTray');
+    const statusLabel = document.getElementById('storyBagStatus');
+    const slider = document.getElementById('storySlider');
+
+    if (slider) slider.value = partA;
+
+    if (statusLabel) {
+      if (poured === 'A') {
+        statusLabel.innerHTML = `📤 Took away <strong>${partA} red balls</strong>! <strong>${partB} yellow balls</strong> remain.`;
+      } else if (poured === 'B') {
+        statusLabel.innerHTML = `📤 Took away <strong>${partB} yellow balls</strong>! <strong>${partA} red balls</strong> remain.`;
+      } else if (swapped) {
+        statusLabel.innerHTML = `🔄 Turned the bag! Now <strong>${partB} yellow</strong> + <strong>${partA} red</strong> = <strong>20 balls</strong>!`;
+      } else {
+        statusLabel.innerHTML = `✨ Full Bag: <strong>${partA} red</strong> + <strong>${partB} yellow</strong> = <strong>20 balls</strong>`;
+      }
+    }
+
+    if (bagTray) {
+      bagTray.innerHTML = '';
+      const order = swapped ? ['B', 'A'] : ['A', 'B'];
+
+      order.forEach(team => {
+        const count = team === 'A' ? partA : partB;
+        const colorClass = team === 'A' ? 'red' : 'yellow';
+        const isPoured = poured === team;
+
+        for (let i = 0; i < count; i++) {
+          const ball = document.createElement('div');
+          ball.className = `story-ball ${colorClass} ${isPoured ? 'poured' : ''}`;
+          ball.textContent = i + 1;
+          ball.title = `${team === 'A' ? 'Red' : 'Yellow'} Ball ${i + 1}`;
+          bagTray.appendChild(ball);
+        }
+      });
+    }
+
+    // Update 4 Fact Equations
+    const eqAdd1 = document.getElementById('factEq_add1');
+    const eqAdd2 = document.getElementById('factEq_add2');
+    const eqSub1 = document.getElementById('factEq_sub1');
+    const eqSub2 = document.getElementById('factEq_sub2');
+
+    if (eqAdd1) eqAdd1.innerHTML = `<span class="red-txt">${partA}</span> + <span class="yellow-txt">${partB}</span> = 20`;
+    if (eqAdd2) eqAdd2.innerHTML = `<span class="yellow-txt">${partB}</span> + <span class="red-txt">${partA}</span> = 20`;
+    if (eqSub1) eqSub1.innerHTML = `20 − <span class="red-txt">${partA}</span> = <span class="yellow-txt">${partB}</span>`;
+    if (eqSub2) eqSub2.innerHTML = `20 − <span class="yellow-txt">${partB}</span> = <span class="red-txt">${partA}</span>`;
+
+    // Highlight active card
+    ['add1', 'add2', 'sub1', 'sub2'].forEach(id => {
+      const card = document.getElementById(`factCard_${id}`);
+      if (card) card.classList.remove('active-story');
+    });
+
+    let activeCardId = 'add1';
+    if (poured === 'A') activeCardId = 'sub1';
+    else if (poured === 'B') activeCardId = 'sub2';
+    else if (swapped) activeCardId = 'add2';
+
+    const targetCard = document.getElementById(`factCard_${activeCardId}`);
+    if (targetCard) targetCard.classList.add('active-story');
+  }
+
+  window.setStoryPartA = function (val) {
+    state.story.partA = Math.max(0, Math.min(20, parseInt(val, 10)));
+    state.story.poured = null;
+    if (window.sound) window.sound.playPop();
+    renderStoryMachine();
+  };
+
+  window.adjustStoryPartA = function (delta) {
+    window.setStoryPartA(state.story.partA + delta);
+  };
+
+  window.onStorySliderChange = function (val) {
+    state.story.partA = parseInt(val, 10);
+    state.story.poured = null;
+    renderStoryMachine();
+  };
+
+  window.storySwapParts = function () {
+    state.story.swapped = !state.story.swapped;
+    state.story.poured = null;
+    if (window.sound) window.sound.playPop();
+    renderStoryMachine();
+  };
+
+  window.storyPourOut = function (part) {
+    state.story.poured = (state.story.poured === part) ? null : part;
+    if (window.sound) window.sound.playPop();
+    renderStoryMachine();
+  };
+
+  window.storyResetBag = function () {
+    state.story.poured = null;
+    state.story.swapped = false;
+    if (window.sound) window.sound.playCorrect();
+    renderStoryMachine();
+  };
+
+  /* ================= MODULE 5: 3-PART COMBINER ================= */
+  function renderThreePart() {
+    const nums = state.threepart.nums;
+    const selected = state.threepart.selectedBags;
+    const bagsRow = document.getElementById('threepartBagsRow');
+    const treeCard = document.getElementById('threepartTreeCard');
+    const runningGrid1 = document.getElementById('runningGrid1');
+    const runningGrid2 = document.getElementById('runningGrid2');
+    const runningTotalText = document.getElementById('runningTotalText');
+    const runningStatus = document.getElementById('runningTotalStatus');
+
+    const emojis = ['⚽', '🏀', '🎾'];
+    const bagLetters = ['A', 'B', 'C'];
+    const bagColors = ['#059669', '#3B82F6', '#F59E0B'];
+
+    // Render 3 Bags
+    if (bagsRow) {
+      bagsRow.innerHTML = nums.map((n, idx) => {
+        const isChosen = selected.includes(idx);
+        const orderNum = selected.indexOf(idx) + 1;
+        return `
+          <div class="sport-bag-card ${isChosen ? 'chosen' : ''}" onclick="onBagClick(${idx})">
+            <div class="bag-icon-bubble">${emojis[idx]}</div>
+            <div class="bag-title">Bag ${bagLetters[idx]}</div>
+            <div class="bag-count">${n} balls</div>
+            <div class="bag-status-badge">
+              ${isChosen ? `Joined #${orderNum} ✓` : 'Tap to Join'}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Calculate Running Sum
+    const currentSum = selected.reduce((sum, idx) => sum + nums[idx], 0);
+
+    // Render Dual Frame Counters
+    if (runningGrid1 && runningGrid2) {
+      runningGrid1.innerHTML = '';
+      runningGrid2.innerHTML = '';
+
+      let counter = 0;
+      for (let i = 0; i < 10; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'frame-cell';
+        if (counter < currentSum) {
+          const token = document.createElement('div');
+          token.className = 'counter-token green';
+          token.textContent = counter + 1;
+          cell.appendChild(token);
+        }
+        runningGrid1.appendChild(cell);
+        counter++;
+      }
+
+      for (let i = 10; i < 20; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'frame-cell';
+        if (counter < currentSum) {
+          const token = document.createElement('div');
+          token.className = 'counter-token green';
+          token.textContent = counter + 1;
+          cell.appendChild(token);
+        }
+        runningGrid2.appendChild(cell);
+        counter++;
+      }
+    }
+
+    if (runningTotalText) {
+      runningTotalText.innerHTML = `Balls joined into big bag: <strong>${currentSum} / 20</strong>`;
+    }
+
+    // Render Stepped Tree Card
+    if (treeCard) {
+      if (selected.length === 0) {
+        if (runningStatus) runningStatus.textContent = 'Step 1: Tap 2 friendly bags';
+        treeCard.innerHTML = `
+          <div class="tree-instruction">
+            👆 <strong>Step 1:</strong> Tap two bags above that make a friendly number first!
+          </div>
+        `;
+      } else if (selected.length === 1) {
+        if (runningStatus) runningStatus.textContent = 'Step 1: Tap 2nd bag';
+        const b1 = nums[selected[0]];
+        treeCard.innerHTML = `
+          <div class="tree-instruction">
+            Now pick another bag to pair with <strong>Bag ${bagLetters[selected[0]]} (${b1})</strong>!
+          </div>
+        `;
+      } else if (selected.length === 2) {
+        if (runningStatus) runningStatus.textContent = 'Step 2: Add the last bag';
+        const b1 = nums[selected[0]];
+        const b2 = nums[selected[1]];
+        const sub = b1 + b2;
+        const remainingIdx = [0, 1, 2].find(i => !selected.includes(i));
+        const b3 = nums[remainingIdx];
+
+        treeCard.innerHTML = `
+          <div class="tree-subtotal-bubble">
+            🌟 <strong>Step 1 Subtotal:</strong> ${b1} + ${b2} = <strong>${sub}</strong>!
+          </div>
+          <div class="tree-instruction" style="margin-top:8px;">
+            Now tap the last bag <strong>Bag ${bagLetters[remainingIdx]} (${b3})</strong> to complete 20! (${sub} + ${b3} = 20)
+          </div>
+        `;
+      } else if (selected.length === 3) {
+        if (runningStatus) runningStatus.textContent = '🎉 Mission Accomplished!';
+        const b1 = nums[selected[0]];
+        const b2 = nums[selected[1]];
+        const b3 = nums[selected[2]];
+        const sub = b1 + b2;
+
+        treeCard.innerHTML = `
+          <div class="tree-complete-banner">
+            🎉 <strong>Great Thinking!</strong> (${b1} + ${b2}) + ${b3} = <strong>${sub} + ${b3} = 20!</strong>
+          </div>
+          <p style="font-size:0.88rem; color:#065F46; margin-top:6px;">
+            You proved that 3 numbers can be added in any friendly order to reach 20!
+          </p>
+        `;
+      }
+    }
+  }
+
+  window.onBagClick = function (bagIdx) {
+    const selected = state.threepart.selectedBags;
+    if (selected.includes(bagIdx)) return;
+
+    selected.push(bagIdx);
+    if (window.sound) window.sound.playPop();
+
+    if (selected.length === 3) {
+      if (window.sound) window.sound.playCorrect();
+      if (window.AppUtils) window.AppUtils.confetti({ particleCount: 45 });
+    }
+
+    renderThreePart();
+  };
+
+  window.resetThreePartStep = function () {
+    state.threepart.selectedBags = [];
+    if (window.sound) window.sound.playPop();
+    renderThreePart();
+  };
+
+  window.setThreePartPreset = function (idx) {
+    state.threepart.presetIndex = idx;
+    state.threepart.nums = [...state.threepart.presets[idx]];
+    state.threepart.selectedBags = [];
+
+    document.querySelectorAll('#view_threepart .preset-chip').forEach((chip, i) => {
+      chip.classList.toggle('active', i === idx);
+    });
+
+    if (window.sound) window.sound.playPop();
+    renderThreePart();
+  };
+
+  window.randomizeThreePart = function () {
+    const a = Math.floor(Math.random() * 12) + 1;
+    const b = Math.floor(Math.random() * (19 - a)) + 1;
+    const c = 20 - a - b;
+    state.threepart.nums = [a, b, c];
+    state.threepart.selectedBags = [];
+
+    document.querySelectorAll('#view_threepart .preset-chip').forEach(chip => {
+      chip.classList.remove('active');
+    });
+
+    if (window.sound) window.sound.playPop();
+    renderThreePart();
+  };
+
+  /* ================= MODULE 6: MASTERY QUIZ ================= */
   const QUIZ_LEVEL_PRESETS = {
     1: [
       { q: "What number pairs with 14 to make 20?", visual: "14 + [ ? ] = 20", correct: 6, options: [4, 6, 8, 16], exp: "14 + 6 = 20 (4 + 6 = 10, plus 10 = 20)" },
@@ -546,7 +836,6 @@
     const scoreEl = document.getElementById('quizScore');
     if (scoreEl) scoreEl.textContent = `Score: ${state.quiz.score}`;
 
-    // Reveal Next Button instead of setTimeout
     if (nextContainer) {
       nextContainer.style.display = 'flex';
       if (nextBtn) {
@@ -598,6 +887,8 @@
     renderDualFrames();
     renderPPW();
     renderBridge();
+    renderStoryMachine();
+    renderThreePart();
     startQuiz(1);
   });
 

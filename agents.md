@@ -46,6 +46,9 @@ d:\coding\interactive_math\
 ├── add-2digit.html             # Chapter 5 Lesson 3: Adding Up to 2-Digit Numbers
 ├── add-2digit.css              # Chapter 5 Lesson 3 stylesheet (base-10 regrouping, split strategy)
 │
+├── tug-of-war.html             # Chapter 5 Battle Arena: Tug of War Math Duel
+├── tug-of-war.css              # Chapter 5 Battle Arena stylesheet (rope physics, mud pit, mascots)
+│
 ├── js/
 │   ├── common/
 │   │   ├── sound.js            # Unified Web Audio API synthesizer singleton (window.sound)
@@ -79,7 +82,8 @@ d:\coding\interactive_math\
 │   └── ch5/
 │       ├── bonds-20.js         # Chapter 5 Lesson 1: Dual 10-frames, PPW tree, bridge to 10 & quiz
 │       ├── pairs-tens.js       # Chapter 5 Lesson 2: 100-rods rack, next-ten hopper & quiz
-│       └── add-2digit.js       # Chapter 5 Lesson 3: Base-10 regrouping mat, split strategy & quiz
+│       ├── add-2digit.js       # Chapter 5 Lesson 3: Base-10 regrouping mat, split strategy & quiz
+│       └── tug-of-war.js       # Chapter 5 Battle Arena: Turn-based Lions vs Wolves tug of war engine
 │
 └── agents.md                   # This architectural guide and developer manual
 ```
@@ -202,6 +206,30 @@ d:\coding\interactive_math\
 1. **Ring Repeating Group** (`unit-detective.js`): Interactive repeating ring tool allowing children to enclose the repeating core unit of newly learned polygons (pentagon, hexagon, octagon) and 3D solids (Solve this! 1a, 1b, 2a).
 2. **Missing 2D Shapes & 3D Solids Builder** (`missing-pattern.js`): Curriculum-matched track solving blanks A & B with 2D shapes (pentagons, hexagons, octagons, triangles) and 3D solids (tilted cylinders, inverted cones, square pyramids, tall vs. short cylinders).
 3. **Pattern Mastery Quizzes** (`patterns-quiz.js`): 4 graded 5-question levels testing 2D polygons, 3D solid sequences, orientation/size traps, and master challenges with celebratory confetti and Web Audio API feedback.
+
+### 4.7 Chapter 5 Addition & Subtraction Activities (`js/ch5/`)
+1. **Lesson 1: Bonds to 20 (`bonds-20.js`)**:
+   - **Dual Ten-Frames**: Tactile counter placement to 20 with red/blue chips.
+   - **Part-Part-Whole Tree**: Stepped bubble tree for inverse addition/subtraction.
+   - **Bridge to 10**: Friendly 10 decomposition step-through.
+   - **4-in-1 Story Machine** (Textbook p.64 / Workbook p.50): Fact families with red/yellow balls, slider (0–20), "Swap Parts" (commutative property), "Take Away" (subtraction relations), and expandable parent/teacher discussion prompts.
+   - **3-Part Combiner** (Textbook p.65 "Dive Deeper"): Sports room ball bags (12 + 3 + 5), interactive bag selection, stepped tree with subtotal calculation, running 20-frame counters, and associative exploration.
+2. **Lesson 2: Multiples of 10 (`pairs-tens.js`)**:
+   - **100-Rods Rack**: Base-10 rods pairing to 100 with interactive rack selector.
+   - **Next-Ten Hopper**: Visual number line hopper calculating distance to the next decade.
+   - **10× Magic Lens** (Textbook p.67): Scaling single-digit facts (e.g. 4+6=10) into tens (40+60=100) with animated unit cubes morphing into 10-rods.
+   - **Basketball Shootout Target 80 & 100** (Textbook pp.66, 68 / Workbook pp.51–52): Shoot basketballs (+10 points each) to help children reach team targets (80 or 100), dynamic progress bar and real-time number bond sync.
+   - **Target Matcher & Mastery Quiz**: Memory match and 4-tier graded quiz.
+3. **Lesson 3: 2-Digit Addition (`add-2digit.js`)**:
+   - **1-Digit Addition & Regrouping**: Interactive place value mat where 10 ones snap-regroup into a 10-rod.
+   - **Add Whole Tens**: Ten-rod stacker keeping ones constant.
+   - **Split Strategy**: Stepped tree breaking 2-digit addends into tens and ones.
+   - **Parent / Teacher Discussion Guides**: Embedded expandable cards across each section with conceptual questions.
+4. **Battle Arena: Tug of War Math Duel (`tug-of-war.js`)**:
+   - **Lions vs Wolves Turn-Based Duel**: 8 questions per team (16 total turns) covering Lesson 1 (Bonds to 20, 3-part bonds, subtraction) and Lesson 2 (Bonds to 100, next-ten hopping).
+   - **2 Curated Question Sets & Shuffle Mode**: Match 1, Match 2 (Rematch), and Shuffle mode allowing repeated classroom gameplay without question fatigue.
+   - **Dynamic Tug Physics**: Center braided rope with lightning ribbon, muddy pit hazard, and pull balance needle.
+   - **Instant Knockout & Victory**: Knockout triggers when leading by 4 pulls, or final pull tally at Round 8, with fanfare and celebratory confetti.
 
 ---
 

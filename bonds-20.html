@@ -31,6 +31,7 @@
       <span class="lesson-chip active" title="Current Lesson">🔟 Bonds to 20</span>
       <a href="pairs-tens.html" class="lesson-chip link" title="Go to Lesson 2: Multiples of 10">🧮 Multiples of 10</a>
       <a href="add-2digit.html" class="lesson-chip link" title="Go to Lesson 3: 2-Digit Addition">🧱 2-Digit Addition</a>
+      <a href="tug-of-war.html" class="lesson-chip link" title="Battle Arena: Tug of War Duel">🏆 Tug of War Duel</a>
     </div>
 
     <div class="nav-controls">
@@ -43,6 +44,12 @@
         </button>
         <button id="tabBtn_bridge" class="tab-btn" onclick="switchBondsMode('bridge')">
           <span class="tab-icon">🌉</span> Bridge to 10
+        </button>
+        <button id="tabBtn_story" class="tab-btn" onclick="switchBondsMode('story')">
+          <span class="tab-icon">🔄</span> 4-in-1 Story
+        </button>
+        <button id="tabBtn_threepart" class="tab-btn" onclick="switchBondsMode('threepart')">
+          <span class="tab-icon">🧩</span> 3-Part Combiner
         </button>
         <button id="tabBtn_quiz" class="tab-btn" onclick="switchBondsMode('quiz')">
           <span class="tab-icon">🏆</span> Mastery Quiz
@@ -67,6 +74,7 @@
             <option value="bonds-20.html" selected>🔟 Lesson 1: Bonds to 20</option>
             <option value="pairs-tens.html">🧮 Lesson 2: Multiples of 10</option>
             <option value="add-2digit.html">🧱 Lesson 3: 2-Digit Addition</option>
+            <option value="tug-of-war.html">🏆 Tug of War Duel</option>
           </optgroup>
         </select>
       </div>
@@ -77,6 +85,8 @@
           <option value="frames" selected>🔟 Dual Ten-Frames</option>
           <option value="ppw">🍒 Part-Part-Whole</option>
           <option value="bridge">🌉 Bridge to 10</option>
+          <option value="story">🔄 4-in-1 Story</option>
+          <option value="threepart">🧩 3-Part Combiner</option>
           <option value="quiz">🏆 Mastery Quiz</option>
         </select>
       </div>
@@ -243,7 +253,154 @@
       </div>
     </section>
 
-    <!-- ================= VIEW 4: MASTERY QUIZ ================= -->
+    <!-- ================= VIEW 4: 4-IN-1 STORY MACHINE ================= -->
+    <section id="view_story" class="view-panel">
+      <div class="bonds-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🔄 4-in-1 Story Machine (Fact Families)</h2>
+            <p>One number bond tells 4 related stories: 2 for adding and 2 for taking away!</p>
+          </div>
+          <span class="badge-pill">Textbook p.64 • Maths Talk</span>
+        </div>
+
+        <!-- Expandable Parent / Teacher Guide -->
+        <details class="parent-guide-card">
+          <summary>💬 <strong>Parent &amp; Teacher Discussion Prompts (Tap to open)</strong></summary>
+          <div class="guide-content">
+            <p>🔹 <strong>Ask:</strong> <em>"If we turn the bag around, does the total number of balls change?"</em> (Commutative Property: $17 + 3 = 3 + 17$).</p>
+            <p>🔹 <strong>Ask:</strong> <em>"If 20 balls fill the bag, and we take out 3, how many must be left inside?"</em> ($20 - 3 = 17$).</p>
+            <p>🔹 <strong>Key Understanding:</strong> Addition and subtraction are partners. Kids don't need to count backwards from 20—they just remember the number bond!</p>
+          </div>
+        </details>
+
+        <!-- Interactive Bag of 20 -->
+        <div class="story-bag-container">
+          <div class="story-bag-label" id="storyBagStatus">Transparent Bag: 20 Balls Total</div>
+          <div class="story-bag" id="storyBagTray"></div>
+        </div>
+
+        <!-- Live Interactive Actions -->
+        <div class="story-action-buttons">
+          <button class="action-btn" id="btnStorySwap" onclick="storySwapParts()">
+            🔄 Turn Bag (Swap $A \leftrightarrow B$)
+          </button>
+          <button class="action-btn secondary" id="btnStoryPourA" onclick="storyPourOut('A')">
+            📤 Take Away Part A
+          </button>
+          <button class="action-btn secondary" id="btnStoryPourB" onclick="storyPourOut('B')">
+            📤 Take Away Part B
+          </button>
+          <button class="action-btn" style="background: linear-gradient(135deg, #10B981, #059669);" onclick="storyResetBag()">
+            ✨ Fill Bag (All 20)
+          </button>
+        </div>
+
+        <!-- Stepper & Quick Presets -->
+        <div class="controls-bar">
+          <div class="stepper-row">
+            <button class="step-btn" onclick="adjustStoryPartA(-1)">➖</button>
+            <input type="range" min="0" max="20" value="17" class="split-slider" id="storySlider" oninput="onStorySliderChange(this.value)">
+            <button class="step-btn" onclick="adjustStoryPartA(1)">➕</button>
+          </div>
+        </div>
+        <div class="presets-chips" style="justify-content: center; margin-top: 8px;">
+          <button class="preset-chip active" onclick="setStoryPartA(17)">17 &amp; 3 (Textbook)</button>
+          <button class="preset-chip" onclick="setStoryPartA(19)">19 &amp; 1</button>
+          <button class="preset-chip" onclick="setStoryPartA(15)">15 &amp; 5</button>
+          <button class="preset-chip" onclick="setStoryPartA(14)">14 &amp; 6</button>
+          <button class="preset-chip" onclick="setStoryPartA(12)">12 &amp; 8</button>
+          <button class="preset-chip" onclick="setStoryPartA(10)">10 &amp; 10</button>
+        </div>
+
+        <!-- 4-in-1 Fact Family Grid -->
+        <div class="fact-family-grid">
+          <div class="fact-card" id="factCard_add1">
+            <span class="fact-type">Addition Story 1</span>
+            <div class="fact-equation" id="factEq_add1">17 + 3 = 20</div>
+            <p class="fact-caption">Part A joins Part B</p>
+          </div>
+          <div class="fact-card" id="factCard_add2">
+            <span class="fact-type">Addition Story 2</span>
+            <div class="fact-equation" id="factEq_add2">3 + 17 = 20</div>
+            <p class="fact-caption">Part B joins Part A (Swapped!)</p>
+          </div>
+          <div class="fact-card" id="factCard_sub1">
+            <span class="fact-type">Subtraction Story 1</span>
+            <div class="fact-equation" id="factEq_sub1">20 − 17 = 3</div>
+            <p class="fact-caption">Whole minus Part A leaves Part B</p>
+          </div>
+          <div class="fact-card" id="factCard_sub2">
+            <span class="fact-type">Subtraction Story 2</span>
+            <div class="fact-equation" id="factEq_sub2">20 − 3 = 17</div>
+            <p class="fact-caption">Whole minus Part B leaves Part A</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 5: 3-PART COMBINER ================= -->
+    <section id="view_threepart" class="view-panel">
+      <div class="bonds-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🧩 Sports Room 3-Part Combiner</h2>
+            <p>Tim &amp; Vera's challenge: Join two numbers first to make a friendly total, then add the rest!</p>
+          </div>
+          <span class="badge-pill">Textbook p.65 • Dive Deeper</span>
+        </div>
+
+        <!-- Expandable Parent / Teacher Guide -->
+        <details class="parent-guide-card">
+          <summary>💬 <strong>Parent &amp; Teacher Discussion Prompts (Tap to open)</strong></summary>
+          <div class="guide-content">
+            <p>🔹 <strong>Ask:</strong> <em>"Tim and Vera have bags of 12 and 3. How many balls do they have so far?"</em> ($12 + 3 = 15$).</p>
+            <p>🔹 <strong>Ask:</strong> <em>"A big bag needs 20 balls. How many more balls are needed to reach 20?"</em> ($15 + 5 = 20$).</p>
+            <p>🔹 <strong>Notice together:</strong> Associative property — you can join ANY two bags first. The final total stays 20!</p>
+          </div>
+        </details>
+
+        <!-- Presets Selection -->
+        <div class="presets-container" style="margin-bottom: 8px;">
+          <span class="presets-label">⚡ Pick a 3-Bag Sports Room Mission:</span>
+          <div class="presets-chips">
+            <button class="preset-chip active" id="chipTrip_0" onclick="setThreePartPreset(0)">⚽ Tim &amp; Vera: 12 + 3 + 5</button>
+            <button class="preset-chip" id="chipTrip_1" onclick="setThreePartPreset(1)">🏀 Target Ten: 8 + 7 + 5</button>
+            <button class="preset-chip" id="chipTrip_2" onclick="setThreePartPreset(2)">🎾 Friendly Tens: 10 + 6 + 4</button>
+            <button class="preset-chip" id="chipTrip_3" onclick="setThreePartPreset(3)">🏐 Near Doubles: 9 + 9 + 2</button>
+            <button class="preset-chip" id="chipTrip_4" onclick="setThreePartPreset(4)">🎲 Big Partner: 1 + 2 + 17</button>
+          </div>
+        </div>
+
+        <!-- 3 Bags Display & Interactive Stepper -->
+        <div class="threepart-interactive-box">
+          <div class="bags-row" id="threepartBagsRow"></div>
+
+          <!-- Stepping Tree Graphic -->
+          <div class="stepped-tree-card" id="threepartTreeCard"></div>
+
+          <!-- Dual Ten-Frame Running Total Bar -->
+          <div class="running-total-bar">
+            <div class="running-total-header">
+              <span id="runningTotalText">Balls in big bag: <strong>0 / 20</strong></span>
+              <span class="badge-pill" id="runningTotalStatus">Step 1: Combine 2 bags</span>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+              <div class="ten-frame-grid" id="runningGrid1" style="transform: scale(0.9);"></div>
+              <div class="ten-frame-grid" id="runningGrid2" style="transform: scale(0.9);"></div>
+            </div>
+          </div>
+
+          <!-- Action Row -->
+          <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px;">
+            <button class="action-btn secondary" onclick="resetThreePartStep()">🔄 Try Different Order</button>
+            <button class="action-btn" onclick="randomizeThreePart()">🎲 Random 3-Part Challenge</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 6: MASTERY QUIZ ================= -->
     <section id="view_quiz" class="view-panel">
       <div class="bonds-card">
         <div class="card-header-bar">

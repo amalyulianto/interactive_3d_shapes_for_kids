@@ -590,7 +590,6 @@ body {
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-/* Explicit layout positions */
 .ppw-node.ppw-pos-whole,
 .ppw-node.whole {
   top: 0;
@@ -827,7 +826,301 @@ body {
   color: #0F172A;
 }
 
-/* ================= SECTION 4: QUIZ STUDIO ================= */
+/* ================= SECTION 4: 4-IN-1 STORY MACHINE ================= */
+.parent-guide-card {
+  background: #F0FDF4;
+  border: 1.5px solid #A7F3D0;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.92rem;
+  color: #064E3B;
+  transition: all 0.2s ease;
+}
+
+.parent-guide-card summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: #047857;
+  padding: 4px 0;
+  outline: none;
+}
+
+.parent-guide-card .guide-content {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  line-height: 1.5;
+  border-top: 1px dashed #A7F3D0;
+  padding-top: 8px;
+}
+
+.story-bag-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.story-bag-label {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #064E3B;
+  background: #ECFDF5;
+  padding: 6px 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid #A7F3D0;
+}
+
+.story-bag {
+  width: 100%;
+  max-width: 580px;
+  min-height: 140px;
+  background: rgba(240, 253, 244, 0.6);
+  border: 3px dashed #10B981;
+  border-radius: 28px;
+  padding: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 10px rgba(5, 150, 105, 0.08);
+  transition: all 0.3s ease;
+}
+
+.story-ball {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.story-ball.red {
+  background: radial-gradient(circle at 30% 30%, #EF4444, #B91C1C);
+  border: 2px solid #7F1D1D;
+}
+
+.story-ball.yellow {
+  background: radial-gradient(circle at 30% 30%, #FDE047, #EAB308);
+  color: #713F12;
+  border: 2px solid #A16207;
+}
+
+.story-ball.poured {
+  opacity: 0.18;
+  transform: translateY(24px) scale(0.8);
+  filter: grayscale(80%);
+}
+
+.story-action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.fact-family-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.fact-card {
+  background: #F8FAFC;
+  border: 2px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.fact-card.active-story {
+  border-color: #10B981;
+  background: #ECFDF5;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  transform: translateY(-2px);
+}
+
+.fact-type {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.fact-card.active-story .fact-type {
+  color: #047857;
+}
+
+.fact-equation {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--text-dark);
+}
+
+.fact-equation .red-txt {
+  color: #DC2626;
+}
+
+.fact-equation .yellow-txt {
+  color: #D97706;
+}
+
+.fact-caption {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ================= SECTION 5: 3-PART COMBINER ================= */
+.threepart-interactive-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.bags-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.sport-bag-card {
+  background: #FFFFFF;
+  border: 2.5px solid #CBD5E1;
+  border-radius: var(--radius-md);
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-xs);
+}
+
+.sport-bag-card:hover {
+  transform: translateY(-3px);
+  border-color: #10B981;
+  box-shadow: var(--shadow-sm);
+}
+
+.sport-bag-card.chosen {
+  background: #ECFDF5;
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+}
+
+.bag-icon-bubble {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.bag-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.bag-count {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #047857;
+}
+
+.bag-status-badge {
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: #F1F5F9;
+  color: #475569;
+  margin-top: 4px;
+}
+
+.sport-bag-card.chosen .bag-status-badge {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.stepped-tree-card {
+  background: #F8FAFC;
+  border: 2px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  padding: 18px;
+  text-align: center;
+}
+
+.tree-instruction {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.tree-subtotal-bubble {
+  font-size: 1.35rem;
+  color: #047857;
+  background: #D1FAE5;
+  border: 1.5px solid #6EE7B7;
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+}
+
+.tree-complete-banner {
+  font-size: 1.4rem;
+  color: #065F46;
+  background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+  border: 2px solid #34D399;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
+}
+
+.running-total-bar {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.running-total-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.counter-token.green {
+  background: radial-gradient(circle at 30% 30%, #34D399, #059669);
+  color: #FFFFFF;
+  border: 2px solid #047857;
+}
+
+/* ================= SECTION 6: QUIZ STUDIO ================= */
 .quiz-level-selector {
   display: flex;
   gap: 10px;
@@ -1034,5 +1327,17 @@ body {
   }
   .quiz-options-grid {
     grid-template-columns: 1fr;
+  }
+  .fact-family-grid {
+    grid-template-columns: 1fr;
+  }
+  .bags-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .story-ball {
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
   }
 }
