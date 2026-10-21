@@ -25,9 +25,10 @@
     <!-- Desktop Header Controls -->
     <div class="header-controls">
       <div class="match-selector-bar" role="group" aria-label="Select Match">
-        <button class="match-select-btn active" data-set="set1" onclick="startMatch('set1')">Match 1</button>
-        <button class="match-select-btn" data-set="set2" onclick="startMatch('set2')">Match 2</button>
-        <button class="match-select-btn" data-set="shuffle" onclick="startMatch('shuffle')">🎲 Shuffle All</button>
+        <button id="btnLobby" class="match-select-btn" onclick="openLobby()" title="Change Match &amp; Timer Settings">⚙️ Setup</button>
+        <button id="btnSet1" class="match-select-btn active" onclick="startMatch('set1', false)">Match 1</button>
+        <button id="btnSet2" class="match-select-btn" onclick="startMatch('set2', false)">Match 2</button>
+        <button id="btnShuffle" class="match-select-btn" onclick="startMatch('shuffle', false)">🎲 Shuffle All</button>
       </div>
 
       <a href="index.html#grade-2" class="back-hub-btn" title="Back to Grade 2 Hub">
@@ -39,7 +40,7 @@
       </button>
     </div>
 
-    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 768px) -->
+    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 960px) -->
     <div class="mobile-nav-dropdowns">
       <div class="mobile-select-wrap">
         <label for="mobileLessonSelect" class="mobile-select-label">📚 Lesson:</label>
@@ -56,7 +57,8 @@
 
       <div class="mobile-select-wrap">
         <label for="mobileMatchSelect" class="mobile-select-label">⚔️ Match:</label>
-        <select id="mobileMatchSelect" class="mobile-select" onchange="startMatch(this.value)">
+        <select id="mobileMatchSelect" class="mobile-select" onchange="if(this.value==='setup'){openLobby();}else{startMatch(this.value, false);}">
+          <option value="setup">⚙️ Match &amp; Timer Setup</option>
           <option value="set1" selected>Match 1 (Curated 16 Qs)</option>
           <option value="set2">Match 2 (Rematch 16 Qs)</option>
           <option value="shuffle">🎲 Shuffle All Questions</option>
@@ -65,85 +67,260 @@
     </div>
   </header>
 
-  <!-- ================= ARENA CONTAINER ================= -->
-  <main class="arena-container">
+  <!-- ================= 3-COLUMN ARENA LAYOUT ================= -->
+  <main class="arena-workspace">
 
-    <!-- Top Round & Turn HUD -->
-    <section class="match-top-hud">
-      <div class="round-badge" id="currentRoundBadge">Round 1 / 8</div>
-      <div class="active-turn-banner lions-turn" id="activeTurnBanner">
-        <span class="banner-icon">🦁</span>
-        <span><strong>TEAM LIONS' TURN</strong> (Question 1/8)</span>
+    <!-- ================= COLUMN 1: TEAM 1 (LIONS - BLUE) ================= -->
+    <section class="team-panel team1-panel active-turn" id="team1Panel" aria-label="Team 1 Lions Panel">
+      <div class="team-header">
+        <span class="turn-pill-badge" id="team1TurnBadge">YOUR TURN</span>
+        <span class="team-label">🦁 Team 1</span>
+        <div class="team-score-circle" id="team1ScoreCircle">0</div>
+      </div>
+
+      <div class="team-body">
+        <div class="topic-tag" id="team1TopicTag">Bonds to 20</div>
+        
+        <div class="equation-box" id="team1EquationBox">
+          14 + ___ = 20
+        </div>
+
+        <div class="options-grid" id="team1OptionsGrid">
+          <button class="choice-btn" onclick="onChoiceClicked(this)">6</button>
+          <button class="choice-btn" onclick="onChoiceClicked(this)">5</button>
+          <button class="choice-btn" onclick="onChoiceClicked(this)">7</button>
+          <button class="choice-btn" onclick="onChoiceClicked(this)">8</button>
+        </div>
+
+        <div class="feedback-box" id="team1Feedback"></div>
+
+        <button class="turn-next-btn" id="team1NextBtn" onclick="advanceTurn()">
+          Next Turn ➔
+        </button>
       </div>
     </section>
 
-    <!-- Stadium Field Card -->
-    <section class="stadium-card" aria-label="Tug of War Field">
-      <div class="stadium-field">
-
-        <!-- Team Lions (Left) -->
-        <div class="team-podium lion-side active-turn" id="lionPodium">
-          <div class="team-mascot lion normal" id="lionMascot" aria-hidden="true">🦁</div>
-          <div class="team-name">LIONS</div>
-          <div class="team-score-badge" id="lionsScore">0</div>
-          <div class="team-pulls-label" id="lionsPulls">0 PULLS</div>
+    <!-- ================= COLUMN 2: CENTER STADIUM FIELD ================= -->
+    <section class="stadium-panel" id="stadiumPanel" aria-label="Tug of War Arena">
+      <!-- Top HUD Bar -->
+      <div class="stadium-hud-bar">
+        <div class="hud-team-score left">
+          <span class="hud-team-label">Team 1</span>
+          <span class="hud-team-val" id="hudTeam1Score">0</span>
         </div>
 
-        <!-- Center Tug Track -->
-        <div class="tug-track-wrapper">
-          <div class="mud-pit-ground">
-            <div class="mud-puddle"></div>
-            <div class="center-line-flag">🚩</div>
-            
-            <div class="rope-track-area">
-              <div class="rope-graphic" id="ropeGraphic">
-                <div class="center-ribbon" id="centerRibbon">⚡</div>
-              </div>
-            </div>
+        <div class="hud-center-group">
+          <span class="hud-round-pill" id="hudRoundText">Round 1 of 8</span>
+          <span class="hud-timer-pill" id="hudTimerPill">⏱️ Untimed</span>
+        </div>
+
+        <div class="hud-team-score right">
+          <span class="hud-team-label">Team 2</span>
+          <span class="hud-team-val" id="hudTeam2Score">0</span>
+        </div>
+      </div>
+
+      <!-- Stage with Clean Vector Tug of War Artwork -->
+      <div class="stadium-stage">
+        <svg id="stadiumSvg" class="stadium-svg idle" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet">
+          <!-- Center Vertical Dashed Line -->
+          <line x1="320" y1="15" x2="320" y2="275" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6,6" />
+
+          <!-- Soft Green Turf Hill -->
+          <path d="M 0 240 Q 320 228 640 240 L 640 300 L 0 300 Z" fill="#BBF7D0" />
+          <path d="M 0 256 Q 320 244 640 256 L 640 300 L 0 300 Z" fill="#86EFAC" />
+
+          <!-- TUG SYSTEM RIG (Translate left or right smoothly) -->
+          <g id="tugSystem" class="tug-system">
+
+            <!-- ================= TEAM 1 (BLUE ATHLETES) ================= -->
+            <g id="blueAthletes" class="athlete-group blue-team">
+              <!-- Back Blue Athlete (Anchor, x=135) -->
+              <g transform="translate(135, 130)">
+                <!-- Helmet / Head with Lion Ears -->
+                <circle cx="10" cy="18" r="16" fill="#FDE047" stroke="#D97706" stroke-width="2" />
+                <path d="M -4 10 Q 10 -2 24 10 L 26 18 L -6 18 Z" fill="#1E88E5" />
+                <circle cx="2" cy="5" r="4" fill="#F59E0B" />
+                <circle cx="18" cy="5" r="4" fill="#F59E0B" />
+                <circle cx="16" cy="19" r="2.5" fill="#0F172A" />
+                <!-- Blue Jacket / Body (Leaning back ~25 deg) -->
+                <path d="M -8 32 L 28 26 L 42 78 L 0 84 Z" fill="#1E88E5" rx="4" />
+                <path d="M 2 34 L 14 32 L 20 54 L 8 56 Z" fill="#FBBF24" />
+                <!-- Dark Pants / Legs Planted Wide -->
+                <line x1="6" y1="84" x2="-14" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <line x1="34" y1="80" x2="16" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <!-- Blue Shoes -->
+                <ellipse cx="-18" cy="130" rx="10" ry="5" fill="#2563EB" />
+                <ellipse cx="12" cy="130" rx="10" ry="5" fill="#2563EB" />
+                <!-- Arms holding rope -->
+                <path d="M 10 44 Q 30 50 48 58" stroke="#FDE047" stroke-width="8" stroke-linecap="round" fill="none" />
+                <circle cx="48" cy="58" r="5" fill="#D97706" />
+              </g>
+
+              <!-- Front Blue Athlete (x=215) -->
+              <g transform="translate(215, 130)">
+                <!-- Helmet / Head with Lion Ears -->
+                <circle cx="10" cy="18" r="16" fill="#FDE047" stroke="#D97706" stroke-width="2" />
+                <path d="M -4 10 Q 10 -2 24 10 L 26 18 L -6 18 Z" fill="#1E88E5" />
+                <circle cx="2" cy="5" r="4" fill="#F59E0B" />
+                <circle cx="18" cy="5" r="4" fill="#F59E0B" />
+                <circle cx="16" cy="19" r="2.5" fill="#0F172A" />
+                <!-- Blue Jacket / Body -->
+                <path d="M -8 32 L 28 26 L 42 78 L 0 84 Z" fill="#1E88E5" rx="4" />
+                <path d="M 2 34 L 14 32 L 20 54 L 8 56 Z" fill="#FBBF24" />
+                <!-- Dark Pants / Legs Planted Wide -->
+                <line x1="6" y1="84" x2="-14" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <line x1="34" y1="80" x2="16" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <!-- Blue Shoes -->
+                <ellipse cx="-18" cy="130" rx="10" ry="5" fill="#2563EB" />
+                <ellipse cx="12" cy="130" rx="10" ry="5" fill="#2563EB" />
+                <!-- Arms holding rope -->
+                <path d="M 10 44 Q 32 50 50 58" stroke="#FDE047" stroke-width="8" stroke-linecap="round" fill="none" />
+                <circle cx="50" cy="58" r="5" fill="#D97706" />
+              </g>
+            </g>
+
+            <!-- ================= THE ROPE & ROCK-SOLID CENTER RIBBON ================= -->
+            <g id="ropeAndFlag" class="rope-group">
+              <!-- Left slack -->
+              <path d="M 60 200 Q 120 190 180 188" stroke="#1E293B" stroke-width="6" stroke-linecap="round" fill="none" />
+              <!-- Taut Rope across the middle -->
+              <line x1="170" y1="188" x2="470" y2="188" stroke="#0F172A" stroke-width="7" stroke-linecap="round" />
+              <!-- Right slack -->
+              <path d="M 460 188 Q 520 190 580 200" stroke="#1E293B" stroke-width="6" stroke-linecap="round" fill="none" />
+
+              <!-- Center Ribbon Flag (Stable, pinned to rope at x=320) -->
+              <g id="centerRibbonFlag" transform="translate(320, 188)">
+                <polygon points="-12,0 12,0 15,36 0,26 -15,36" fill="#DC2626" stroke="#FFFFFF" stroke-width="1.5" />
+                <circle cx="0" cy="1" r="4" fill="#FBBF24" />
+              </g>
+            </g>
+
+            <!-- ================= TEAM 2 (RED ATHLETES) ================= -->
+            <g id="redAthletes" class="athlete-group red-team">
+              <!-- Front Red Athlete (x=380) -->
+              <g transform="translate(380, 130)">
+                <!-- Cap / Head with Wolf Ears -->
+                <polygon points="4,2 10,-6 14,3" fill="#64748B" />
+                <polygon points="20,2 26,-6 30,3" fill="#64748B" />
+                <circle cx="16" cy="18" r="16" fill="#CBD5E1" stroke="#64748B" stroke-width="2" />
+                <path d="M 2 10 Q 16 -2 30 10 L 32 18 L 0 18 Z" fill="#D32F2F" />
+                <circle cx="10" cy="19" r="2.5" fill="#0F172A" />
+                <!-- Red Jacket / Body (Leaning back ~25 deg) -->
+                <path d="M -2 26 L 34 32 L 26 84 L -16 78 Z" fill="#D32F2F" rx="4" />
+                <path d="M 12 32 L 24 34 L 18 56 L 6 54 Z" fill="#FBBF24" />
+                <!-- Dark Pants / Legs Planted Wide -->
+                <line x1="-8" y1="80" x2="10" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <line x1="20" y1="84" x2="40" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <!-- Red Shoes -->
+                <ellipse cx="14" cy="130" rx="10" ry="5" fill="#DC2626" />
+                <ellipse cx="44" cy="130" rx="10" ry="5" fill="#DC2626" />
+                <!-- Arms holding rope -->
+                <path d="M 16 44 Q -6 50 -24 58" stroke="#CBD5E1" stroke-width="8" stroke-linecap="round" fill="none" />
+                <circle cx="-24" cy="58" r="5" fill="#64748B" />
+              </g>
+
+              <!-- Back Red Athlete (Anchor, x=460) -->
+              <g transform="translate(460, 130)">
+                <!-- Wolf Tail -->
+                <path d="M 28 70 Q 48 64 52 82 Q 44 94 28 86" fill="#64748B" stroke="#475569" stroke-width="1.5" />
+                <!-- Cap / Head with Wolf Ears -->
+                <polygon points="4,2 10,-6 14,3" fill="#64748B" />
+                <polygon points="20,2 26,-6 30,3" fill="#64748B" />
+                <circle cx="16" cy="18" r="16" fill="#CBD5E1" stroke="#64748B" stroke-width="2" />
+                <path d="M 2 10 Q 16 -2 30 10 L 32 18 L 0 18 Z" fill="#D32F2F" />
+                <circle cx="10" cy="19" r="2.5" fill="#0F172A" />
+                <!-- Red Jacket / Body -->
+                <path d="M -2 26 L 34 32 L 26 84 L -16 78 Z" fill="#D32F2F" rx="4" />
+                <path d="M 12 32 L 24 34 L 18 56 L 6 54 Z" fill="#FBBF24" />
+                <!-- Dark Pants / Legs Planted Wide -->
+                <line x1="-8" y1="80" x2="10" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <line x1="20" y1="84" x2="40" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <!-- Red Shoes -->
+                <ellipse cx="14" cy="130" rx="10" ry="5" fill="#DC2626" />
+                <ellipse cx="44" cy="130" rx="10" ry="5" fill="#DC2626" />
+                <!-- Arms holding rope -->
+                <path d="M 16 44 Q -6 50 -24 58" stroke="#CBD5E1" stroke-width="8" stroke-linecap="round" fill="none" />
+                <circle cx="-24" cy="58" r="5" fill="#64748B" />
+              </g>
+            </g>
+
+          </g>
+        </svg>
+      </div>
+
+      <!-- Prominent Center Stadium Action Bar (Visible upon answering / timeout) -->
+      <div class="stadium-action-bar" id="stadiumActionBar" style="display: none;">
+        <button class="stadium-next-btn" id="stadiumNextBtn" onclick="advanceTurn()">
+          Next Turn ➔
+        </button>
+      </div>
+
+      <!-- ================= START MATCH LOBBY OVERLAY ================= -->
+      <div class="start-lobby-overlay" id="startLobbyOverlay">
+        <div class="start-lobby-card">
+          <div class="lobby-title-row">
+            <span class="lobby-mascot-icon">⚔️</span>
+            <h2 class="lobby-title">Tug of War Duel</h2>
           </div>
 
-          <div class="meter-scale-bar">
-            <span class="lion-zone">◀ LIONS WIN</span>
-            <span class="center-marker">MUD PIT</span>
-            <span class="wolf-zone">WOLVES WIN ▶</span>
+          <div class="lobby-teams-duel-badge">
+            <span class="lobby-team-tag t1">🦁 Team 1 (Lions)</span>
+            <span style="color:#64748B; font-weight:900;">VS</span>
+            <span class="lobby-team-tag t2">🐺 Team 2 (Wolves)</span>
           </div>
-        </div>
 
-        <!-- Team Wolves (Right) -->
-        <div class="team-podium wolf-side" id="wolfPodium">
-          <div class="team-mascot wolf normal" id="wolfMascot" aria-hidden="true">🐺</div>
-          <div class="team-name">WOLVES</div>
-          <div class="team-score-badge" id="wolvesScore">0</div>
-          <div class="team-pulls-label" id="wolvesPulls">0 PULLS</div>
-        </div>
+          <!-- Turn Timer Selection -->
+          <div class="lobby-section-title">⏱️ Turn Timer</div>
+          <div class="timer-options-row">
+            <button class="timer-choice-btn active" data-time="0" onclick="selectTurnTimer(0)">Untimed</button>
+            <button class="timer-choice-btn" data-time="15" onclick="selectTurnTimer(15)">15s</button>
+            <button class="timer-choice-btn" data-time="20" onclick="selectTurnTimer(20)">20s</button>
+            <button class="timer-choice-btn" data-time="25" onclick="selectTurnTimer(25)">25s</button>
+            <button class="timer-choice-btn" data-time="30" onclick="selectTurnTimer(30)">30s</button>
+          </div>
 
+          <!-- Question Set Selection -->
+          <div class="lobby-section-title">📜 Question Set</div>
+          <div class="lobby-matches-row">
+            <button class="lobby-match-btn active" data-set="set1" onclick="selectLobbyMatchSet('set1')">Match 1</button>
+            <button class="lobby-match-btn" data-set="set2" onclick="selectLobbyMatchSet('set2')">Match 2</button>
+            <button class="lobby-match-btn" data-set="shuffle" onclick="selectLobbyMatchSet('shuffle')">🎲 Shuffle</button>
+          </div>
+
+          <!-- Big Start Button -->
+          <button class="big-start-duel-btn" onclick="startDuelFromLobby()">
+            🚀 START MATCH!
+          </button>
+        </div>
       </div>
     </section>
 
-    <!-- Question Duel Card -->
-    <section class="question-duel-card" aria-live="polite">
-      <div class="question-topic-pill lions-pill" id="questionTopic">
-        🎯 Bonds to 20 • Team Lions
+    <!-- ================= COLUMN 3: TEAM 2 (WOLVES - RED) ================= -->
+    <section class="team-panel team2-panel inactive-turn" id="team2Panel" aria-label="Team 2 Wolves Panel">
+      <div class="team-header">
+        <span class="turn-pill-badge" id="team2TurnBadge">YOUR TURN</span>
+        <span class="team-label">🐺 Team 2</span>
+        <div class="team-score-circle" id="team2ScoreCircle">0</div>
       </div>
 
-      <h2 class="question-prompt" id="questionPrompt">What makes 20?</h2>
+      <div class="team-body">
+        <div class="topic-tag" id="team2TopicTag">Waiting for Turn...</div>
+        
+        <div class="equation-box" id="team2EquationBox">
+          ? + ? = ?
+        </div>
 
-      <div class="question-equation-box" id="questionEquation">
-        14 + ___ = 20
-      </div>
+        <div class="options-grid" id="team2OptionsGrid">
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+        </div>
 
-      <div class="duel-options-grid" id="questionOptionsGrid">
-        <!-- Injected via JavaScript -->
-      </div>
+        <div class="feedback-box" id="team2Feedback"></div>
 
-      <!-- Turn Feedback Banner -->
-      <div class="turn-feedback-banner hidden" id="turnFeedbackBanner">
-        <!-- Injected via JavaScript -->
-      </div>
-
-      <!-- Next Turn Button Container -->
-      <div class="next-turn-container hidden" id="nextTurnContainer">
-        <button class="next-turn-btn" id="nextTurnBtn" onclick="advanceTurn()">
+        <button class="turn-next-btn" id="team2NextBtn" onclick="advanceTurn()">
           Next Turn ➔
         </button>
       </div>
@@ -158,25 +335,28 @@
         <span class="big-victory-mascot">🦁</span>
         <span class="trophy-badge">🏆</span>
       </div>
-      <h2 class="victory-title" id="victoryTitle">🦁 TEAM LIONS WINS!</h2>
+      <h2 class="victory-title" id="victoryTitle">🦁 TEAM 1 WINS!</h2>
       <p class="victory-msg" id="victoryMsg">
-        Incredible tug of war! The Lions pulled the rope with tremendous teamwork!
+        Incredible tug of war! Team 1 pulled the rope with tremendous teamwork!
       </p>
 
       <div class="victory-scores-row" id="victoryScores">
-        <div class="final-score-pill lion-pill">🦁 Lions: 6 / 8</div>
-        <div class="final-score-pill wolf-pill">🐺 Wolves: 4 / 8</div>
+        <div class="final-score-pill lion-pill" id="victoryT1Pill">🦁 Team 1: 6 / 8</div>
+        <div class="final-score-pill wolf-pill" id="victoryT2Pill">🐺 Team 2: 4 / 8</div>
       </div>
 
       <div class="victory-actions">
-        <button class="victory-btn primary" onclick="startMatch('set2')">
+        <button class="victory-btn primary" onclick="startMatch('set2', false)">
           ⚔️ Play Match 2 (Rematch!)
         </button>
-        <button class="victory-btn secondary" onclick="startMatch('set1')">
+        <button class="victory-btn secondary" onclick="startMatch('set1', false)">
           🔄 Play Match 1 Again
         </button>
-        <button class="victory-btn secondary" onclick="startMatch('shuffle')">
+        <button class="victory-btn secondary" onclick="startMatch('shuffle', false)">
           🎲 Shuffle All Questions
+        </button>
+        <button class="victory-btn secondary" onclick="openLobby()">
+          ⚙️ Change Timer / Match Settings
         </button>
         <a href="index.html#grade-2" class="victory-btn secondary">
           ← Back to Grade 2 Hub
@@ -185,11 +365,699 @@
     </div>
   </div>
 
-  <!-- Common Utilities & Audio Engine -->
+  <!-- Common Audio & Utilities -->
   <script src="js/common/sound.js"></script>
   <script src="js/common/utils.js"></script>
 
-  <!-- Tug of War Controller -->
-  <script src="js/ch5/tug-of-war.js"></script>
+  <!-- ================= INLINE CONTROLLER SCRIPT (100% CACHE-PROOF) ================= -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ================= CURATED QUESTIONS (32 TOTAL - NO 10X SCALE) ================= */
+    const QUESTION_SETS = {
+      set1: {
+        name: "Match 1",
+        team1: [
+          { topic: "Bonds to 20", visual: "14 + ___ = 20", options: [6, 5, 7, 8], correct: 6, tip: "14 + 6 = 20! (4 and 6 make 10)" },
+          { topic: "Bonds to 100", visual: "30 + ___ = 100", options: [70, 60, 80, 50], correct: 70, tip: "3 tens + 7 tens = 10 tens (100)!" },
+          { topic: "Take Away from 20", visual: "20 - 7 = ___", options: [13, 12, 14, 11], correct: 13, tip: "20 - 7 = 13, because 13 + 7 = 20!" },
+          { topic: "Next-Ten Hopper", visual: "45 + ___ = 50", options: [5, 4, 6, 15], correct: 5, tip: "5 more gets us to the next multiple of 10!" },
+          { topic: "3-Part Combiner", visual: "11 + 4 + ___ = 20", options: [5, 4, 6, 7], correct: 5, tip: "11 + 4 = 15, then 15 + 5 = 20!" },
+          { topic: "Bonds to 100", visual: "80 + ___ = 100", options: [20, 30, 10, 40], correct: 20, tip: "80 + 20 = 100!" },
+          { topic: "Take Away from 20", visual: "20 - 16 = ___", options: [4, 5, 3, 6], correct: 4, tip: "20 - 16 = 4, because 16 + 4 = 20!" },
+          { topic: "Next-Ten Hopper", visual: "63 + ___ = 70", options: [7, 8, 6, 3], correct: 7, tip: "3 and 7 make 10, so 63 + 7 = 70!" }
+        ],
+        team2: [
+          { topic: "Bonds to 20", visual: "12 + ___ = 20", options: [8, 7, 9, 6], correct: 8, tip: "12 + 8 = 20! (2 and 8 make 10)" },
+          { topic: "Bonds to 100", visual: "50 + ___ = 100", options: [50, 40, 60, 30], correct: 50, tip: "50 + 50 = 100! Half of 100 is 50." },
+          { topic: "Take Away from 20", visual: "20 - 9 = ___", options: [11, 12, 10, 13], correct: 11, tip: "20 - 9 = 11, because 11 + 9 = 20!" },
+          { topic: "Next-Ten Hopper", visual: "62 + ___ = 70", options: [8, 7, 9, 6], correct: 8, tip: "2 and 8 make 10, so 62 + 8 = 70!" },
+          { topic: "3-Part Combiner", visual: "13 + 2 + ___ = 20", options: [5, 4, 6, 7], correct: 5, tip: "13 + 2 = 15, then 15 + 5 = 20!" },
+          { topic: "Bonds to 100", visual: "40 + ___ = 100", options: [60, 50, 70, 40], correct: 60, tip: "40 + 60 = 100!" },
+          { topic: "Take Away from 20", visual: "20 - 15 = ___", options: [5, 4, 6, 7], correct: 5, tip: "20 - 15 = 5, because 15 + 5 = 20!" },
+          { topic: "Next-Ten Hopper", visual: "27 + ___ = 30", options: [3, 4, 2, 7], correct: 3, tip: "7 and 3 make 10, so 27 + 3 = 30!" }
+        ]
+      },
+      set2: {
+        name: "Match 2",
+        team1: [
+          { topic: "Bonds to 20", visual: "17 + ___ = 20", options: [3, 2, 4, 5], correct: 3, tip: "17 + 3 = 20! (7 and 3 make 10)" },
+          { topic: "Bonds to 100", visual: "60 + ___ = 100", options: [40, 50, 30, 20], correct: 40, tip: "60 + 40 = 100!" },
+          { topic: "Take Away from 20", visual: "20 - 4 = ___", options: [16, 15, 17, 14], correct: 16, tip: "20 - 4 = 16, because 16 + 4 = 20!" },
+          { topic: "Next-Ten Hopper", visual: "84 + ___ = 90", options: [6, 5, 7, 4], correct: 6, tip: "4 and 6 make 10, so 84 + 6 = 90!" },
+          { topic: "3-Part Combiner", visual: "8 + 7 + ___ = 20", options: [5, 4, 6, 3], correct: 5, tip: "8 + 7 = 15, then 15 + 5 = 20!" },
+          { topic: "Bonds to 100", visual: "10 + ___ = 100", options: [90, 80, 100, 70], correct: 90, tip: "10 + 90 = 100!" },
+          { topic: "Take Away from 20", visual: "20 - 12 = ___", options: [8, 7, 9, 6], correct: 8, tip: "20 - 12 = 8, because 12 + 8 = 20!" },
+          { topic: "Next-Ten Hopper", visual: "51 + ___ = 60", options: [9, 8, 7, 1], correct: 9, tip: "1 and 9 make 10, so 51 + 9 = 60!" }
+        ],
+        team2: [
+          { topic: "Bonds to 20", visual: "9 + ___ = 20", options: [11, 10, 12, 9], correct: 11, tip: "9 + 11 = 20! (9 and 1 make 10, + 10 is 20)" },
+          { topic: "Bonds to 100", visual: "20 + ___ = 100", options: [80, 70, 90, 60], correct: 80, tip: "20 + 80 = 100!" },
+          { topic: "Take Away from 20", visual: "20 - 8 = ___", options: [12, 11, 13, 14], correct: 12, tip: "20 - 8 = 12, because 12 + 8 = 20!" },
+          { topic: "Next-Ten Hopper", visual: "76 + ___ = 80", options: [4, 5, 3, 6], correct: 4, tip: "6 and 4 make 10, so 76 + 4 = 80!" },
+          { topic: "3-Part Combiner", visual: "10 + 6 + ___ = 20", options: [4, 3, 5, 6], correct: 4, tip: "10 + 6 = 16, then 16 + 4 = 20!" },
+          { topic: "Bonds to 100", visual: "70 + ___ = 100", options: [30, 20, 40, 50], correct: 30, tip: "70 + 30 = 100!" },
+          { topic: "Take Away from 20", visual: "20 - 18 = ___", options: [2, 3, 1, 4], correct: 2, tip: "20 - 18 = 2, because 18 + 2 = 20!" },
+          { topic: "Next-Ten Hopper", visual: "38 + ___ = 40", options: [2, 3, 1, 8], correct: 2, tip: "8 and 2 make 10, so 38 + 2 = 40!" }
+        ]
+      }
+    };
+
+    /* ================= GAME STATE ================= */
+    const state = {
+      selectedSetKey: 'set1',
+      turnTimeLimit: 0, // 0 = untimed, or 15, 20, 25, 30
+      timerRemaining: 0,
+      timerInterval: null,
+      autoAdvanceTimer: null,
+      autoAdvanceCountdown: null,
+      inLobby: true,
+      currentRound: 1,
+      currentTurn: 'team1',
+      ropePosition: 0,
+      team1Score: 0,
+      team2Score: 0,
+      answered: false,
+      gameOver: false,
+      questionsTeam1: [],
+      questionsTeam2: [],
+      qIndexTeam1: 0,
+      qIndexTeam2: 0,
+      currentActiveQ: null
+    };
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    /* ================= AUTO-ADVANCE HELPERS ================= */
+    function clearAutoAdvance() {
+      if (state.autoAdvanceTimer) {
+        clearTimeout(state.autoAdvanceTimer);
+        state.autoAdvanceTimer = null;
+      }
+      if (state.autoAdvanceCountdown) {
+        clearInterval(state.autoAdvanceCountdown);
+        state.autoAdvanceCountdown = null;
+      }
+    }
+
+    function triggerTurnTransition(isLastTurn, nextTeamName) {
+      clearAutoAdvance();
+
+      const isT1 = (state.currentTurn === 'team1');
+      const sideNextBtn = document.getElementById(isT1 ? 'team1NextBtn' : 'team2NextBtn');
+      const stadiumBar = document.getElementById('stadiumActionBar');
+      const stadiumNextBtn = document.getElementById('stadiumNextBtn');
+
+      if (stadiumBar) stadiumBar.style.display = 'flex';
+      if (sideNextBtn) {
+        sideNextBtn.style.display = 'block';
+        sideNextBtn.classList.add('visible');
+      }
+
+      let secLeft = 2;
+      const setLabels = () => {
+        const text = isLastTurn
+          ? `🏆 See Final Results (${secLeft}s)`
+          : `Next: ${nextTeamName} ➔ (${secLeft}s)`;
+        if (stadiumNextBtn) stadiumNextBtn.innerHTML = text;
+        if (sideNextBtn) sideNextBtn.innerHTML = text;
+      };
+      setLabels();
+
+      state.autoAdvanceCountdown = setInterval(() => {
+        secLeft--;
+        if (secLeft > 0) {
+          setLabels();
+        } else {
+          if (state.autoAdvanceCountdown) {
+            clearInterval(state.autoAdvanceCountdown);
+            state.autoAdvanceCountdown = null;
+          }
+        }
+      }, 1000);
+
+      // Auto-advance automatically after 2.2 seconds
+      state.autoAdvanceTimer = setTimeout(() => {
+        clearAutoAdvance();
+        if (!state.gameOver && state.answered && !state.inLobby) {
+          if (isLastTurn) {
+            finishMatch('completed');
+          } else {
+            advanceTurn();
+          }
+        }
+      }, 2200);
+
+      // Direct click handler to skip wait immediately
+      const clickHandler = () => {
+        clearAutoAdvance();
+        if (isLastTurn) {
+          finishMatch('completed');
+        } else {
+          advanceTurn();
+        }
+      };
+
+      if (stadiumNextBtn) stadiumNextBtn.onclick = clickHandler;
+      if (sideNextBtn) sideNextBtn.onclick = clickHandler;
+
+      try {
+        if (stadiumBar) stadiumBar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (e) {}
+    }
+
+    /* ================= TIMER FUNCTIONS ================= */
+    function stopTurnTimer() {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+      const pill = document.getElementById('hudTimerPill');
+      if (pill) {
+        pill.classList.remove('alert');
+      }
+    }
+
+    function startTurnTimer() {
+      stopTurnTimer();
+      const pill = document.getElementById('hudTimerPill');
+
+      if (state.turnTimeLimit <= 0) {
+        if (pill) {
+          pill.textContent = '⏱️ Untimed';
+          pill.classList.remove('alert');
+        }
+        return;
+      }
+
+      state.timerRemaining = state.turnTimeLimit;
+      if (pill) {
+        pill.textContent = `⏱️ ${state.timerRemaining}s`;
+        pill.classList.remove('alert');
+      }
+
+      state.timerInterval = setInterval(() => {
+        if (state.answered || state.gameOver || state.inLobby) {
+          stopTurnTimer();
+          return;
+        }
+
+        state.timerRemaining--;
+
+        if (pill) {
+          pill.textContent = `⏱️ ${Math.max(0, state.timerRemaining)}s`;
+          if (state.timerRemaining <= 5 && state.timerRemaining > 0) {
+            pill.classList.add('alert');
+            try {
+              if (window.sound && typeof window.sound.playPop === 'function') {
+                window.sound.playPop();
+              }
+            } catch (e) {}
+          }
+        }
+
+        if (state.timerRemaining <= 0) {
+          stopTurnTimer();
+          handleTurnTimeout();
+        }
+      }, 1000);
+    }
+
+    function handleTurnTimeout() {
+      if (state.answered || state.gameOver) return;
+      state.answered = true;
+
+      const isT1 = (state.currentTurn === 'team1');
+      const activeQ = state.currentActiveQ;
+      if (!activeQ) return;
+
+      const activePanel = document.getElementById(isT1 ? 'team1Panel' : 'team2Panel');
+      const allBtns = activePanel ? activePanel.querySelectorAll('.choice-btn') : [];
+
+      allBtns.forEach(btn => {
+        btn.disabled = true;
+        const val = parseInt(btn.textContent.trim(), 10);
+        if (val === activeQ.correct) {
+          btn.classList.add('correct-pick');
+        }
+      });
+
+      try {
+        if (window.sound && typeof window.sound.playBuzz === 'function') {
+          window.sound.playBuzz();
+        }
+      } catch (e) {}
+
+      const feedbackEl = document.getElementById(isT1 ? 'team1Feedback' : 'team2Feedback');
+      if (feedbackEl) {
+        feedbackEl.className = 'feedback-box wrong';
+        feedbackEl.style.display = 'block';
+        feedbackEl.innerHTML = `⏰ <strong>TIME'S UP!</strong> Answer: <strong>${activeQ.correct}</strong>. ${activeQ.tip}`;
+      }
+
+      const isLastTurn = (state.currentRound === 8 && state.currentTurn === 'team2');
+      const nextTeamName = isT1 ? "Team 2" : "Team 1";
+      triggerTurnTransition(isLastTurn, nextTeamName);
+    }
+
+    /* ================= LOBBY CONTROLS ================= */
+    window.selectTurnTimer = function (seconds) {
+      state.turnTimeLimit = parseInt(seconds, 10);
+      document.querySelectorAll('.timer-choice-btn').forEach(btn => {
+        const val = parseInt(btn.getAttribute('data-time'), 10);
+        btn.classList.toggle('active', val === state.turnTimeLimit);
+      });
+      const pill = document.getElementById('hudTimerPill');
+      if (pill) {
+        pill.textContent = state.turnTimeLimit > 0 ? `⏱️ ${state.turnTimeLimit}s` : '⏱️ Untimed';
+      }
+      try { if (window.sound && typeof window.sound.playPop === 'function') window.sound.playPop(); } catch (e) {}
+    };
+
+    window.selectLobbyMatchSet = function (setKey) {
+      state.selectedSetKey = setKey;
+      document.querySelectorAll('.lobby-match-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-set') === setKey);
+      });
+      const b1 = document.getElementById('btnSet1');
+      const b2 = document.getElementById('btnSet2');
+      const bS = document.getElementById('btnShuffle');
+      if (b1) b1.classList.toggle('active', setKey === 'set1');
+      if (b2) b2.classList.toggle('active', setKey === 'set2');
+      if (bS) bS.classList.toggle('active', setKey === 'shuffle');
+      const mSelect = document.getElementById('mobileMatchSelect');
+      if (mSelect) mSelect.value = setKey;
+      try { if (window.sound && typeof window.sound.playPop === 'function') window.sound.playPop(); } catch (e) {}
+    };
+
+    window.startDuelFromLobby = function () {
+      const lobby = document.getElementById('startLobbyOverlay');
+      if (lobby) lobby.classList.add('hidden');
+      state.inLobby = false;
+      startMatch(state.selectedSetKey, false);
+      startTurnTimer();
+    };
+
+    window.openLobby = function () {
+      clearAutoAdvance();
+      stopTurnTimer();
+      state.inLobby = true;
+      const stadiumBar = document.getElementById('stadiumActionBar');
+      if (stadiumBar) stadiumBar.style.display = 'none';
+      const lobby = document.getElementById('startLobbyOverlay');
+      if (lobby) lobby.classList.remove('hidden');
+    };
+
+    /* ================= START MATCH ================= */
+    window.startMatch = function (setKey, showLobby) {
+      clearAutoAdvance();
+      stopTurnTimer();
+      state.selectedSetKey = setKey || 'set1';
+      state.currentRound = 1;
+      state.currentTurn = 'team1';
+      state.ropePosition = 0;
+      state.team1Score = 0;
+      state.team2Score = 0;
+      state.answered = false;
+      state.gameOver = false;
+      state.qIndexTeam1 = 0;
+      state.qIndexTeam2 = 0;
+
+      // Close lobby unless explicitly asked
+      state.inLobby = (showLobby === true);
+      const lobby = document.getElementById('startLobbyOverlay');
+      if (lobby) {
+        if (state.inLobby) {
+          lobby.classList.remove('hidden');
+        } else {
+          lobby.classList.add('hidden');
+        }
+      }
+
+      const stadiumBar = document.getElementById('stadiumActionBar');
+      if (stadiumBar) stadiumBar.style.display = 'none';
+
+      // Question Loading
+      if (state.selectedSetKey === 'shuffle') {
+        const allT1 = [...QUESTION_SETS.set1.team1, ...QUESTION_SETS.set2.team1];
+        const allT2 = [...QUESTION_SETS.set1.team2, ...QUESTION_SETS.set2.team2];
+        state.questionsTeam1 = shuffleArray(allT1).slice(0, 8);
+        state.questionsTeam2 = shuffleArray(allT2).slice(0, 8);
+      } else {
+        const selected = QUESTION_SETS[state.selectedSetKey] || QUESTION_SETS.set1;
+        state.questionsTeam1 = [...selected.team1];
+        state.questionsTeam2 = [...selected.team2];
+      }
+
+      // UI Switcher Tabs
+      const btnSet1 = document.getElementById('btnSet1');
+      const btnSet2 = document.getElementById('btnSet2');
+      const btnShuffle = document.getElementById('btnShuffle');
+      if (btnSet1) btnSet1.classList.toggle('active', state.selectedSetKey === 'set1');
+      if (btnSet2) btnSet2.classList.toggle('active', state.selectedSetKey === 'set2');
+      if (btnShuffle) btnShuffle.classList.toggle('active', state.selectedSetKey === 'shuffle');
+
+      // Sync Lobby buttons
+      document.querySelectorAll('.lobby-match-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-set') === state.selectedSetKey);
+      });
+
+      const mobileSelect = document.getElementById('mobileMatchSelect');
+      if (mobileSelect) mobileSelect.value = state.selectedSetKey;
+
+      const victoryModal = document.getElementById('victoryModal');
+      if (victoryModal) victoryModal.classList.remove('active');
+
+      const svgEl = document.getElementById('stadiumSvg');
+      if (svgEl) svgEl.setAttribute('class', 'stadium-svg idle');
+
+      updateHUD();
+      renderCurrentQuestion();
+      updateRopeVisual(false);
+
+      if (showLobby) {
+        openLobby();
+      } else if (!state.inLobby) {
+        startTurnTimer();
+      }
+
+      try {
+        if (window.sound && typeof window.sound.playPop === 'function') {
+          window.sound.playPop();
+        }
+      } catch (e) {}
+    };
+
+    /* ================= UPDATE HUD ================= */
+    function updateHUD() {
+      const hudT1 = document.getElementById('hudTeam1Score');
+      const hudT2 = document.getElementById('hudTeam2Score');
+      const roundTxt = document.getElementById('hudRoundText');
+      const scoreCircleT1 = document.getElementById('team1ScoreCircle');
+      const scoreCircleT2 = document.getElementById('team2ScoreCircle');
+
+      if (hudT1) hudT1.textContent = state.team1Score;
+      if (hudT2) hudT2.textContent = state.team2Score;
+      if (roundTxt) roundTxt.textContent = `Round ${state.currentRound} of 8`;
+      if (scoreCircleT1) scoreCircleT1.textContent = state.team1Score;
+      if (scoreCircleT2) scoreCircleT2.textContent = state.team2Score;
+
+      const panel1 = document.getElementById('team1Panel');
+      const panel2 = document.getElementById('team2Panel');
+
+      if (state.currentTurn === 'team1') {
+        if (panel1) {
+          panel1.classList.remove('inactive-turn');
+          panel1.classList.add('active-turn');
+        }
+        if (panel2) {
+          panel2.classList.remove('active-turn');
+          panel2.classList.add('inactive-turn');
+        }
+      } else {
+        if (panel1) {
+          panel1.classList.remove('active-turn');
+          panel1.classList.add('inactive-turn');
+        }
+        if (panel2) {
+          panel2.classList.remove('inactive-turn');
+          panel2.classList.add('active-turn');
+        }
+      }
+    }
+
+    /* ================= ROPE VISUAL ================= */
+    function updateRopeVisual(animateTug, winningTeam) {
+      const tugSystem = document.getElementById('tugSystem');
+      const svgEl = document.getElementById('stadiumSvg');
+
+      const clampPos = Math.max(-4, Math.min(4, state.ropePosition));
+      const offsetX = clampPos * 25;
+
+      if (tugSystem) {
+        tugSystem.style.transform = `translateX(${offsetX}px)`;
+      }
+
+      if (animateTug && svgEl) {
+        if (winningTeam === 'team1') {
+          svgEl.setAttribute('class', 'stadium-svg pull-team1');
+          setTimeout(() => { if (!state.gameOver) svgEl.setAttribute('class', 'stadium-svg idle'); }, 1500);
+        } else if (winningTeam === 'team2') {
+          svgEl.setAttribute('class', 'stadium-svg pull-team2');
+          setTimeout(() => { if (!state.gameOver) svgEl.setAttribute('class', 'stadium-svg idle'); }, 1500);
+        }
+      } else if (svgEl && !state.gameOver) {
+        svgEl.setAttribute('class', 'stadium-svg idle');
+      }
+    }
+
+    /* ================= RENDER CURRENT QUESTION ================= */
+    function renderCurrentQuestion() {
+      state.answered = false;
+      clearAutoAdvance();
+
+      const stadiumBar = document.getElementById('stadiumActionBar');
+      if (stadiumBar) stadiumBar.style.display = 'none';
+
+      const isT1 = (state.currentTurn === 'team1');
+      const activeQ = isT1
+        ? state.questionsTeam1[state.qIndexTeam1]
+        : state.questionsTeam2[state.qIndexTeam2];
+
+      state.currentActiveQ = activeQ;
+      if (!activeQ) return;
+
+      const activeTopic = document.getElementById(isT1 ? 'team1TopicTag' : 'team2TopicTag');
+      const activeEqBox = document.getElementById(isT1 ? 'team1EquationBox' : 'team2EquationBox');
+      const activeGrid = document.getElementById(isT1 ? 'team1OptionsGrid' : 'team2OptionsGrid');
+      const activeFeedback = document.getElementById(isT1 ? 'team1Feedback' : 'team2Feedback');
+      const activeNextBtn = document.getElementById(isT1 ? 'team1NextBtn' : 'team2NextBtn');
+
+      const inactiveTopic = document.getElementById(isT1 ? 'team2TopicTag' : 'team1TopicTag');
+      const inactiveEqBox = document.getElementById(isT1 ? 'team2EquationBox' : 'team1EquationBox');
+      const inactiveGrid = document.getElementById(isT1 ? 'team2OptionsGrid' : 'team1OptionsGrid');
+      const inactiveFeedback = document.getElementById(isT1 ? 'team2Feedback' : 'team1Feedback');
+      const inactiveNextBtn = document.getElementById(isT1 ? 'team2NextBtn' : 'team1NextBtn');
+
+      // 1. Populate Active Panel
+      if (activeTopic) activeTopic.textContent = activeQ.topic;
+      if (activeEqBox) activeEqBox.textContent = activeQ.visual;
+
+      if (activeFeedback) {
+        activeFeedback.className = 'feedback-box';
+        activeFeedback.style.display = 'none';
+        activeFeedback.innerHTML = '';
+      }
+
+      if (activeNextBtn) {
+        activeNextBtn.classList.remove('visible');
+        activeNextBtn.style.display = 'none';
+      }
+
+      if (activeGrid) {
+        activeGrid.innerHTML = '';
+        const shuffled = shuffleArray(activeQ.options);
+        shuffled.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn';
+          btn.textContent = opt;
+          btn.onclick = function () { onChoiceClicked(this); };
+          activeGrid.appendChild(btn);
+        });
+      }
+
+      // 2. Inactive Panel (Blurred waiting state)
+      if (inactiveTopic) inactiveTopic.textContent = 'Waiting for Turn...';
+      if (inactiveEqBox) inactiveEqBox.textContent = '? + ? = ?';
+      if (inactiveFeedback) inactiveFeedback.style.display = 'none';
+      if (inactiveNextBtn) inactiveNextBtn.style.display = 'none';
+      if (inactiveGrid) {
+        inactiveGrid.innerHTML = `
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+        `;
+      }
+    }
+
+    /* ================= ON CHOICE CLICKED ================= */
+    window.onChoiceClicked = function (clickedBtn) {
+      if (state.answered || state.gameOver || state.inLobby) return;
+      state.answered = true;
+      stopTurnTimer();
+
+      const isT1 = (state.currentTurn === 'team1');
+      const activeQ = state.currentActiveQ || (isT1 ? state.questionsTeam1[0] : state.questionsTeam2[0]);
+      if (!activeQ) return;
+
+      const selectedVal = parseInt(clickedBtn.textContent.trim(), 10);
+      const isCorrect = (selectedVal === activeQ.correct);
+
+      const activePanel = document.getElementById(isT1 ? 'team1Panel' : 'team2Panel');
+      const allBtns = activePanel ? activePanel.querySelectorAll('.choice-btn') : [];
+
+      allBtns.forEach(btn => {
+        btn.disabled = true;
+        const val = parseInt(btn.textContent.trim(), 10);
+        if (val === activeQ.correct) {
+          btn.classList.add('correct-pick');
+        } else if (btn === clickedBtn && !isCorrect) {
+          btn.classList.add('wrong-pick');
+        }
+      });
+
+      const feedbackEl = document.getElementById(isT1 ? 'team1Feedback' : 'team2Feedback');
+
+      if (isCorrect) {
+        try { if (window.sound) window.sound.playCorrect(); } catch (e) {}
+
+        if (isT1) {
+          state.ropePosition -= 1;
+          state.team1Score += 1;
+          updateRopeVisual(true, 'team1');
+        } else {
+          state.ropePosition += 1;
+          state.team2Score += 1;
+          updateRopeVisual(true, 'team2');
+        }
+
+        if (feedbackEl) {
+          feedbackEl.className = 'feedback-box correct';
+          feedbackEl.style.display = 'block';
+          feedbackEl.innerHTML = `🎉 <strong>GREAT PULL!</strong> ${activeQ.tip}`;
+        }
+      } else {
+        try { if (window.sound) window.sound.playBuzz(); } catch (e) {}
+
+        if (feedbackEl) {
+          feedbackEl.className = 'feedback-box wrong';
+          feedbackEl.style.display = 'block';
+          feedbackEl.innerHTML = `💦 <strong>MISSED!</strong> Answer: <strong>${activeQ.correct}</strong>. ${activeQ.tip}`;
+        }
+      }
+
+      updateHUD();
+
+      // Knockout check (lead of 4)
+      if (Math.abs(state.ropePosition) >= 4) {
+        setTimeout(() => {
+          finishMatch(state.ropePosition <= -4 ? 'team1_knockout' : 'team2_knockout');
+        }, 1200);
+        return;
+      }
+
+      // Last turn of match
+      const isLastTurn = (state.currentRound === 8 && state.currentTurn === 'team2');
+      const nextTeamName = isT1 ? "Team 2" : "Team 1";
+      triggerTurnTransition(isLastTurn, nextTeamName);
+    };
+
+    /* ================= ADVANCE TURN ================= */
+    window.advanceTurn = function () {
+      clearAutoAdvance();
+      stopTurnTimer();
+      const stadiumBar = document.getElementById('stadiumActionBar');
+      if (stadiumBar) stadiumBar.style.display = 'none';
+
+      try { if (window.sound) window.sound.playPop(); } catch (e) {}
+
+      if (state.currentTurn === 'team1') {
+        state.currentTurn = 'team2';
+        state.qIndexTeam1++;
+      } else {
+        state.currentTurn = 'team1';
+        state.qIndexTeam2++;
+        state.currentRound++;
+      }
+
+      updateHUD();
+      renderCurrentQuestion();
+      if (!state.inLobby && !state.gameOver) {
+        startTurnTimer();
+      }
+    };
+
+    /* ================= FINISH MATCH ================= */
+    function finishMatch(reason) {
+      clearAutoAdvance();
+      stopTurnTimer();
+      state.gameOver = true;
+
+      const stadiumBar = document.getElementById('stadiumActionBar');
+      if (stadiumBar) stadiumBar.style.display = 'none';
+
+      let winner = 'tie';
+      let victoryTitle = "🤝 IT'S A TIE!";
+      let victoryMsg = "Incredible tug of war! Both teams pulled with equal strength!";
+
+      if (reason === 'team1_knockout' || state.ropePosition < 0 || (state.ropePosition === 0 && state.team1Score > state.team2Score)) {
+        winner = 'team1';
+        victoryTitle = "🦁 TEAM 1 (LIONS) WINS!";
+        victoryMsg = (reason === 'team1_knockout')
+          ? "KNOCKOUT VICTORY! Team 1 pulled the rope all the way to their side!"
+          : `Team 1 triumphs with ${state.team1Score} successful pulls!`;
+      } else if (reason === 'team2_knockout' || state.ropePosition > 0 || (state.ropePosition === 0 && state.team2Score > state.team1Score)) {
+        winner = 'team2';
+        victoryTitle = "🐺 TEAM 2 (WOLVES) WINS!";
+        victoryMsg = (reason === 'team2_knockout')
+          ? "KNOCKOUT VICTORY! Team 2 pulled the rope across the center line!"
+          : `Team 2 triumphs with ${state.team2Score} successful pulls!`;
+      }
+
+      try {
+        if (window.sound) window.sound.playFanfare();
+        if (window.AppUtils && window.AppUtils.confetti) {
+          window.AppUtils.confetti({ particleCount: 110, spread: 90 });
+        }
+      } catch (e) {}
+
+      const modal = document.getElementById('victoryModal');
+      const titleEl = document.getElementById('victoryTitle');
+      const msgEl = document.getElementById('victoryMsg');
+      const t1Pill = document.getElementById('victoryT1Pill');
+      const t2Pill = document.getElementById('victoryT2Pill');
+      const mascotWrap = document.getElementById('victoryMascotWrap');
+
+      if (titleEl) titleEl.textContent = victoryTitle;
+      if (msgEl) msgEl.textContent = victoryMsg;
+      if (t1Pill) t1Pill.textContent = `🦁 Team 1: ${state.team1Score} / 8`;
+      if (t2Pill) t2Pill.textContent = `🐺 Team 2: ${state.team2Score} / 8`;
+
+      if (mascotWrap) {
+        if (winner === 'team1') {
+          mascotWrap.innerHTML = `<span class="big-victory-mascot">🦁</span><span class="trophy-badge">🏆</span>`;
+        } else if (winner === 'team2') {
+          mascotWrap.innerHTML = `<span class="big-victory-mascot">🐺</span><span class="trophy-badge">🏆</span>`;
+        } else {
+          mascotWrap.innerHTML = `<span class="big-victory-mascot">🦁 🤝 🐺</span>`;
+        }
+      }
+
+      if (modal) modal.classList.add('active');
+    }
+
+    /* ================= AUDIO TOGGLE ================= */
+    window.toggleAudio = function () {
+      if (window.sound) {
+        window.sound.enabled = !window.sound.enabled;
+        const btn = document.getElementById('soundToggle');
+        if (btn) btn.innerHTML = window.sound.enabled ? '🔊' : '🔇';
+      }
+    };
+
+    // Initialize with Lobby screen active on initial load
+    window.startMatch('set1', true);
+
+  })();
+  </script>
 </body>
 </html>
