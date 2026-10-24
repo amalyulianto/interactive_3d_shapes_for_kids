@@ -42,7 +42,10 @@
           <span class="tab-icon">🔟</span> Add Whole Tens
         </button>
         <button id="tabBtn_split" class="tab-btn" onclick="switchAddMode('split')">
-          <span class="tab-icon">⚡</span> Split Strategy
+          <span class="tab-icon">⚡</span> Double-Split &amp; Column
+        </button>
+        <button id="tabBtn_puzzle" class="tab-btn" onclick="switchAddMode('puzzle')">
+          <span class="tab-icon">🧩</span> Puzzles &amp; Stories
         </button>
         <button id="tabBtn_quiz" class="tab-btn" onclick="switchAddMode('quiz')">
           <span class="tab-icon">🏆</span> Mastery Quiz
@@ -78,7 +81,8 @@
         <select id="mobileActivitySelect" class="mobile-select" onchange="switchAddMode(this.value)">
           <option value="single" selected>➕ Add 1-Digit</option>
           <option value="tens">🔟 Add Whole Tens</option>
-          <option value="split">⚡ Split Strategy</option>
+          <option value="split">⚡ Double-Split &amp; Column</option>
+          <option value="puzzle">🧩 Puzzles &amp; Stories</option>
           <option value="quiz">🏆 Mastery Quiz</option>
         </select>
       </div>
@@ -88,75 +92,146 @@
   <!-- Application Container -->
   <main class="app-container" id="appContainer">
 
-    <!-- ================= VIEW 1: ADD 1-DIGIT & REGROUPING ================= -->
+    <!-- ================= VIEW 1: ADD 1-DIGIT ================= -->
     <section id="view_single" class="view-panel active">
       <div class="add-card">
         <div class="card-header-bar">
           <div class="card-title-group">
             <h2>➕ Adding a 1-Digit Number</h2>
-            <p>Add ones cubes to the place-value mat. When ones reach 10, snap them into a new Ten Rod!</p>
+            <p>Explore Cyrus &amp; Vera's balls problem ($32 + 4$) using Number Line hops and Place Value columns!</p>
           </div>
-          <span class="badge-pill">Base-10 Blocks Lab</span>
+          <span class="badge-pill">Textbook pp. 69–70, 72</span>
         </div>
 
-        <div class="tip-banner">
-          💡 <strong>Teacher Tip:</strong> Add the ones first! If you get 10 or more ones, 10 of them trade for 1 Ten Rod (Regrouping).
+        <!-- Strategy Sub-tabs -->
+        <div class="submode-pill-bar">
+          <button class="submode-pill active" id="singleSub_line" onclick="setSingleSubMode('line')">
+            📏 Number Line Hops (+1)
+          </button>
+          <button class="submode-pill" id="singleSub_mat" onclick="setSingleSubMode('mat')">
+            🧱 Base-10 Mat &amp; Column
+          </button>
+        </div>
+
+        <!-- Alert Tip -->
+        <div class="tip-banner warning" id="singleTipBanner">
+          ⚠️ <strong>Beware!</strong> When you count on using a number line, <strong>do not include the starting number!</strong> Start counting from the next number.
         </div>
 
         <!-- Parent & Teacher Discussion Prompts -->
         <details class="parent-guide-card">
           <summary>💬 <strong>Parent &amp; Teacher Discussion Prompts (Tap to open)</strong></summary>
           <div class="guide-content">
-            <p>🔹 <strong>Ask:</strong> <em>"We have 7 ones and add 5 ones. How many ones is that? (12 ones)."</em></p>
-            <p>🔹 <strong>Ask:</strong> <em>"Can 12 ones fit in the ones column? No! 10 ones trade to make 1 new Ten Rod."</em> (Regrouping intuition).</p>
-            <p>🔹 <strong>Check together:</strong> Watch the 10 loose cubes snap together into a blue rod of 10!</p>
+            <p>🔹 <strong>Ask:</strong> <em>"Cyrus has 32 balls. Vera gives him 4 more balls. How can we find the total? What are two different ways?"</em> (Textbook p. 69)</p>
+            <p>🔹 <strong>Number Line Check:</strong> <em>"Why do we make 4 hops of +1 starting AFTER 32? (33, 34, 35, 36)."</em></p>
+            <p>🔹 <strong>Place Value Check:</strong> <em>"Add the ones first: 2 ones + 4 ones = 6 ones. What happens to the 3 tens? They stay 3 tens = 36!"</em></p>
           </div>
         </details>
 
         <!-- Big Live Equation Card -->
         <div class="add-equation-card">
           <div class="add-equation-main">
-            <span class="val-box num1" id="singleEqNum1">27</span>
+            <span class="val-box num1" id="singleEqNum1">32</span>
             <span class="eq-sign">+</span>
-            <span class="val-box num2" id="singleEqNum2">5</span>
+            <span class="val-box num2" id="singleEqNum2">4</span>
             <span class="eq-sign">=</span>
-            <span class="val-box sum" id="singleEqSum">32</span>
+            <span class="val-box sum" id="singleEqSum">36</span>
           </div>
         </div>
 
-        <!-- Regrouping Action Banner -->
-        <div class="regroup-banner" id="regroupBanner"></div>
-
-        <!-- Place Value Mat -->
-        <div class="place-value-mat">
-          <!-- Tens Column -->
-          <div class="pv-column">
-            <div class="pv-header">
-              <span class="pv-title tens">Tens (Rods of 10)</span>
-              <span class="pv-count-badge tens" id="matTensCount">2 Tens (20)</span>
+        <!-- Submode 1: Interactive Number Line Container -->
+        <div id="singleNumberLineSection" class="number-line-section">
+          <div class="nl-controls-row">
+            <span class="nl-status-text" id="nlSingleStatus">Start at <strong>32</strong>, hop <strong>4</strong> times (+1 each):</span>
+            <div class="nl-btn-group">
+              <button class="action-btn secondary small" onclick="stepSingleHop()">Hop +1 ➔</button>
+              <button class="action-btn secondary small" onclick="resetSingleHops()">↺ Reset</button>
+              <button class="action-btn small" onclick="autoSingleHops()">⚡ Animate All</button>
             </div>
-            <div class="pv-content" id="matTensContent"></div>
+          </div>
+          <div class="number-line-canvas-wrap" id="singleNlWrap">
+            <!-- Dynamically populated SVG Number Line -->
+          </div>
+        </div>
+
+        <!-- Submode 2: Place Value Mat & Column Addition -->
+        <div id="singleMatSection" class="mat-and-column-grid" style="display: none;">
+          <!-- Place Value Mat -->
+          <div class="place-value-mat">
+            <div class="pv-column">
+              <div class="pv-header">
+                <span class="pv-title tens">Tens (Rods of 10)</span>
+                <span class="pv-count-badge tens" id="singleTensCount">3 Tens (30)</span>
+              </div>
+              <div class="pv-content" id="singleTensRack"></div>
+            </div>
+            <div class="pv-column">
+              <div class="pv-header">
+                <span class="pv-title ones">Ones (Loose Cubes)</span>
+                <span class="pv-count-badge ones" id="singleOnesCount">6 Ones</span>
+              </div>
+              <div class="pv-content" id="singleOnesRack"></div>
+            </div>
           </div>
 
-          <!-- Ones Column -->
-          <div class="pv-column">
-            <div class="pv-header">
-              <span class="pv-title ones">Ones (Loose Cubes)</span>
-              <span class="pv-count-badge ones" id="matOnesCount">12 Ones</span>
+          <!-- Vertical Column Step-Through -->
+          <div class="column-addition-card" id="singleColCard">
+            <div class="col-title">Step-by-Step Column Addition</div>
+            <table class="col-add-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="col-th-tens">Tens</th>
+                  <th class="col-th-ones">Ones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-label"></td>
+                  <td class="col-digit tens" id="colSingleT1">3</td>
+                  <td class="col-digit ones" id="colSingleO1">2</td>
+                </tr>
+                <tr class="col-row-add">
+                  <td class="col-plus">+</td>
+                  <td class="col-digit tens" id="colSingleT2"></td>
+                  <td class="col-digit ones" id="colSingleO2">4</td>
+                </tr>
+                <tr class="col-row-sum">
+                  <td class="col-line" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="col-digit tens result" id="colSingleSumT">3</td>
+                  <td class="col-digit ones result" id="colSingleSumO">6</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="col-steps-explainer">
+              <div class="col-step-box step-ones active" id="singleStepOnes">
+                <span class="step-tag">Step 1</span>
+                <strong>First, add the ones:</strong>
+                <span class="step-eq" id="singleStepOnesEq">2 ones + 4 ones = 6 ones</span>
+              </div>
+              <div class="col-step-box step-tens active" id="singleStepTens">
+                <span class="step-tag">Step 2</span>
+                <strong>Then, add the tens:</strong>
+                <span class="step-eq" id="singleStepTensEq">3 tens + 0 tens = 3 tens</span>
+              </div>
             </div>
-            <div class="pv-content" id="matOnesContent"></div>
           </div>
         </div>
 
         <!-- Presets Row -->
-        <div class="presets-container" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">⚡ Practice Problems:</span>
+        <div class="presets-container">
+          <span class="presets-title">⚡ Practice Problems (Textbook p. 69, 70, 72 &amp; Workbook p. 55):</span>
           <div class="presets-chips">
-            <button class="preset-chip" onclick="setSingleProblem(24, 3)">24 + 3 (No Regroup)</button>
-            <button class="preset-chip" onclick="setSingleProblem(45, 4)">45 + 4 (No Regroup)</button>
-            <button class="preset-chip active" onclick="setSingleProblem(27, 5)">27 + 5 (Regroup!)</button>
-            <button class="preset-chip" onclick="setSingleProblem(38, 6)">38 + 6 (Regroup!)</button>
-            <button class="preset-chip" onclick="setSingleProblem(56, 7)">56 + 7 (Regroup!)</button>
+            <button class="preset-chip active" onclick="setSingleProblem(32, 4)">32 + 4 (Cyrus's Balls)</button>
+            <button class="preset-chip" onclick="setSingleProblem(24, 3)">24 + 3</button>
+            <button class="preset-chip" onclick="setSingleProblem(41, 7)">41 + 7</button>
+            <button class="preset-chip" onclick="setSingleProblem(55, 4)">55 + 4</button>
+            <button class="preset-chip" onclick="setSingleProblem(12, 5)">12 + 5 (Connect the Dots)</button>
+            <button class="preset-chip" onclick="setSingleProblem(63, 6)">63 + 6</button>
             <button class="preset-chip" onclick="randomizeSingleProblem()">🎲 New Problem</button>
           </div>
         </div>
@@ -169,159 +244,426 @@
         <div class="card-header-bar">
           <div class="card-title-group">
             <h2>🔟 Adding Whole Tens</h2>
-            <p>Notice what happens when you add tens: only the tens digit increases!</p>
+            <p>Count in $+10$ hops like Ada &amp; Cyrus with hockey sticks ($25 + 30 = 55$)!</p>
           </div>
-          <span class="badge-pill">Place Value Focus</span>
+          <span class="badge-pill">Textbook pp. 71–72</span>
+        </div>
+
+        <!-- Estimation Banner -->
+        <div class="estimation-bubble-row">
+          <div class="mascot-avatar">👧🏽</div>
+          <div class="bubble-speech">
+            💭 <strong>Ada's Estimation Secret:</strong> <em>"Both numbers are big! 30 + 30 = 60, so I estimate we have about <strong>60 hockey sticks</strong>!"</em>
+          </div>
+        </div>
+
+        <!-- Strategy Sub-tabs -->
+        <div class="submode-pill-bar">
+          <button class="submode-pill active" id="tensSub_line" onclick="setTensSubMode('line')">
+            📏 Tens Hopper (+10 Hops)
+          </button>
+          <button class="submode-pill" id="tensSub_mat" onclick="setTensSubMode('mat')">
+            🧱 Tens Place Value &amp; Column
+          </button>
         </div>
 
         <div class="tip-banner">
-          💡 <strong>Key Observation:</strong> Whole tens have 0 ones. So the ones column NEVER changes when you add tens!
+          💡 <strong>Key Observation:</strong> Whole tens have <strong>0 ones</strong>. So the <strong>ones column NEVER changes</strong> when you add whole tens!
         </div>
 
         <!-- Parent & Teacher Discussion Prompts -->
         <details class="parent-guide-card">
           <summary>💬 <strong>Parent &amp; Teacher Discussion Prompts (Tap to open)</strong></summary>
           <div class="guide-content">
-            <p>🔹 <strong>Ask:</strong> <em>"Look at 34 + 20. Does the 4 change? (No, 4 + 0 = 4!)."</em></p>
-            <p>🔹 <strong>Ask:</strong> <em>"What is 3 tens + 2 tens? (5 tens!). So 34 + 20 = 54!"</em></p>
-            <p>🔹 <strong>Rule:</strong> When adding tens, just count by 10s: 34 ➔ 44 ➔ 54!</p>
+            <p>🔹 <strong>Ask:</strong> <em>"Look at 25 + 30. Does the 5 change? Why not? (5 + 0 = 5!)."</em></p>
+            <p>🔹 <strong>Ask:</strong> <em>"What is 2 tens + 3 tens? (5 tens!). So 25 + 30 = 55!"</em></p>
+            <p>🔹 <strong>Hopping Rule:</strong> Hop by 10s: 25 ➔ 35 ➔ 45 ➔ 55!</p>
           </div>
         </details>
 
         <!-- Main Equation Display -->
-        <div class="focus-equation-row" id="tensMainEq">
-          <span class="digit-tens">3</span><span class="digit-ones">4</span> + <span class="digit-tens">20</span> = <span class="digit-tens">5</span><span class="digit-ones">4</span>
-        </div>
-
-        <!-- Breakdown Grid -->
-        <div class="tens-focus-grid">
-          <div class="tens-focus-panel highlight" id="tensRowVisual">
-            <!-- Populated via JS -->
-          </div>
-          <div class="tens-focus-panel" id="onesRowVisual">
-            <!-- Populated via JS -->
+        <div class="add-equation-card">
+          <div class="add-equation-main" id="tensMainEq">
+            <span class="val-box num1" id="tensEqNum1">25</span>
+            <span class="eq-sign">+</span>
+            <span class="val-box num2" id="tensEqNum2">30</span>
+            <span class="eq-sign">=</span>
+            <span class="val-box sum" id="tensEqSum">55</span>
           </div>
         </div>
 
-        <!-- Golden Rule Insight -->
-        <div class="tip-banner" id="tensInsightTip" style="background:#EFF6FF; border-color:#93C5FD; color:#1E3A8A;">
-          <!-- Populated via JS -->
+        <!-- Tens Submode 1: Tens Number Line Hopper -->
+        <div id="tensNumberLineSection" class="number-line-section">
+          <div class="nl-controls-row">
+            <span class="nl-status-text" id="nlTensStatus">Start at <strong>25</strong>, hop <strong>3</strong> times (+10 each):</span>
+            <div class="nl-btn-group">
+              <button class="action-btn secondary small" onclick="stepTensHop()">Hop +10 ➔</button>
+              <button class="action-btn secondary small" onclick="resetTensHops()">↺ Reset</button>
+              <button class="action-btn small" onclick="autoTensHops()">⚡ Animate All</button>
+            </div>
+          </div>
+          <div class="number-line-canvas-wrap" id="tensNlWrap">
+            <!-- Dynamically populated SVG Tens Number Line -->
+          </div>
+        </div>
+
+        <!-- Tens Submode 2: Tens Place Value Mat & Column -->
+        <div id="tensMatSection" class="mat-and-column-grid" style="display: none;">
+          <div class="place-value-mat">
+            <div class="pv-column">
+              <div class="pv-header">
+                <span class="pv-title tens">Tens (Rods of 10)</span>
+                <span class="pv-count-badge tens" id="tensMatCount">5 Tens (50)</span>
+              </div>
+              <div class="pv-content" id="tensMatRack"></div>
+            </div>
+            <div class="pv-column">
+              <div class="pv-header">
+                <span class="pv-title ones">Ones (Loose Cubes)</span>
+                <span class="pv-count-badge ones" id="tensOnesCount">5 Ones (Unchanged!)</span>
+              </div>
+              <div class="pv-content" id="tensOnesRack"></div>
+            </div>
+          </div>
+
+          <!-- Column Table -->
+          <div class="column-addition-card" id="tensColCard">
+            <div class="col-title">Adding Whole Tens Column</div>
+            <table class="col-add-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="col-th-tens">Tens</th>
+                  <th class="col-th-ones">Ones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td class="col-digit tens" id="colTensT1">2</td>
+                  <td class="col-digit ones" id="colTensO1">5</td>
+                </tr>
+                <tr class="col-row-add">
+                  <td class="col-plus">+</td>
+                  <td class="col-digit tens" id="colTensT2">3</td>
+                  <td class="col-digit ones" id="colTensO2">0</td>
+                </tr>
+                <tr class="col-row-sum">
+                  <td class="col-line" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="col-digit tens result" id="colTensSumT">5</td>
+                  <td class="col-digit ones result" id="colTensSumO">5</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="col-steps-explainer">
+              <div class="col-step-box step-ones active">
+                <span class="step-tag">Step 1</span>
+                <strong>Ones stay untouched:</strong>
+                <span class="step-eq" id="tensStepOnesEq">5 ones + 0 ones = 5 ones</span>
+              </div>
+              <div class="col-step-box step-tens active">
+                <span class="step-tag">Step 2</span>
+                <strong>Tens increase:</strong>
+                <span class="step-eq" id="tensStepTensEq">2 tens + 3 tens = 5 tens</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Presets Row -->
-        <div class="presets-container" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">⚡ Practice Problems:</span>
+        <div class="presets-container">
+          <span class="presets-title">⚡ Practice Problems (Textbook pp. 71–72 &amp; Workbook p. 55):</span>
           <div class="presets-chips">
-            <button class="preset-chip active" onclick="setTensProblem(34, 20)">34 + 20</button>
-            <button class="preset-chip" onclick="setTensProblem(23, 30)">23 + 30</button>
-            <button class="preset-chip" onclick="setTensProblem(45, 20)">45 + 20</button>
-            <button class="preset-chip" onclick="setTensProblem(18, 40)">18 + 40</button>
-            <button class="preset-chip" onclick="setTensProblem(52, 30)">52 + 30</button>
+            <button class="preset-chip active" onclick="setTensProblem(25, 30)">25 + 30 (Hockey Sticks)</button>
+            <button class="preset-chip" onclick="setTensProblem(24, 50)">24 + 50</button>
+            <button class="preset-chip" onclick="setTensProblem(41, 30)">41 + 30</button>
+            <button class="preset-chip" onclick="setTensProblem(55, 40)">55 + 40</button>
+            <button class="preset-chip" onclick="setTensProblem(13, 40)">13 + 40</button>
+            <button class="preset-chip" onclick="setTensProblem(50, 40)">50 + 40</button>
             <button class="preset-chip" onclick="randomizeTensProblem()">🎲 New Problem</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ================= VIEW 3: SPLIT STRATEGY ================= -->
+    <!-- ================= VIEW 3: DOUBLE-SPLIT & COLUMN STUDIO ================= -->
     <section id="view_split" class="view-panel">
       <div class="add-card">
         <div class="card-header-bar">
           <div class="card-title-group">
-            <h2>⚡ 2-Digit Split Strategy</h2>
-            <p>Decompose both numbers into tens and ones, add tens first, ones second, then combine!</p>
+            <h2>⚡ Double-Split &amp; Column Addition</h2>
+            <p>Break both numbers into tens and ones bonds as in Workbook p. 53 &amp; Textbook p. 73!</p>
           </div>
-          <span class="badge-pill">Mental Math Method</span>
+          <span class="badge-pill">Workbook 4 (p. 53)</span>
         </div>
 
-        <div class="tip-banner">
-          💡 <strong>Mental Math Secret:</strong> Split each number into Tens and Ones. Adding $30 + 20$ is easy, and adding $5 + 4$ is easy!
+        <!-- Context Banner -->
+        <div class="tip-banner" style="background:#EEF2FF; border-color:#C7D2FE; color:#312E81;">
+          ✏️ <strong>Ada's Erasers Story:</strong> <em>Ada's sister has 21 erasers. Ada has 17 erasers more than her sister. How many erasers does Ada have? $21 + 17 = 38$!</em>
         </div>
 
         <!-- Parent & Teacher Discussion Prompts -->
         <details class="parent-guide-card">
           <summary>💬 <strong>Parent &amp; Teacher Discussion Prompts (Tap to open)</strong></summary>
           <div class="guide-content">
-            <p>🔹 <strong>Ask:</strong> <em>"How do we break 35 into friendly pieces? (30 and 5). And 24? (20 and 4)."</em></p>
-            <p>🔹 <strong>Ask:</strong> <em>"Add the big parts first: 30 + 20 = 50. Add the small parts: 5 + 4 = 9. Total = 59!"</em></p>
-            <p>🔹 <strong>Why this helps:</strong> This strategy allows kids to do two-digit addition in their head without pencil and paper!</p>
+            <p>🔹 <strong>Ask:</strong> <em>"Should we count on using a number line for 21 + 17? Why or why not?"</em> (Textbook p. 73 Maths Talk: No, because hopping 17 times takes too long! Place value splitting is much faster!).</p>
+            <p>🔹 <strong>Step 1:</strong> Split both numbers: $21 \to (20 + 1)$ and $17 \to (10 + 7)$.</p>
+            <p>🔹 <strong>Step 2:</strong> Add ones: $1 + 7 = 8$. Add tens: $20 + 10 = 30$.</p>
+            <p>🔹 <strong>Step 3:</strong> Combine tens and ones: $30 + 8 = 38$!</p>
           </div>
         </details>
 
         <!-- Big Live Equation Card -->
         <div class="add-equation-card">
           <div class="add-equation-main" id="splitMainEq">
-            35 + 24 = 59
+            <span class="val-box num1" id="splitValA">21</span>
+            <span class="eq-sign">+</span>
+            <span class="val-box num2" id="splitValB">13</span>
+            <span class="eq-sign">=</span>
+            <span class="val-box sum" id="splitValSum">34</span>
           </div>
         </div>
 
-        <!-- Step-by-Step Cards -->
-        <div class="split-steps-wrapper">
-          <!-- Step 1 -->
-          <div class="split-step-card">
-            <div class="step-num-bubble">1</div>
-            <div class="step-content">
-              <div class="step-title">Split both numbers into Tens and Ones:</div>
-              <div class="step-math" id="step1Math">Split 35 ➔ (30 + 5) • Split 24 ➔ (20 + 4)</div>
+        <!-- Split Tree and Column Studio Layout -->
+        <div class="split-studio-container">
+          <!-- The Authentic Workbook Double-Split Tree -->
+          <div class="split-tree-card">
+            <div class="split-tree-title">Workbook 4 Double-Split Tree</div>
+            
+            <div class="split-tree-svg-wrap" id="splitTreeSvgWrap">
+              <!-- Dynamically populated SVG Tree with branching lines and circular bubbles -->
+            </div>
+
+            <!-- Stepped Breakdown Sentences (Authentic Workbook Format) -->
+            <div class="workbook-fill-box">
+              <div class="fill-line" id="wbLine1">
+                <span class="fill-label">Add the ones:</span>
+                <span class="fill-math" id="wbOnesMath">1 + 3 = <strong>4</strong></span>
+              </div>
+              <div class="fill-line" id="wbLine2">
+                <span class="fill-label">Add the tens:</span>
+                <span class="fill-math" id="wbTensMath">20 + 10 = <strong>30</strong></span>
+              </div>
+              <div class="fill-line total" id="wbLine3">
+                <span class="fill-label">So,</span>
+                <span class="fill-math" id="wbTotalMath">30 + 4 = <strong>34</strong> 🎉</span>
+              </div>
             </div>
           </div>
 
-          <!-- Step 2 -->
-          <div class="split-step-card">
-            <div class="step-num-bubble">2</div>
-            <div class="step-content">
-              <div class="step-title">Add the Tens:</div>
-              <div class="step-math" id="step2Math">30 + 20 = 50</div>
-            </div>
-          </div>
+          <!-- Synchronized Column Card -->
+          <div class="column-addition-card" style="align-self: flex-start;">
+            <div class="col-title">Vertical Place Values</div>
+            <table class="col-add-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="col-th-tens">Tens</th>
+                  <th class="col-th-ones">Ones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td class="col-digit tens" id="colSplitT1">2</td>
+                  <td class="col-digit ones" id="colSplitO1">1</td>
+                </tr>
+                <tr class="col-row-add">
+                  <td class="col-plus">+</td>
+                  <td class="col-digit tens" id="colSplitT2">1</td>
+                  <td class="col-digit ones" id="colSplitO2">3</td>
+                </tr>
+                <tr class="col-row-sum">
+                  <td class="col-line" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="col-digit tens result" id="colSplitSumT">3</td>
+                  <td class="col-digit ones result" id="colSplitSumO">4</td>
+                </tr>
+              </tbody>
+            </table>
 
-          <!-- Step 3 -->
-          <div class="split-step-card">
-            <div class="step-num-bubble">3</div>
-            <div class="step-content">
-              <div class="step-title">Add the Ones:</div>
-              <div class="step-math" id="step3Math">5 + 4 = 9</div>
-            </div>
-          </div>
-
-          <!-- Step 4 -->
-          <div class="split-step-card" style="border-color:#10B981; background:#F0FDF4;">
-            <div class="step-num-bubble" style="background:linear-gradient(135deg, #059669, #10B981);">4</div>
-            <div class="step-content">
-              <div class="step-title">Combine the Tens and Ones:</div>
-              <div class="step-math" id="step4Math">50 + 9 = 59 🎉</div>
+            <div class="col-steps-explainer">
+              <div class="col-step-box step-ones active">
+                <span class="step-tag">Step 1</span>
+                <strong>Add Ones:</strong>
+                <span class="step-eq" id="colSplitStep1">1 one + 3 ones = 4 ones</span>
+              </div>
+              <div class="col-step-box step-tens active">
+                <span class="step-tag">Step 2</span>
+                <strong>Add Tens:</strong>
+                <span class="step-eq" id="colSplitStep2">2 tens + 1 ten = 3 tens</span>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Presets Row -->
-        <div class="presets-container" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">⚡ Practice Problems:</span>
+        <div class="presets-container">
+          <span class="presets-title">⚡ Practice Problems from Workbook 4 (p. 53) &amp; Textbook (pp. 73–74):</span>
           <div class="presets-chips">
-            <button class="preset-chip active" onclick="setSplitProblem(35, 24)">35 + 24</button>
-            <button class="preset-chip" onclick="setSplitProblem(23, 14)">23 + 14</button>
-            <button class="preset-chip" onclick="setSplitProblem(42, 36)">42 + 36</button>
-            <button class="preset-chip" onclick="setSplitProblem(51, 27)">51 + 27</button>
-            <button class="preset-chip" onclick="setSplitProblem(63, 25)">63 + 25</button>
+            <button class="preset-chip active" onclick="setSplitProblem(21, 13)">21 + 13 (Wb 4 Q1a)</button>
+            <button class="preset-chip" onclick="setSplitProblem(47, 32)">47 + 32 (Wb 4 Q1b)</button>
+            <button class="preset-chip" onclick="setSplitProblem(15, 41)">15 + 41 (Wb 4 Q1c)</button>
+            <button class="preset-chip" onclick="setSplitProblem(33, 64)">33 + 64 (Wb 4 Q1d)</button>
+            <button class="preset-chip" onclick="setSplitProblem(21, 17)">21 + 17 (Ada's Erasers)</button>
+            <button class="preset-chip" onclick="setSplitProblem(43, 25)">43 + 25 (Textbook p. 74)</button>
+            <button class="preset-chip" onclick="setSplitProblem(23, 61)">23 + 61 (Textbook p. 74)</button>
             <button class="preset-chip" onclick="randomizeSplitProblem()">🎲 New Problem</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ================= VIEW 4: MASTERY QUIZ ================= -->
+    <!-- ================= VIEW 4: PUZZLE MATCH & STORIES ================= -->
+    <section id="view_puzzle" class="view-panel">
+      <div class="add-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🧩 Puzzles &amp; Real-World Story Lab</h2>
+            <p>Jigsaw puzzle connections, Mrs. Jones' chicken pies, and digit-tile place value puzzles!</p>
+          </div>
+          <span class="badge-pill">Workbook p. 54 &amp; Textbook p. 74</span>
+        </div>
+
+        <!-- Puzzle Activity Tabs -->
+        <div class="submode-pill-bar">
+          <button class="submode-pill active" id="puzSub_match" onclick="setPuzzleSubMode('match')">
+            🧩 Jigsaw Puzzle Matcher
+          </button>
+          <button class="submode-pill" id="puzSub_story" onclick="setPuzzleSubMode('story')">
+            🥧 Story Problems Lab
+          </button>
+          <button class="submode-pill" id="puzSub_tiles" onclick="setPuzzleSubMode('tiles')">
+            🔢 2, 3, 4, 5 Digit Tile Challenge
+          </button>
+        </div>
+
+        <!-- SECTION A: JIGSAW PUZZLE MATCHER -->
+        <div id="puzzleMatchSection" class="puzzle-section-wrap">
+          <div class="tip-banner">
+            🧩 <strong>Workbook 4 (p. 54 Q2):</strong> Tap a blue addition puzzle piece, then tap its matching pink answer piece to snap them together!
+          </div>
+
+          <div class="puzzle-board" id="puzzleBoard">
+            <!-- Left Pieces (Sums) -->
+            <div class="puzzle-column" id="puzzleLeftCol"></div>
+            <!-- Center Connection Line Canvas -->
+            <div class="puzzle-center-indicator" id="puzzleCenterStatus">Select a piece</div>
+            <!-- Right Pieces (Answers) -->
+            <div class="puzzle-column" id="puzzleRightCol"></div>
+          </div>
+
+          <div class="puzzle-footer-actions">
+            <span class="puzzle-progress-text" id="puzzleProgress">Matched: 0 / 4</span>
+            <button class="action-btn secondary small" onclick="resetPuzzleMatcher()">↺ Reset Puzzle</button>
+          </div>
+        </div>
+
+        <!-- SECTION B: REAL-WORLD STORIES -->
+        <div id="puzzleStorySection" class="puzzle-section-wrap" style="display: none;">
+          <div class="story-carousel-nav">
+            <button class="story-tab active" id="storyTab1" onclick="selectStoryProblem(1)">🥧 Mrs. Jones' Chicken Pies</button>
+            <button class="story-tab" id="storyTab2" onclick="selectStoryProblem(2)">✏️ Gerald &amp; June's Pencils</button>
+            <button class="story-tab" id="storyTab3" onclick="selectStoryProblem(3)">🪑 Mr. Chan's Chairs</button>
+          </div>
+
+          <div class="story-problem-card" id="storyProblemCard">
+            <!-- Dynamically populated story problem card -->
+          </div>
+        </div>
+
+        <!-- SECTION C: 2, 3, 4, 5 DIGIT TILE CHALLENGE -->
+        <div id="puzzleTilesSection" class="puzzle-section-wrap" style="display: none;">
+          <div class="tip-banner" style="background:#FFFBEB; border-color:#FDE68A; color:#92400E;">
+            🧠 <strong>Workbook 4 (p. 54 Q4) Challenge:</strong> Use the digits <strong>2, 3, 4 and 5</strong> once each to form two 2-digit numbers. Find their sum!
+          </div>
+
+          <div class="digit-challenge-container">
+            <div class="mascot-avatar" style="font-size:2.5rem;">🧒🏻</div>
+            <div class="bubble-speech">
+              💬 <strong>Mascot Clue:</strong> <em>"Should the largest digits (5 and 4) be placed in the <strong>TENS</strong> place or the <strong>ONES</strong> place to get the largest possible sum?"</em>
+            </div>
+
+            <!-- Movable Digit Tiles Rack -->
+            <div class="tiles-pool-row">
+              <span class="tiles-pool-label">Available Digits:</span>
+              <div class="tiles-rack" id="digitTilesRack">
+                <button class="digit-tile" data-val="2" onclick="pickTile('2')">2</button>
+                <button class="digit-tile" data-val="3" onclick="pickTile('3')">3</button>
+                <button class="digit-tile" data-val="4" onclick="pickTile('4')">4</button>
+                <button class="digit-tile" data-val="5" onclick="pickTile('5')">5</button>
+              </div>
+              <button class="action-btn secondary small" onclick="resetDigitTiles()">↺ Reset Tiles</button>
+            </div>
+
+            <!-- Target 2-Digit Equation Slots -->
+            <div class="tile-slots-grid">
+              <div class="tile-addend-box">
+                <span class="slot-row-label">First Number:</span>
+                <div class="slot-pair">
+                  <div class="digit-slot tens" id="slotA_tens" onclick="placeInSlot('slotA_tens')">
+                    <span class="slot-hint">Tens</span>
+                  </div>
+                  <div class="digit-slot ones" id="slotA_ones" onclick="placeInSlot('slotA_ones')">
+                    <span class="slot-hint">Ones</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slot-plus-sign">+</div>
+
+              <div class="tile-addend-box">
+                <span class="slot-row-label">Second Number:</span>
+                <div class="slot-pair">
+                  <div class="digit-slot tens" id="slotB_tens" onclick="placeInSlot('slotB_tens')">
+                    <span class="slot-hint">Tens</span>
+                  </div>
+                  <div class="digit-slot ones" id="slotB_ones" onclick="placeInSlot('slotB_ones')">
+                    <span class="slot-hint">Ones</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slot-equals-sign">=</div>
+
+              <div class="tile-sum-box">
+                <span class="slot-row-label">Their Sum:</span>
+                <div class="tile-sum-val" id="tileTotalSum">--</div>
+              </div>
+            </div>
+
+            <div class="tile-challenge-feedback" id="tileFeedback">
+              Tap an available digit above, then tap an empty Tens or Ones slot!
+            </div>
+
+            <div class="tile-actions-row">
+              <button class="action-btn" onclick="revealBestTileSum()">💡 Reveal Maximum Sum</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= VIEW 5: MASTERY QUIZ ================= -->
     <section id="view_quiz" class="view-panel">
       <div class="add-card">
         <div class="card-header-bar">
           <div class="card-title-group">
             <h2>🏆 2-Digit Addition Mastery Quiz</h2>
-            <p>Put all your new addition skills to the test across 4 graded challenge levels!</p>
+            <p>Test your knowledge with 4 graded levels strictly without regrouping (Workbook p. 55 &amp; Textbook pp. 70–74)!</p>
           </div>
           <div class="quiz-level-selector">
-            <button class="level-btn active" data-level="1" onclick="startQuiz(1)">Level 1: 1-Digit (No Regroup)</button>
-            <button class="level-btn" data-level="2" onclick="startQuiz(2)">Level 2: Adding Tens</button>
-            <button class="level-btn" data-level="3" onclick="startQuiz(3)">Level 3: 1-Digit Regrouping</button>
-            <button class="level-btn" data-level="4" onclick="startQuiz(4)">Level 4: 2-Digit Split</button>
+            <button class="level-btn active" data-level="1" onclick="startQuiz(1)">Level 1: Add 1-Digit</button>
+            <button class="level-btn" data-level="2" onclick="startQuiz(2)">Level 2: Add Tens</button>
+            <button class="level-btn" data-level="3" onclick="startQuiz(3)">Level 3: 2-Digit Split</button>
+            <button class="level-btn" data-level="4" onclick="startQuiz(4)">Level 4: Word Problems</button>
           </div>
         </div>
 
@@ -334,7 +676,7 @@
 
           <div class="quiz-question-box">
             <h3 class="quiz-question-prompt" id="quizPrompt">Add a 1-digit number:</h3>
-            <div class="quiz-question-visual" id="quizVisual">43 + 5 = [ ? ]</div>
+            <div class="quiz-question-visual" id="quizVisual">32 + 4 = [ ? ]</div>
           </div>
 
           <div class="quiz-options-grid" id="quizOptions"></div>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Duel Arena | Standalone Multiplayer Game</title>
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/duel.css">
+</head>
+<body>
+
+  <!-- ================= TOP MAIN HEADER ================= -->
+  <header class="main-header">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">🏆</div>
+      <div class="brand-text">
+        <h1>Quiz Duel Arena</h1>
+        <span class="studio-badge">Team Battle Mode</span>
+      </div>
+    </div>
+
+    <!-- Match Controls -->
+    <div class="header-controls">
+      <div class="match-selector-bar" role="group" aria-label="Select Match">
+        <button id="btnLobby" class="match-select-btn" onclick="openLobby()" title="Change Match &amp; Timer Settings">⚙️ Setup</button>
+        <button id="btnSet1" class="match-select-btn active" onclick="startMatch('set1', false)">Match 1</button>
+        <button id="btnSet2" class="match-select-btn" onclick="startMatch('set2', false)">Match 2</button>
+        <button id="btnShuffle" class="match-select-btn" onclick="startMatch('shuffle', false)">🎲 Shuffle</button>
+      </div>
+
+      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= 3-COLUMN ARENA LAYOUT ================= -->
+  <main class="arena-workspace">
+
+    <!-- ================= COLUMN 1: TEAM 1 (LIONS - BLUE) ================= -->
+    <section class="team-panel team1-panel active-turn" id="team1Panel" aria-label="Team 1 Panel">
+      <div class="team-header">
+        <span class="turn-pill-badge" id="team1TurnBadge">YOUR TURN</span>
+        <span class="team-label">🦁 Team 1</span>
+        <div class="team-score-circle" id="team1ScoreCircle">0</div>
+      </div>
+
+      <div class="team-body">
+        <div class="topic-tag" id="team1TopicTag">Question Category</div>
+        
+        <div class="equation-box" id="team1EquationBox">
+          Loading Question...
+        </div>
+
+        <div class="options-grid" id="team1OptionsGrid">
+          <button class="choice-btn" onclick="onChoiceClicked(this)">A</button>
+          <button class="choice-btn" onclick="onChoiceClicked(this)">B</button>
+          <button class="choice-btn" onclick="onChoiceClicked(this)">C</button>
+          <button class="choice-btn" onclick="onChoiceClicked(this)">D</button>
+        </div>
+
+        <div class="feedback-box" id="team1Feedback"></div>
+
+        <button class="turn-next-btn" id="team1NextBtn" onclick="advanceTurn()">
+          Next Turn ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= COLUMN 2: CENTER STADIUM FIELD ================= -->
+    <section class="stadium-panel" id="stadiumPanel" aria-label="Battle Stadium Arena">
+      <!-- Top HUD Bar -->
+      <div class="stadium-hud-bar">
+        <div class="hud-team-score left">
+          <span class="hud-team-label">Team 1</span>
+          <span class="hud-team-val" id="hudTeam1Score">0</span>
+        </div>
+
+        <div class="hud-center-group">
+          <span class="hud-round-pill" id="hudRoundText">Round 1 of 8</span>
+          <span class="hud-timer-pill" id="hudTimerPill">⏱️ Untimed</span>
+        </div>
+
+        <div class="hud-team-score right">
+          <span class="hud-team-label">Team 2</span>
+          <span class="hud-team-val" id="hudTeam2Score">0</span>
+        </div>
+      </div>
+
+      <!-- Stage with Clean Vector Tug of War Artwork -->
+      <div class="stadium-stage">
+        <svg id="stadiumSvg" class="stadium-svg idle" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet">
+          <!-- Center Vertical Dashed Line -->
+          <line x1="320" y1="15" x2="320" y2="275" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6,6" />
+
+          <!-- Soft Green Turf Hill -->
+          <path d="M 0 240 Q 320 228 640 240 L 640 300 L 0 300 Z" fill="#BBF7D0" />
+          <path d="M 0 256 Q 320 244 640 256 L 640 300 L 0 300 Z" fill="#86EFAC" />
+
+          <!-- TUG SYSTEM RIG (Translate left or right smoothly) -->
+          <g id="tugSystem" class="tug-system">
+
+            <!-- ================= TEAM 1 (BLUE ATHLETES) ================= -->
+            <g id="blueAthletes" class="athlete-group blue-team">
+              <!-- Back Blue Athlete -->
+              <g transform="translate(135, 130)">
+                <circle cx="10" cy="18" r="16" fill="#FDE047" stroke="#D97706" stroke-width="2" />
+                <path d="M -4 10 Q 10 -2 24 10 L 26 18 L -6 18 Z" fill="#1E88E5" />
+                <circle cx="2" cy="5" r="4" fill="#F59E0B" />
+                <circle cx="18" cy="5" r="4" fill="#F59E0B" />
+                <circle cx="16" cy="19" r="2.5" fill="#0F172A" />
+                <path d="M -8 32 L 28 26 L 42 78 L 0 84 Z" fill="#1E88E5" rx="4" />
+                <path d="M 2 34 L 14 32 L 20 54 L 8 56 Z" fill="#FBBF24" />
+                <line x1="6" y1="84" x2="-14" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <line x1="34" y1="80" x2="16" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <ellipse cx="-18" cy="130" rx="10" ry="5" fill="#2563EB" />
+                <ellipse cx="12" cy="130" rx="10" ry="5" fill="#2563EB" />
+                <path d="M 10 44 Q 30 50 48 58" stroke="#FDE047" stroke-width="8" stroke-linecap="round" fill="none" />
+                <circle cx="48" cy="58" r="5" fill="#D97706" />
+              </g>
+
+              <!-- Front Blue Athlete -->
+              <g transform="translate(215, 130)">
+                <circle cx="10" cy="18" r="16" fill="#FDE047" stroke="#D97706" stroke-width="2" />
+                <path d="M -4 10 Q 10 -2 24 10 L 26 18 L -6 18 Z" fill="#1E88E5" />
+                <circle cx="2" cy="5" r="4" fill="#F59E0B" />
+                <circle cx="18" cy="5" r="4" fill="#F59E0B" />
+                <circle cx="16" cy="19" r="2.5" fill="#0F172A" />
+                <path d="M -8 32 L 28 26 L 42 78 L 0 84 Z" fill="#1E88E5" rx="4" />
+                <path d="M 2 34 L 14 32 L 20 54 L 8 56 Z" fill="#FBBF24" />
+                <line x1="6" y1="84" x2="-14" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <line x1="34" y1="80" x2="16" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <ellipse cx="-18" cy="130" rx="10" ry="5" fill="#2563EB" />
+                <ellipse cx="12" cy="130" rx="10" ry="5" fill="#2563EB" />
+                <path d="M 10 44 Q 32 50 50 58" stroke="#FDE047" stroke-width="8" stroke-linecap="round" fill="none" />
+                <circle cx="50" cy="58" r="5" fill="#D97706" />
+              </g>
+            </g>
+
+            <!-- ================= THE ROPE & ROCK-SOLID CENTER RIBBON ================= -->
+            <g id="ropeAndFlag" class="rope-group">
+              <path d="M 60 200 Q 120 190 180 188" stroke="#1E293B" stroke-width="6" stroke-linecap="round" fill="none" />
+              <line x1="170" y1="188" x2="470" y2="188" stroke="#0F172A" stroke-width="7" stroke-linecap="round" />
+              <path d="M 460 188 Q 520 190 580 200" stroke="#1E293B" stroke-width="6" stroke-linecap="round" fill="none" />
+
+              <g id="centerRibbonFlag" transform="translate(320, 188)">
+                <polygon points="-12,0 12,0 15,36 0,26 -15,36" fill="#DC2626" stroke="#FFFFFF" stroke-width="1.5" />
+                <circle cx="0" cy="1" r="4" fill="#FBBF24" />
+              </g>
+            </g>
+
+            <!-- ================= TEAM 2 (RED ATHLETES) ================= -->
+            <g id="redAthletes" class="athlete-group red-team">
+              <!-- Front Red Athlete -->
+              <g transform="translate(380, 130)">
+                <polygon points="4,2 10,-6 14,3" fill="#64748B" />
+                <polygon points="20,2 26,-6 30,3" fill="#64748B" />
+                <circle cx="16" cy="18" r="16" fill="#CBD5E1" stroke="#64748B" stroke-width="2" />
+                <path d="M 2 10 Q 16 -2 30 10 L 32 18 L 0 18 Z" fill="#D32F2F" />
+                <circle cx="10" cy="19" r="2.5" fill="#0F172A" />
+                <path d="M -2 26 L 34 32 L 26 84 L -16 78 Z" fill="#D32F2F" rx="4" />
+                <path d="M 12 32 L 24 34 L 18 56 L 6 54 Z" fill="#FBBF24" />
+                <line x1="-8" y1="80" x2="10" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <line x1="20" y1="84" x2="40" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <ellipse cx="14" cy="130" rx="10" ry="5" fill="#DC2626" />
+                <ellipse cx="44" cy="130" rx="10" ry="5" fill="#DC2626" />
+                <path d="M 16 44 Q -6 50 -24 58" stroke="#CBD5E1" stroke-width="8" stroke-linecap="round" fill="none" />
+                <circle cx="-24" cy="58" r="5" fill="#64748B" />
+              </g>
+
+              <!-- Back Red Athlete -->
+              <g transform="translate(460, 130)">
+                <path d="M 28 70 Q 48 64 52 82 Q 44 94 28 86" fill="#64748B" stroke="#475569" stroke-width="1.5" />
+                <polygon points="4,2 10,-6 14,3" fill="#64748B" />
+                <polygon points="20,2 26,-6 30,3" fill="#64748B" />
+                <circle cx="16" cy="18" r="16" fill="#CBD5E1" stroke="#64748B" stroke-width="2" />
+                <path d="M 2 10 Q 16 -2 30 10 L 32 18 L 0 18 Z" fill="#D32F2F" />
+                <circle cx="10" cy="19" r="2.5" fill="#0F172A" />
+                <path d="M -2 26 L 34 32 L 26 84 L -16 78 Z" fill="#D32F2F" rx="4" />
+                <path d="M 12 32 L 24 34 L 18 56 L 6 54 Z" fill="#FBBF24" />
+                <line x1="-8" y1="80" x2="10" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <line x1="20" y1="84" x2="40" y2="128" stroke="#0F172A" stroke-width="10" stroke-linecap="round" />
+                <ellipse cx="14" cy="130" rx="10" ry="5" fill="#DC2626" />
+                <ellipse cx="44" cy="130" rx="10" ry="5" fill="#DC2626" />
+                <path d="M 16 44 Q -6 50 -24 58" stroke="#CBD5E1" stroke-width="8" stroke-linecap="round" fill="none" />
+                <circle cx="-24" cy="58" r="5" fill="#64748B" />
+              </g>
+            </g>
+
+          </g>
+        </svg>
+      </div>
+
+      <!-- Prominent Center Stadium Action Bar (Visible upon answering / timeout) -->
+      <div class="stadium-action-bar" id="stadiumActionBar" style="display: none;">
+        <button class="stadium-next-btn" id="stadiumNextBtn" onclick="advanceTurn()">
+          Next Turn ➔
+        </button>
+      </div>
+
+      <!-- ================= START MATCH LOBBY OVERLAY ================= -->
+      <div class="start-lobby-overlay" id="startLobbyOverlay">
+        <div class="start-lobby-card">
+          <div class="lobby-title-row">
+            <span class="lobby-mascot-icon">⚔️</span>
+            <h2 class="lobby-title">Quiz Duel Setup</h2>
+          </div>
+
+          <div class="lobby-teams-duel-badge">
+            <span class="lobby-team-tag t1">🦁 Team 1 (Blue)</span>
+            <span style="color:#64748B; font-weight:900;">VS</span>
+            <span class="lobby-team-tag t2">🐺 Team 2 (Red)</span>
+          </div>
+
+          <!-- Turn Timer Selection -->
+          <div class="lobby-section-title">⏱️ Turn Timer</div>
+          <div class="timer-options-row">
+            <button class="timer-choice-btn active" data-time="0" onclick="selectTurnTimer(0)">Untimed</button>
+            <button class="timer-choice-btn" data-time="15" onclick="selectTurnTimer(15)">15s</button>
+            <button class="timer-choice-btn" data-time="20" onclick="selectTurnTimer(20)">20s</button>
+            <button class="timer-choice-btn" data-time="25" onclick="selectTurnTimer(25)">25s</button>
+            <button class="timer-choice-btn" data-time="30" onclick="selectTurnTimer(30)">30s</button>
+          </div>
+
+          <!-- Question Set Selection -->
+          <div class="lobby-section-title">📜 Question Set</div>
+          <div class="lobby-matches-row">
+            <button class="lobby-match-btn active" data-set="set1" onclick="selectLobbyMatchSet('set1')">Match 1</button>
+            <button class="lobby-match-btn" data-set="set2" onclick="selectLobbyMatchSet('set2')">Match 2</button>
+            <button class="lobby-match-btn" data-set="shuffle" onclick="selectLobbyMatchSet('shuffle')">🎲 Shuffle</button>
+          </div>
+
+          <!-- Big Start Button -->
+          <button class="big-start-duel-btn" onclick="startDuelFromLobby()">
+            🚀 START MATCH!
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= COLUMN 3: TEAM 2 (WOLVES - RED) ================= -->
+    <section class="team-panel team2-panel inactive-turn" id="team2Panel" aria-label="Team 2 Panel">
+      <div class="team-header">
+        <span class="turn-pill-badge" id="team2TurnBadge">YOUR TURN</span>
+        <span class="team-label">🐺 Team 2</span>
+        <div class="team-score-circle" id="team2ScoreCircle">0</div>
+      </div>
+
+      <div class="team-body">
+        <div class="topic-tag" id="team2TopicTag">Waiting for Turn...</div>
+        
+        <div class="equation-box" id="team2EquationBox">
+          ? + ? = ?
+        </div>
+
+        <div class="options-grid" id="team2OptionsGrid">
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+          <button class="choice-btn" disabled>?</button>
+        </div>
+
+        <div class="feedback-box" id="team2Feedback"></div>
+
+        <button class="turn-next-btn" id="team2NextBtn" onclick="advanceTurn()">
+          Next Turn ➔
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= VICTORY MODAL ================= -->
+  <div class="victory-modal-overlay" id="victoryModal">
+    <div class="victory-card">
+      <div class="victory-mascot-wrap" id="victoryMascotWrap">
+        <span class="big-victory-mascot">🦁</span>
+        <span class="trophy-badge">🏆</span>
+      </div>
+      <h2 class="victory-title" id="victoryTitle">🦁 TEAM 1 WINS!</h2>
+      <p class="victory-msg" id="victoryMsg">
+        Incredible performance! Team 1 pulled through with tremendous teamwork!
+      </p>
+
+      <div class="victory-scores-row" id="victoryScores">
+        <div class="final-score-pill lion-pill" id="victoryT1Pill">🦁 Team 1: 6 / 8</div>
+        <div class="final-score-pill wolf-pill" id="victoryT2Pill">🐺 Team 2: 4 / 8</div>
+      </div>
+
+      <div class="victory-actions">
+        <button class="victory-btn primary" onclick="startMatch('set2', false)">
+          ⚔️ Play Match 2 (Rematch!)
+        </button>
+        <button class="victory-btn secondary" onclick="startMatch('set1', false)">
+          🔄 Play Match 1 Again
+        </button>
+        <button class="victory-btn secondary" onclick="startMatch('shuffle', false)">
+          🎲 Shuffle Questions
+        </button>
+        <button class="victory-btn secondary" onclick="openLobby()">
+          ⚙️ Change Settings &amp; Timer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Sound & Confetti -->
+  <script src="js/sound.js"></script>
+  <script src="js/confetti.js"></script>
+
+  <!-- 2. Question Data Provider (Swap with your backend API) -->
+  <script src="js/questions.js"></script>
+
+  <!-- 3. Core Game Engine -->
+  <script src="js/engine.js"></script>
+
+</body>
+</html>

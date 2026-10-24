@@ -28,6 +28,8 @@
         <button id="btnLobby" class="match-select-btn" onclick="openLobby()" title="Change Match &amp; Timer Settings">⚙️ Setup</button>
         <button id="btnSet1" class="match-select-btn active" onclick="startMatch('set1', false)">Match 1</button>
         <button id="btnSet2" class="match-select-btn" onclick="startMatch('set2', false)">Match 2</button>
+        <button id="btnSet3" class="match-select-btn" onclick="startMatch('set3', false)">Match 3</button>
+        <button id="btnSet4" class="match-select-btn" onclick="startMatch('set4', false)">Match 4</button>
         <button id="btnShuffle" class="match-select-btn" onclick="startMatch('shuffle', false)">🎲 Shuffle All</button>
       </div>
 
@@ -59,8 +61,10 @@
         <label for="mobileMatchSelect" class="mobile-select-label">⚔️ Match:</label>
         <select id="mobileMatchSelect" class="mobile-select" onchange="if(this.value==='setup'){openLobby();}else{startMatch(this.value, false);}">
           <option value="setup">⚙️ Match &amp; Timer Setup</option>
-          <option value="set1" selected>Match 1 (Curated 16 Qs)</option>
+          <option value="set1" selected>Match 1 (Bonds to 20 &amp; 100)</option>
           <option value="set2">Match 2 (Rematch 16 Qs)</option>
+          <option value="set3">Match 3 (2-Digit Addition Part 1)</option>
+          <option value="set4">Match 4 (2-Digit Addition Part 2)</option>
           <option value="shuffle">🎲 Shuffle All Questions</option>
         </select>
       </div>
@@ -283,9 +287,11 @@
           <!-- Question Set Selection -->
           <div class="lobby-section-title">📜 Question Set</div>
           <div class="lobby-matches-row">
-            <button class="lobby-match-btn active" data-set="set1" onclick="selectLobbyMatchSet('set1')">Match 1</button>
-            <button class="lobby-match-btn" data-set="set2" onclick="selectLobbyMatchSet('set2')">Match 2</button>
-            <button class="lobby-match-btn" data-set="shuffle" onclick="selectLobbyMatchSet('shuffle')">🎲 Shuffle</button>
+            <button class="lobby-match-btn active" data-set="set1" onclick="selectLobbyMatchSet('set1')">Match 1 (Bonds)</button>
+            <button class="lobby-match-btn" data-set="set2" onclick="selectLobbyMatchSet('set2')">Match 2 (Tens)</button>
+            <button class="lobby-match-btn" data-set="set3" onclick="selectLobbyMatchSet('set3')">Match 3 (2-Digit Part 1)</button>
+            <button class="lobby-match-btn" data-set="set4" onclick="selectLobbyMatchSet('set4')">Match 4 (2-Digit Part 2)</button>
+            <button class="lobby-match-btn" data-set="shuffle" onclick="selectLobbyMatchSet('shuffle')">🎲 Shuffle All</button>
           </div>
 
           <!-- Big Start Button -->
@@ -346,11 +352,14 @@
       </div>
 
       <div class="victory-actions">
-        <button class="victory-btn primary" onclick="startMatch('set2', false)">
-          ⚔️ Play Match 2 (Rematch!)
+        <button class="victory-btn primary" onclick="startMatch('set3', false)">
+          ⚔️ Play Match 3 (2-Digit Addition)
+        </button>
+        <button class="victory-btn secondary" onclick="startMatch('set4', false)">
+          ⚔️ Play Match 4 (2-Digit Rematch)
         </button>
         <button class="victory-btn secondary" onclick="startMatch('set1', false)">
-          🔄 Play Match 1 Again
+          🔄 Play Match 1 (Bonds)
         </button>
         <button class="victory-btn secondary" onclick="startMatch('shuffle', false)">
           🎲 Shuffle All Questions
@@ -374,7 +383,18 @@
   (function () {
     'use strict';
 
-    /* ================= CURATED QUESTIONS (32 TOTAL - NO 10X SCALE) ================= */
+    /* ================= QUESTION BUILDERS ================= */
+    function makeCol(t1, o1, t2, o2) {
+      const t1Str = (t1 > 0) ? t1 : '&nbsp;';
+      const t2Str = (t2 > 0) ? t2 : '&nbsp;';
+      return `<div class="arena-col-math"><div class="arena-col-row"><span class="op"></span><span class="d">${t1Str}</span><span class="d">${o1}</span></div><div class="arena-col-row"><span class="op">+</span><span class="d">${t2Str}</span><span class="d">${o2}</span></div><div class="arena-col-line"></div><div class="arena-col-row ans"><span class="op"></span><span class="d">?</span><span class="d">?</span></div></div>`;
+    }
+
+    function makeStory(story, eq) {
+      return `<div class="arena-story-text">${story}</div><div class="arena-story-eq">${eq}</div>`;
+    }
+
+    /* ================= CURATED QUESTIONS (72 TOTAL ACROSS 4 MATCHES) ================= */
     const QUESTION_SETS = {
       set1: {
         name: "Match 1",
@@ -420,6 +440,60 @@
           { topic: "Bonds to 100", visual: "70 + ___ = 100", options: [30, 20, 40, 50], correct: 30, tip: "70 + 30 = 100!" },
           { topic: "Take Away from 20", visual: "20 - 18 = ___", options: [2, 3, 1, 4], correct: 2, tip: "20 - 18 = 2, because 18 + 2 = 20!" },
           { topic: "Next-Ten Hopper", visual: "38 + ___ = 40", options: [2, 3, 1, 8], correct: 2, tip: "8 and 2 make 10, so 38 + 2 = 40!" }
+        ]
+      },
+      set3: {
+        name: "Match 3 (2-Digit Part 1)",
+        team1: [
+          { topic: "Story Problem", visual: makeStory("Cyrus has 32 balls. Vera gives him 4 more balls. How many altogether?", "32 + 4 = ___"), options: [36, 35, 37, 38], correct: 36, tip: "2 + 4 = 6 ones, so 32 + 4 = 36!" },
+          { topic: "Column Addition", visual: makeCol(2, 4, 0, 3), options: [27, 26, 28, 29], correct: 27, tip: "Add ones first: 4 + 3 = 7. Tens stay 2 = 27!" },
+          { topic: "Story Problem", visual: makeStory("Ada found 25 hockey sticks. Cyrus found 30 more. Total hockey sticks?", "25 + 30 = ___"), options: [55, 45, 65, 50], correct: 55, tip: "2 tens + 3 tens = 5 tens. Ones stay 5 = 55!" },
+          { topic: "Column Addition", visual: makeCol(4, 1, 3, 0), options: [71, 61, 81, 70], correct: 71, tip: "1 + 0 = 1, 4 + 3 = 7 tens. Total = 71!" },
+          { topic: "Story Problem", visual: makeStory("Mrs. Jones made 25 chicken pies, then made 42 more. How many pies in all?", "25 + 42 = ___"), options: [67, 66, 68, 57], correct: 67, tip: "25 + 42 = 67 chicken pies!" },
+          { topic: "Workbook 4 Split", visual: makeStory("Split 21 and 13 into tens and ones. What is their combined sum?", "21 + 13 = ___"), options: [34, 33, 35, 44], correct: 34, tip: "1 + 3 = 4, 20 + 10 = 30. Total = 34!" },
+          { topic: "Column Addition", visual: makeCol(4, 3, 2, 5), options: [68, 67, 69, 58], correct: 68, tip: "3 + 5 = 8 ones, 4 + 2 = 6 tens. Total = 68!" },
+          { topic: "Story Problem", visual: makeStory("The classroom library had 33 storybooks. The teacher bought 24 more.", "33 + 24 = ___"), options: [57, 56, 58, 67], correct: 57, tip: "33 + 24 = 57 books!" },
+          { topic: "Column Addition", visual: makeCol(5, 2, 3, 4), options: [86, 85, 87, 76], correct: 86, tip: "2 + 4 = 6 ones, 5 + 3 = 8 tens. Total = 86!" },
+          { topic: "Missing Tens", visual: makeStory("What whole tens are missing to make 75?", "20 + ___ = 75"), options: [55, 45, 65, 50], correct: 55, tip: "75 - 20 = 55, because 55 + 20 = 75!" }
+        ],
+        team2: [
+          { topic: "Story Problem", visual: makeStory("Ada's sister has 21 erasers. Ada has 17 erasers more. How many does Ada have?", "21 + 17 = ___"), options: [38, 37, 39, 48], correct: 38, tip: "21 + 17 = 38 erasers!" },
+          { topic: "Column Addition", visual: makeCol(4, 1, 0, 7), options: [48, 47, 49, 50], correct: 48, tip: "1 + 7 = 8 ones. Tens stay 4 = 48!" },
+          { topic: "Story Problem", visual: makeStory("The toy shop had 24 cars. A delivery brought 50 more cars. Total cars?", "24 + 50 = ___"), options: [74, 64, 84, 70], correct: 74, tip: "2 tens + 5 tens = 7 tens. Ones stay 4 = 74!" },
+          { topic: "Column Addition", visual: makeCol(5, 5, 4, 0), options: [95, 85, 90, 100], correct: 95, tip: "5 + 0 = 5, 5 + 4 = 9 tens. Total = 95!" },
+          { topic: "Story Problem", visual: makeStory("Gerald bought 33 pencils. June bought 22 more pencils than Gerald.", "33 + 22 = ___"), options: [55, 54, 56, 45], correct: 55, tip: "33 + 22 = 55 pencils!" },
+          { topic: "Workbook 4 Split", visual: makeStory("Split 47 and 32 into tens and ones. What is their combined sum?", "47 + 32 = ___"), options: [79, 78, 80, 69], correct: 79, tip: "7 + 2 = 9, 40 + 30 = 70. Total = 79!" },
+          { topic: "Column Addition", visual: makeCol(2, 3, 6, 1), options: [84, 83, 85, 74], correct: 84, tip: "3 + 1 = 4 ones, 2 + 6 = 8 tens = 84!" },
+          { topic: "Story Problem", visual: makeStory("A fruit stall has 52 apples and 26 oranges. How many fruits altogether?", "52 + 26 = ___"), options: [78, 77, 79, 68], correct: 78, tip: "52 + 26 = 78 fruits!" },
+          { topic: "Column Addition", visual: makeCol(3, 6, 2, 2), options: [58, 57, 59, 68], correct: 58, tip: "6 + 2 = 8 ones, 3 + 2 = 5 tens = 58!" },
+          { topic: "Missing Tens", visual: makeStory("What whole tens are missing to make 62?", "30 + ___ = 62"), options: [32, 22, 42, 30], correct: 32, tip: "62 - 30 = 32, because 32 + 30 = 62!" }
+        ]
+      },
+      set4: {
+        name: "Match 4 (2-Digit Part 2)",
+        team1: [
+          { topic: "Story Problem", visual: makeStory("There are 25 chairs in room. Mr. Chan brings in 64 more chairs.", "25 + 64 = ___"), options: [89, 88, 90, 79], correct: 89, tip: "25 + 64 = 89 chairs!" },
+          { topic: "Column Addition", visual: makeCol(5, 5, 0, 4), options: [59, 58, 60, 57], correct: 59, tip: "5 + 4 = 9 ones. Tens stay 5 = 59!" },
+          { topic: "Story Problem", visual: makeStory("A farm coop has 13 brown hens and 40 white hens. Total hens?", "13 + 40 = ___"), options: [53, 43, 63, 50], correct: 53, tip: "1 ten + 4 tens = 5 tens = 53 hens!" },
+          { topic: "Column Addition", visual: makeCol(7, 2, 2, 7), options: [99, 98, 97, 89], correct: 99, tip: "2 + 7 = 9 ones, 7 + 2 = 9 tens = 99!" },
+          { topic: "Story Problem", visual: makeStory("Leo scored 55 points, then earned 4 bonus points. What is his total score?", "55 + 4 = ___"), options: [59, 58, 60, 61], correct: 59, tip: "55 + 4 = 59 points!" },
+          { topic: "Workbook 4 Split", visual: makeStory("Split 15 and 41 into tens and ones. What is their combined sum?", "15 + 41 = ___"), options: [56, 55, 57, 66], correct: 56, tip: "5 + 1 = 6, 10 + 40 = 50. Total = 56!" },
+          { topic: "Column Addition", visual: makeCol(6, 3, 0, 6), options: [69, 68, 70, 67], correct: 69, tip: "3 + 6 = 9 ones. Tens stay 6 = 69!" },
+          { topic: "Story Problem", visual: makeStory("Emma picked 43 red roses and 15 yellow daisies. How many flowers in all?", "43 + 15 = ___"), options: [58, 57, 59, 68], correct: 58, tip: "43 + 15 = 58 flowers!" },
+          { topic: "Column Addition", visual: makeCol(5, 0, 4, 0), options: [90, 80, 100, 70], correct: 90, tip: "5 tens + 4 tens = 9 tens (90)!" },
+          { topic: "Missing Addend", visual: makeStory("Ada has 38 erasers. Her sister has 21 erasers. How many more?", "21 + ___ = 38"), options: [17, 16, 18, 15], correct: 17, tip: "21 + 17 = 38 (Ada's erasers)!" }
+        ],
+        team2: [
+          { topic: "Story Problem", visual: makeStory("A bakery baked 14 blueberry muffins and 52 banana muffins. Total muffins?", "14 + 52 = ___"), options: [66, 65, 67, 56], correct: 66, tip: "14 + 52 = 66 muffins!" },
+          { topic: "Column Addition", visual: makeCol(1, 2, 0, 5), options: [17, 16, 18, 19], correct: 17, tip: "2 + 5 = 7 ones. Tens stay 1 = 17!" },
+          { topic: "Story Problem", visual: makeStory("The booth sold 70 tickets in morning and 25 tickets in evening. Total tickets?", "70 + 25 = ___"), options: [95, 85, 90, 100], correct: 95, tip: "7 tens + 2 tens = 9 tens. Total = 95!" },
+          { topic: "Column Addition", visual: makeCol(3, 3, 6, 4), options: [97, 96, 98, 87], correct: 97, tip: "3 + 4 = 7 ones, 3 + 6 = 9 tens = 97!" },
+          { topic: "Story Problem", visual: makeStory("Maya collected 63 sea shells on Saturday and 6 more on Sunday. Total shells?", "63 + 6 = ___"), options: [69, 68, 70, 72], correct: 69, tip: "63 + 6 = 69 seashells!" },
+          { topic: "Workbook 4 Split", visual: makeStory("Split 22 and 25 into tens and ones. What is their combined sum?", "22 + 25 = ___"), options: [47, 46, 48, 57], correct: 47, tip: "2 + 5 = 7, 20 + 20 = 40. Total = 47!" },
+          { topic: "Column Addition", visual: makeCol(2, 1, 0, 7), options: [28, 27, 29, 30], correct: 28, tip: "1 + 7 = 8 ones. Tens stay 2 = 28!" },
+          { topic: "Story Problem", visual: makeStory("The rescue shelter cared for 34 puppies and 23 kittens. How many pets?", "34 + 23 = ___"), options: [57, 56, 58, 67], correct: 57, tip: "34 + 23 = 57 pets!" },
+          { topic: "Column Addition", visual: makeCol(3, 0, 2, 2), options: [52, 42, 62, 50], correct: 52, tip: "0 + 2 = 2 ones, 3 + 2 = 5 tens = 52!" },
+          { topic: "Digit Challenge", visual: makeStory("Form the greatest sum using digits 2, 3, 4, 5 once each:", "53 + 42 = ___"), options: [95, 86, 77, 59], correct: 95, tip: "53 + 42 = 95 (tens places get 5 and 4 for maximum sum)!" }
         ]
       }
     };
@@ -649,9 +723,13 @@
       });
       const b1 = document.getElementById('btnSet1');
       const b2 = document.getElementById('btnSet2');
+      const b3 = document.getElementById('btnSet3');
+      const b4 = document.getElementById('btnSet4');
       const bS = document.getElementById('btnShuffle');
       if (b1) b1.classList.toggle('active', setKey === 'set1');
       if (b2) b2.classList.toggle('active', setKey === 'set2');
+      if (b3) b3.classList.toggle('active', setKey === 'set3');
+      if (b4) b4.classList.toggle('active', setKey === 'set4');
       if (bS) bS.classList.toggle('active', setKey === 'shuffle');
       const mSelect = document.getElementById('mobileMatchSelect');
       if (mSelect) mSelect.value = setKey;
@@ -707,10 +785,20 @@
 
       // Question Loading
       if (state.selectedSetKey === 'shuffle') {
-        const allT1 = [...QUESTION_SETS.set1.team1, ...QUESTION_SETS.set2.team1];
-        const allT2 = [...QUESTION_SETS.set1.team2, ...QUESTION_SETS.set2.team2];
-        state.questionsTeam1 = shuffleArray(allT1).slice(0, 8);
-        state.questionsTeam2 = shuffleArray(allT2).slice(0, 8);
+        const allT1 = [
+          ...QUESTION_SETS.set1.team1,
+          ...QUESTION_SETS.set2.team1,
+          ...QUESTION_SETS.set3.team1,
+          ...QUESTION_SETS.set4.team1
+        ];
+        const allT2 = [
+          ...QUESTION_SETS.set1.team2,
+          ...QUESTION_SETS.set2.team2,
+          ...QUESTION_SETS.set3.team2,
+          ...QUESTION_SETS.set4.team2
+        ];
+        state.questionsTeam1 = shuffleArray(allT1).slice(0, 10);
+        state.questionsTeam2 = shuffleArray(allT2).slice(0, 10);
       } else {
         const selected = QUESTION_SETS[state.selectedSetKey] || QUESTION_SETS.set1;
         state.questionsTeam1 = [...selected.team1];
@@ -720,9 +808,13 @@
       // UI Switcher Tabs
       const btnSet1 = document.getElementById('btnSet1');
       const btnSet2 = document.getElementById('btnSet2');
+      const btnSet3 = document.getElementById('btnSet3');
+      const btnSet4 = document.getElementById('btnSet4');
       const btnShuffle = document.getElementById('btnShuffle');
       if (btnSet1) btnSet1.classList.toggle('active', state.selectedSetKey === 'set1');
       if (btnSet2) btnSet2.classList.toggle('active', state.selectedSetKey === 'set2');
+      if (btnSet3) btnSet3.classList.toggle('active', state.selectedSetKey === 'set3');
+      if (btnSet4) btnSet4.classList.toggle('active', state.selectedSetKey === 'set4');
       if (btnShuffle) btnShuffle.classList.toggle('active', state.selectedSetKey === 'shuffle');
 
       // Sync Lobby buttons
@@ -764,9 +856,11 @@
       const scoreCircleT1 = document.getElementById('team1ScoreCircle');
       const scoreCircleT2 = document.getElementById('team2ScoreCircle');
 
+      const maxRounds = state.questionsTeam1 ? state.questionsTeam1.length : 8;
+
       if (hudT1) hudT1.textContent = state.team1Score;
       if (hudT2) hudT2.textContent = state.team2Score;
-      if (roundTxt) roundTxt.textContent = `Round ${state.currentRound} of 8`;
+      if (roundTxt) roundTxt.textContent = `Round ${state.currentRound} of ${maxRounds}`;
       if (scoreCircleT1) scoreCircleT1.textContent = state.team1Score;
       if (scoreCircleT2) scoreCircleT2.textContent = state.team2Score;
 
@@ -849,7 +943,7 @@
 
       // 1. Populate Active Panel
       if (activeTopic) activeTopic.textContent = activeQ.topic;
-      if (activeEqBox) activeEqBox.textContent = activeQ.visual;
+      if (activeEqBox) activeEqBox.innerHTML = activeQ.visual;
 
       if (activeFeedback) {
         activeFeedback.className = 'feedback-box';
@@ -876,7 +970,7 @@
 
       // 2. Inactive Panel (Blurred waiting state)
       if (inactiveTopic) inactiveTopic.textContent = 'Waiting for Turn...';
-      if (inactiveEqBox) inactiveEqBox.textContent = '? + ? = ?';
+      if (inactiveEqBox) inactiveEqBox.innerHTML = '? + ? = ?';
       if (inactiveFeedback) inactiveFeedback.style.display = 'none';
       if (inactiveNextBtn) inactiveNextBtn.style.display = 'none';
       if (inactiveGrid) {
@@ -956,7 +1050,8 @@
       }
 
       // Last turn of match
-      const isLastTurn = (state.currentRound === 8 && state.currentTurn === 'team2');
+      const maxRounds = state.questionsTeam1 ? state.questionsTeam1.length : 8;
+      const isLastTurn = (state.currentRound === maxRounds && state.currentTurn === 'team2');
       const nextTeamName = isT1 ? "Team 2" : "Team 1";
       triggerTurnTransition(isLastTurn, nextTeamName);
     };
@@ -1027,10 +1122,11 @@
       const t2Pill = document.getElementById('victoryT2Pill');
       const mascotWrap = document.getElementById('victoryMascotWrap');
 
+      const maxRounds = state.questionsTeam1 ? state.questionsTeam1.length : 8;
       if (titleEl) titleEl.textContent = victoryTitle;
       if (msgEl) msgEl.textContent = victoryMsg;
-      if (t1Pill) t1Pill.textContent = `🦁 Team 1: ${state.team1Score} / 8`;
-      if (t2Pill) t2Pill.textContent = `🐺 Team 2: ${state.team2Score} / 8`;
+      if (t1Pill) t1Pill.textContent = `🦁 Team 1: ${state.team1Score} / ${maxRounds}`;
+      if (t2Pill) t2Pill.textContent = `🐺 Team 2: ${state.team2Score} / ${maxRounds}`;
 
       if (mascotWrap) {
         if (winner === 'team1') {

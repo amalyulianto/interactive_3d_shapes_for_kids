@@ -342,15 +342,79 @@ body {
 .equation-box {
   width: 100%;
   border-radius: 14px;
-  padding: 10px 8px;
+  padding: 10px 10px;
   font-size: 1.85rem;
   font-weight: 900;
   text-align: center;
   letter-spacing: 0.5px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 56px;
+  min-height: 70px;
+  gap: 4px;
+}
+
+/* Arena Vertical Column Math Component */
+.arena-col-math {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: 'Fredoka', monospace, sans-serif;
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1.15;
+  padding: 4px 14px;
+}
+
+.arena-col-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  gap: 6px;
+}
+
+.arena-col-row .op {
+  width: 20px;
+  text-align: center;
+  font-weight: 900;
+  opacity: 0.85;
+}
+
+.arena-col-row .d {
+  width: 18px;
+  text-align: center;
+  font-weight: 900;
+}
+
+.arena-col-line {
+  width: 100%;
+  border-bottom: 3px solid currentColor;
+  margin: 3px 0;
+  border-radius: 2px;
+}
+
+.arena-col-row.ans {
+  color: #10B981;
+}
+
+/* Arena Story Problem Display */
+.arena-story-text {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: inherit;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.arena-story-eq {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
 }
 
 .team1-panel .equation-box {

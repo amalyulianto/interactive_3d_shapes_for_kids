@@ -221,15 +221,20 @@ d:\coding\interactive_math\
    - **Basketball Shootout Target 80 & 100** (Textbook pp.66, 68 / Workbook pp.51–52): Shoot basketballs (+10 points each) to help children reach team targets (80 or 100), dynamic progress bar and real-time number bond sync.
    - **Target Matcher & Mastery Quiz**: Memory match and 4-tier graded quiz.
 3. **Lesson 3: 2-Digit Addition (`add-2digit.js`)**:
-   - **1-Digit Addition & Regrouping**: Interactive place value mat where 10 ones snap-regroup into a 10-rod.
-   - **Add Whole Tens**: Ten-rod stacker keeping ones constant.
-   - **Split Strategy**: Stepped tree breaking 2-digit addends into tens and ones.
-   - **Parent / Teacher Discussion Guides**: Embedded expandable cards across each section with conceptual questions.
-4. **Battle Arena: Tug of War Math Duel (`tug-of-war.js`)**:
-   - **Lions vs Wolves Turn-Based Duel**: 8 questions per team (16 total turns) covering Lesson 1 (Bonds to 20, 3-part bonds, subtraction) and Lesson 2 (Bonds to 100, next-ten hopping).
-   - **2 Curated Question Sets & Shuffle Mode**: Match 1, Match 2 (Rematch), and Shuffle mode allowing repeated classroom gameplay without question fatigue.
-   - **Dynamic Tug Physics**: Center braided rope with lightning ribbon, muddy pit hazard, and pull balance needle.
-   - **Instant Knockout & Victory**: Knockout triggers when leading by 4 pulls, or final pull tally at Round 8, with fanfare and celebratory confetti.
+   - **1-Digit Addition (Textbook pp. 69–70, 72)**: Interactive SVG Number Line with animated +1 hops and Cyrus's starting-number warning, plus Base-10 mat with step-by-step column addition.
+   - **Adding Whole Tens (Textbook pp. 71–72)**: Tens Hopper Number Line (+10 hops), Ada's estimation secret, and place value demonstration showing ones remain unchanged.
+   - **Double-Split & Column Studio (Workbook p. 53 & Textbook p. 73)**: Authentic Workbook 4 double-split bubble tree with tens/ones branch decomposition and synchronized vertical column table.
+   - **Puzzles & Story Lab (Workbook p. 54 & Textbook p. 74)**: Jigsaw puzzle expression-answer matcher (43+23=66, 11+16=27, 41+51=92, 21+74=95), real-world story solvers (Mrs. Jones' chicken pies, Gerald's pencils, Mr. Chan's chairs), and 2, 3, 4, 5 digit tile place value optimization.
+   - **Mastery Quiz (Workbook p. 55 & Textbook)**: 4-tier 20-question quiz strictly without regrouping, with audio feedback, confetti, and explanations.
+4. **Battle Arena: Tug of War Math Duel (`tug-of-war.js` & `tug-of-war.html`)**:
+   - **Lions vs Wolves Turn-Based Duel**: 8 to 10 rounds per team covering Lessons 1, 2, and 3.
+   - **4 Curated Question Sets & Shuffle Mode**:
+     - **Match 1 (Lessons 1 & 2)**: 8 rounds (16 questions) — Bonds to 20, bonds to 100, 3-part combiner, and next-ten hops.
+     - **Match 2 (Rematch)**: 8 rounds (16 questions) — Alternate fact families and decade hops.
+     - **Match 3 (Lesson 3 2-Digit Addition Part 1)**: 10 rounds (20 questions) — Vertical column additions, Cyrus's ball stories, Mrs. Jones' chicken pies, and double-split bubble bonds.
+     - **Match 4 (Lesson 3 2-Digit Addition Part 2)**: 10 rounds (20 questions) — Mr. Chan's chairs, farm animal stories, Workbook 5 column problems, and digit tile place value challenges.
+     - **Shuffle All Mode**: Dynamically samples 10 questions from all 72 curated items across all 4 matches.
+   - **Dynamic Tug Physics & Column Display**: Braided rope physics with knockout detection, custom vertical column addition layout, and timer/untimed options.
 
 ---
 
