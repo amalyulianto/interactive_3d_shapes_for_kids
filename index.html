@@ -6,25 +6,26 @@
   <title>Interactive Math Studio - Elementary Geometry Suite</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="hub.css">
 </head>
 <body>
 
-  <!-- Clean, Reassuring Studio Header -->
+  <!-- Owl Green Gamified Studio Header -->
   <header class="hub-header">
     <div class="brand">
-      <div class="brand-logo" aria-hidden="true">✨📐🪞</div>
+      <div class="brand-logo" aria-hidden="true">📐</div>
       <div class="brand-text">
         <h1>Interactive Math Studio</h1>
-        <span class="studio-badge">By Alapakadala Studio</span>
+        <span class="studio-subtext">Alapakadala Studio • Grade 2</span>
       </div>
     </div>
 
     <!-- Navigation Controls -->
     <div class="hub-header-actions">
       <button id="btnHeaderBackGrades" class="hub-nav-btn hidden" onclick="showGradesView()" title="Return to Grade Selection">
-        ⬅️ All Grades
+        ⬅ All Grades
       </button>
 
       <div class="hub-grade-chip" id="hubGradeChip">
@@ -39,17 +40,17 @@
     <!-- ================= VIEW 1: GRADE SELECTION SCREEN ================= -->
     <section id="gradesView" class="hub-view-panel">
 
-      <!-- Compact Hero Header -->
+      <!-- Clean Typography Hero (No Pastel AI Gradient Box) -->
       <section class="hub-hero">
-        <h2>Choose Your Grade Level 🎒</h2>
-        <p>Interactive spatial geometry and hands-on math adventures for elementary learners.</p>
+        <h2>Choose Your Grade Level</h2>
+        <p>Tactile spatial geometry and hands-on math adventures designed for elementary learners.</p>
       </section>
 
       <!-- Grade Selection Listview -->
       <section class="grade-listview-wrapper">
         <div class="grade-listview-header">
           <h3>Available Grades</h3>
-          <span class="grade-count-badge">Grade 2 Ready</span>
+          <span class="metric-pill gold">1 Grade Ready</span>
         </div>
 
         <div class="grade-listview">
@@ -62,10 +63,9 @@
               <div class="grade-item-details">
                 <div class="grade-item-title-row">
                   <h4>Grade 2: Elementary Math Adventures</h4>
-                  <span class="grade-status-pill available">✨ Ready</span>
                 </div>
                 <p class="grade-item-desc">
-                  Explore Chapter 4: Shapes &amp; Solids and Chapter 5: Addition &amp; Subtraction.
+                  Explore Chapter 4 (Shapes &amp; Solids, Symmetry, Patterns) and Chapter 5 (Bonds to 20, Multiples of 10, 2-Digit Addition).
                 </p>
               </div>
             </div>
@@ -88,7 +88,7 @@
       <!-- Breadcrumb Navigation Bar -->
       <nav class="lessons-nav-bar" aria-label="Breadcrumb">
         <button class="lessons-back-btn" onclick="showGradesView()" title="Back to Grade Selection">
-          ⬅️ Back to Grade Selection
+          ⬅ Back to Grade Selection
         </button>
         <div class="current-grade-badge">
           <span>Current Level:</span>
@@ -96,10 +96,10 @@
         </div>
       </nav>
 
-      <!-- Compact Hero Banner -->
+      <!-- Clean Section Banner -->
       <section class="hub-hero">
-        <h2>Grade 2 Math Adventures 🌟</h2>
-        <p>Explore chapters and interactive learning studios below.</p>
+        <h2>Grade 2 Math Adventures</h2>
+        <p>Select a chapter below to jump into interactive math studios and games.</p>
       </section>
 
       <!-- Chapters Accordion Container -->
@@ -111,7 +111,7 @@
             <div class="chapter-header-left">
               <span class="chapter-badge">Chapter 4</span>
               <div class="chapter-title-group">
-                <h3 class="chapter-title">Shapes and Solids 🔷🎲</h3>
+                <h3 class="chapter-title">Shapes and Solids</h3>
                 <span class="chapter-subtitle">3D Solids, Symmetry &amp; Patterns</span>
               </div>
             </div>
@@ -129,7 +129,7 @@
                 <div class="lesson-card-header">
                   <div class="lesson-card-badge-row">
                     <span class="lesson-number-badge">Lesson 1</span>
-                    <span class="lesson-icon-preview">🎲 📐 🥫</span>
+                    <span class="lesson-icon-preview">🎲 📐</span>
                   </div>
                   <h3>3D Solid Shapes Adventure</h3>
                   <p class="lesson-subtitle">Spatial Geometry, Faces, Edges &amp; Vertices</p>
@@ -152,7 +152,7 @@
                 <div class="lesson-card-header">
                   <div class="lesson-card-badge-row">
                     <span class="lesson-number-badge">Lesson 2</span>
-                    <span class="lesson-icon-preview">🦋 🪞 🎨</span>
+                    <span class="lesson-icon-preview">🦋 🪞</span>
                   </div>
                   <h3>Lines of Symmetry Studio</h3>
                   <p class="lesson-subtitle">Mirror Reflections, Paper Folding &amp; Detective</p>
@@ -175,10 +175,10 @@
                 <div class="lesson-card-header">
                   <div class="lesson-card-badge-row">
                     <span class="lesson-number-badge">Lesson 3</span>
-                    <span class="lesson-icon-preview">🔷 🎲 ⭕</span>
+                    <span class="lesson-icon-preview">🔷 ⭕</span>
                   </div>
                   <h3>Shape &amp; Solid Patterns Studio</h3>
-                  <p class="lesson-subtitle">Repeating Groups, Blanks A &amp; B, Pentagons to Octagons &amp; 3D Solids</p>
+                  <p class="lesson-subtitle">Repeating Groups, Blanks A &amp; B, Pentagons &amp; 3D Solids</p>
                 </div>
 
                 <p class="lesson-desc">
@@ -203,7 +203,7 @@
             <div class="chapter-header-left">
               <span class="chapter-badge chapter-5-badge">Chapter 5</span>
               <div class="chapter-title-group">
-                <h3 class="chapter-title">Addition and Subtraction ➕➖</h3>
+                <h3 class="chapter-title">Addition and Subtraction</h3>
                 <span class="chapter-subtitle">Bonds to 20, Multiples of 10 &amp; 2-Digit Addition</span>
               </div>
             </div>
@@ -221,7 +221,7 @@
                 <div class="lesson-card-header">
                   <div class="lesson-card-badge-row">
                     <span class="lesson-number-badge">Lesson 1</span>
-                    <span class="lesson-icon-preview">🔟 🔄 🧩</span>
+                    <span class="lesson-icon-preview">🔟 🔄</span>
                   </div>
                   <h3>Number Pairs &amp; Bonds to 20</h3>
                   <p class="lesson-subtitle">Dual Frames, 4-in-1 Story Machine &amp; 3-Part Combiner</p>
@@ -244,7 +244,7 @@
                 <div class="lesson-card-header">
                   <div class="lesson-card-badge-row">
                     <span class="lesson-number-badge">Lesson 2</span>
-                    <span class="lesson-icon-preview">🧮 🔍 🏀</span>
+                    <span class="lesson-icon-preview">🧮 🏀</span>
                   </div>
                   <h3>Number Pairs to Multiples of 10</h3>
                   <p class="lesson-subtitle">Base-10 Rods, 10× Magic Lens &amp; Basketball Target 80</p>
@@ -267,7 +267,7 @@
                 <div class="lesson-card-header">
                   <div class="lesson-card-badge-row">
                     <span class="lesson-number-badge">Lesson 3</span>
-                    <span class="lesson-icon-preview">🧱 ⚡ 🧩</span>
+                    <span class="lesson-icon-preview">🧱 ⚡</span>
                   </div>
                   <h3>Adding Up to 2-Digit Numbers</h3>
                   <p class="lesson-subtitle">Number Lines, Double-Split Trees &amp; Puzzle Match</p>
@@ -286,14 +286,14 @@
               </a>
 
               <!-- SPECIAL BATTLE ARENA: TUG OF WAR MATH DUEL -->
-              <a href="tug-of-war.html" class="lesson-card addition" style="border-color: #F59E0B; background: linear-gradient(180deg, #FFFFFF 0%, #FFFBEB 100%);" aria-label="Start Tug of War Math Duel Arena">
+              <a href="tug-of-war.html" class="lesson-card arena" aria-label="Start Tug of War Math Duel Arena">
                 <div class="lesson-card-header">
                   <div class="lesson-card-badge-row">
-                    <span class="lesson-number-badge" style="background: linear-gradient(135deg, #F59E0B, #DC2626); color: #FFF;">Battle Arena</span>
-                    <span class="lesson-icon-preview">🦁 ⚔️ 🐺</span>
+                    <span class="lesson-number-badge arena-badge">Battle Arena</span>
+                    <span class="lesson-icon-preview">🦁 🐺</span>
                   </div>
-                  <h3 style="color: #92400E;">Tug of War Math Duel</h3>
-                  <p class="lesson-subtitle">Lions vs Wolves Turn-Based Classroom Showdown</p>
+                  <h3>Tug of War Math Duel</h3>
+                  <p class="lesson-subtitle arena-sub">Lions vs Wolves Turn-Based Classroom Showdown</p>
                 </div>
 
                 <p class="lesson-desc">
@@ -301,7 +301,7 @@
                 </p>
 
                 <div class="lesson-card-footer">
-                  <div class="lesson-cta-btn" style="background: linear-gradient(135deg, #D97706, #2563EB);">
+                  <div class="lesson-cta-btn arena-btn">
                     <span>Enter Arena</span>
                     <span class="cta-arrow">⚔️</span>
                   </div>
@@ -322,7 +322,7 @@
   <footer class="hub-footer">
     <div class="footer-content">
       <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary Geometry &amp; Math Learning</p>
-      <p class="copyright">© 2026 Alapakadala Studio • Zero-Build Educational Platform • Grade 2 Curriculum</p>
+      <p class="copyright">© 2026 Alapakadala Studio • Zero-Build Educational Platform • Grade 2 Curriculum Aligned</p>
     </div>
   </footer>
 
@@ -345,7 +345,7 @@
       if (gradeId === 'grade-2') {
         document.getElementById('gradesView').classList.add('hidden');
         document.getElementById('lessonsView').classList.remove('hidden');
-        document.getElementById('hubGradeChip').innerHTML = '🎒 Grade 2 Math';
+        document.getElementById('hubGradeChip').innerHTML = '🎒 Grade 2 Active';
         document.getElementById('btnHeaderBackGrades').classList.remove('hidden');
         window.location.hash = 'grade-2';
         window.scrollTo({ top: 0, behavior: 'smooth' });

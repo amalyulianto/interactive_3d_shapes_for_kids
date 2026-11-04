@@ -7,69 +7,70 @@
   <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="tug-of-war.css">
+  <!-- Canvas Confetti for Celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-  <!-- ================= TOP MAIN HEADER ================= -->
-  <header class="main-header">
-    <div class="brand">
-      <div class="brand-logo" aria-hidden="true">🏆</div>
-      <div class="brand-text">
-        <h1>Tug of War Math Duel</h1>
-        <span class="studio-badge">Chapter 5 Battle Arena</span>
+  <!-- Tier 1: Unified Owl Green Studio Header -->
+  <header class="studio-header">
+    <div class="studio-header-left">
+      <a href="index.html#grade-2" class="studio-back-btn" title="Back to Grade 2 Lessons">⬅ Grade 2</a>
+      <div class="studio-brand-title">
+        <span class="studio-brand-icon">🏆</span>
+        <span class="studio-brand-name">Tug of War Duel</span>
+        <span class="studio-chapter-badge">Chapter 5 Arena</span>
       </div>
     </div>
 
-    <!-- Desktop Header Controls -->
-    <div class="header-controls">
-      <div class="match-selector-bar" role="group" aria-label="Select Match">
-        <button id="btnLobby" class="match-select-btn" onclick="openLobby()" title="Change Match &amp; Timer Settings">⚙️ Setup</button>
-        <button id="btnSet1" class="match-select-btn active" onclick="startMatch('set1', false)">Match 1</button>
-        <button id="btnSet2" class="match-select-btn" onclick="startMatch('set2', false)">Match 2</button>
-        <button id="btnSet3" class="match-select-btn" onclick="startMatch('set3', false)">Match 3</button>
-        <button id="btnSet4" class="match-select-btn" onclick="startMatch('set4', false)">Match 4</button>
-        <button id="btnShuffle" class="match-select-btn" onclick="startMatch('shuffle', false)">🎲 Shuffle All</button>
-      </div>
-
-      <a href="index.html#grade-2" class="back-hub-btn" title="Back to Grade 2 Hub">
-        ← Grade 2 Lessons
-      </a>
-
-      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
-        🔊
-      </button>
-    </div>
-
-    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 960px) -->
-    <div class="mobile-nav-dropdowns">
-      <div class="mobile-select-wrap">
-        <label for="mobileLessonSelect" class="mobile-select-label">📚 Lesson:</label>
-        <select id="mobileLessonSelect" class="mobile-select" onchange="if(this.value) window.location.href=this.value;">
-          <option value="index.html#grade-2">← All Grade 2 Lessons</option>
+    <div class="studio-header-right">
+      <div class="studio-lesson-picker">
+        <select class="studio-lesson-select" aria-label="Select Lesson" onchange="if(this.value) window.location.href=this.value;">
+          <optgroup label="Chapter 4: Spatial Geometry">
+            <option value="shapes.html">📐 Lesson 1: 3D Shapes</option>
+            <option value="symmetry.html">🪞 Lesson 2: Symmetry</option>
+            <option value="patterns.html">🧩 Lesson 3: Patterns</option>
+          </optgroup>
           <optgroup label="Chapter 5: Addition &amp; Subtraction">
             <option value="bonds-20.html">🔟 Lesson 1: Bonds to 20</option>
             <option value="pairs-tens.html">🧮 Lesson 2: Multiples of 10</option>
             <option value="add-2digit.html">🧱 Lesson 3: 2-Digit Addition</option>
-            <option value="tug-of-war.html" selected>🏆 Tug of War Duel</option>
+            <option value="tug-of-war.html" selected>🏆 Battle Arena: Tug of War</option>
           </optgroup>
         </select>
+        <span class="studio-picker-arrow">▼</span>
       </div>
 
-      <div class="mobile-select-wrap">
-        <label for="mobileMatchSelect" class="mobile-select-label">⚔️ Match:</label>
-        <select id="mobileMatchSelect" class="mobile-select" onchange="if(this.value==='setup'){openLobby();}else{startMatch(this.value, false);}">
-          <option value="setup">⚙️ Match &amp; Timer Setup</option>
-          <option value="set1" selected>Match 1 (Bonds to 20 &amp; 100)</option>
-          <option value="set2">Match 2 (Rematch 16 Qs)</option>
-          <option value="set3">Match 3 (2-Digit Addition Part 1)</option>
-          <option value="set4">Match 4 (2-Digit Addition Part 2)</option>
-          <option value="shuffle">🎲 Shuffle All Questions</option>
-        </select>
-      </div>
+      <button id="soundToggle" class="studio-sound-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
     </div>
   </header>
+
+  <!-- Tier 2: Studio Mode Bar (Match Selector) -->
+  <nav class="studio-mode-bar" aria-label="Match Selector">
+    <button id="btnLobby" class="tab-btn" onclick="openLobby()" title="Change Match &amp; Timer Settings">
+      <span class="tab-icon">⚙️</span> Setup
+    </button>
+    <button id="btnSet1" class="tab-btn active" onclick="startMatch('set1', false)">
+      <span class="tab-icon">⚔️</span> Match 1
+    </button>
+    <button id="btnSet2" class="tab-btn" onclick="startMatch('set2', false)">
+      <span class="tab-icon">⚔️</span> Match 2
+    </button>
+    <button id="btnSet3" class="tab-btn" onclick="startMatch('set3', false)">
+      <span class="tab-icon">⚔️</span> Match 3
+    </button>
+    <button id="btnSet4" class="tab-btn" onclick="startMatch('set4', false)">
+      <span class="tab-icon">⚔️</span> Match 4
+    </button>
+    <button id="btnShuffle" class="tab-btn" onclick="startMatch('shuffle', false)">
+      <span class="tab-icon">🎲</span> Shuffle All
+    </button>
+  </nav>
 
   <!-- ================= 3-COLUMN ARENA LAYOUT ================= -->
   <main class="arena-workspace">

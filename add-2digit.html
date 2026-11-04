@@ -6,63 +6,29 @@
   <title>Adding Up to 2-Digit Numbers - Interactive Math Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="add-2digit.css">
   <!-- Canvas Confetti for Celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-  <!-- Main Navigation Header -->
-  <header class="main-header" id="mainHeader">
-    <div class="brand">
-      <div class="brand-logo" aria-hidden="true">✨🧱➕</div>
-      <div class="brand-text">
-        <h1>2-Digit Addition Studio</h1>
-        <span class="studio-badge">Chapter 5 • Lesson 3</span>
+  <!-- Tier 1: Unified Owl Green Studio Header -->
+  <header class="studio-header">
+    <div class="studio-header-left">
+      <a href="index.html#grade-2" class="studio-back-btn" title="Back to Grade 2 Lessons">⬅ Grade 2</a>
+      <div class="studio-brand-title">
+        <span class="studio-brand-icon">🧱</span>
+        <span class="studio-brand-name">2-Digit Addition</span>
+        <span class="studio-chapter-badge">Chapter 5</span>
       </div>
     </div>
 
-    <!-- Navigation between Grade 2 lessons -->
-    <div class="lesson-switcher">
-      <a href="index.html#grade-2" class="lesson-chip home" title="Back to Grade 2 Lessons">← Grade 2 Lessons</a>
-      <span class="lesson-label">Lesson:</span>
-      <a href="bonds-20.html" class="lesson-chip link" title="Go to Lesson 1: Bonds to 20">🔟 Bonds to 20</a>
-      <a href="pairs-tens.html" class="lesson-chip link" title="Go to Lesson 2: Multiples of 10">🧮 Multiples of 10</a>
-      <span class="lesson-chip active" title="Current Lesson">🧱 2-Digit Addition</span>
-      <a href="tug-of-war.html" class="lesson-chip link" title="Battle Arena: Tug of War Duel">🏆 Tug of War Duel</a>
-    </div>
-
-    <div class="nav-controls">
-      <nav class="mode-tabs">
-        <button id="tabBtn_single" class="tab-btn active" onclick="switchAddMode('single')">
-          <span class="tab-icon">➕</span> Add 1-Digit
-        </button>
-        <button id="tabBtn_tens" class="tab-btn" onclick="switchAddMode('tens')">
-          <span class="tab-icon">🔟</span> Add Whole Tens
-        </button>
-        <button id="tabBtn_split" class="tab-btn" onclick="switchAddMode('split')">
-          <span class="tab-icon">⚡</span> Double-Split &amp; Column
-        </button>
-        <button id="tabBtn_puzzle" class="tab-btn" onclick="switchAddMode('puzzle')">
-          <span class="tab-icon">🧩</span> Puzzles &amp; Stories
-        </button>
-        <button id="tabBtn_quiz" class="tab-btn" onclick="switchAddMode('quiz')">
-          <span class="tab-icon">🏆</span> Mastery Quiz
-        </button>
-      </nav>
-      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
-        🔊
-      </button>
-    </div>
-
-    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 768px) -->
-    <div class="mobile-nav-dropdowns">
-      <div class="mobile-select-wrap">
-        <label for="mobileLessonSelect" class="mobile-select-label">📚 Lesson:</label>
-        <select id="mobileLessonSelect" class="mobile-select" onchange="if(this.value) window.location.href=this.value;">
-          <option value="index.html#grade-2">← All Grade 2 Lessons</option>
-          <optgroup label="Chapter 4: Shapes &amp; Solids">
+    <div class="studio-header-right">
+      <div class="studio-lesson-picker">
+        <select class="studio-lesson-select" aria-label="Select Lesson" onchange="if(this.value) window.location.href=this.value;">
+          <optgroup label="Chapter 4: Spatial Geometry">
             <option value="shapes.html">📐 Lesson 1: 3D Shapes</option>
             <option value="symmetry.html">🪞 Lesson 2: Symmetry</option>
             <option value="patterns.html">🧩 Lesson 3: Patterns</option>
@@ -71,23 +37,36 @@
             <option value="bonds-20.html">🔟 Lesson 1: Bonds to 20</option>
             <option value="pairs-tens.html">🧮 Lesson 2: Multiples of 10</option>
             <option value="add-2digit.html" selected>🧱 Lesson 3: 2-Digit Addition</option>
-            <option value="tug-of-war.html">🏆 Tug of War Duel</option>
+            <option value="tug-of-war.html">🏆 Battle Arena: Tug of War</option>
           </optgroup>
         </select>
+        <span class="studio-picker-arrow">▼</span>
       </div>
 
-      <div class="mobile-select-wrap">
-        <label for="mobileActivitySelect" class="mobile-select-label">🎮 Activity:</label>
-        <select id="mobileActivitySelect" class="mobile-select" onchange="switchAddMode(this.value)">
-          <option value="single" selected>➕ Add 1-Digit</option>
-          <option value="tens">🔟 Add Whole Tens</option>
-          <option value="split">⚡ Double-Split &amp; Column</option>
-          <option value="puzzle">🧩 Puzzles &amp; Stories</option>
-          <option value="quiz">🏆 Mastery Quiz</option>
-        </select>
-      </div>
+      <button id="soundToggle" class="studio-sound-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
     </div>
   </header>
+
+  <!-- Tier 2: Studio Mode Bar -->
+  <nav class="studio-mode-bar" aria-label="Activities">
+    <button id="tabBtn_single" class="tab-btn active" onclick="switchAddMode('single')">
+      <span class="tab-icon">➕</span> Add 1-Digit
+    </button>
+    <button id="tabBtn_tens" class="tab-btn" onclick="switchAddMode('tens')">
+      <span class="tab-icon">🔟</span> Add Whole Tens
+    </button>
+    <button id="tabBtn_split" class="tab-btn" onclick="switchAddMode('split')">
+      <span class="tab-icon">⚡</span> Double-Split &amp; Column
+    </button>
+    <button id="tabBtn_puzzle" class="tab-btn" onclick="switchAddMode('puzzle')">
+      <span class="tab-icon">🧩</span> Puzzles &amp; Stories
+    </button>
+    <button id="tabBtn_quiz" class="tab-btn" onclick="switchAddMode('quiz')">
+      <span class="tab-icon">🏆</span> Mastery Quiz
+    </button>
+  </nav>
 
   <!-- Application Container -->
   <main class="app-container" id="appContainer">

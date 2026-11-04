@@ -6,59 +6,29 @@
   <title>Shape & Solid Patterns Studio - Alapakadala Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="patterns.css">
   <!-- Canvas Confetti for Celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-  <!-- Header / Navigation -->
-  <header class="main-header" id="mainHeader">
-    <div class="brand">
-      <div class="brand-logo" aria-hidden="true">✨🧩</div>
-      <div class="brand-text">
-        <h1>Shape & Solid Patterns Studio</h1>
-        <span class="studio-badge">By Alapakadala Studio</span>
+  <!-- Tier 1: Unified Owl Green Studio Header -->
+  <header class="studio-header">
+    <div class="studio-header-left">
+      <a href="index.html#grade-2" class="studio-back-btn" title="Back to Grade 2 Lessons">⬅ Grade 2</a>
+      <div class="studio-brand-title">
+        <span class="studio-brand-icon">🧩</span>
+        <span class="studio-brand-name">Shape &amp; Solid Patterns</span>
+        <span class="studio-chapter-badge">Chapter 4</span>
       </div>
     </div>
 
-    <!-- Navigation between Grade 2 lessons -->
-    <div class="lesson-switcher">
-      <a href="index.html#grade-2" class="lesson-chip home" title="Back to Grade 2 Lessons">← Grade 2 Lessons</a>
-      <span class="lesson-label">Lesson:</span>
-      <a href="shapes.html" class="lesson-chip link" title="Go to Lesson 1: 3D Shapes">📐 3D Shapes</a>
-      <a href="symmetry.html" class="lesson-chip link" title="Go to Lesson 2: Symmetry">🪞 Symmetry</a>
-      <span class="lesson-chip active" title="Current Lesson">🧩 Patterns</span>
-    </div>
-
-    <div class="nav-controls">
-      <nav class="mode-tabs">
-        <button id="tabRing" class="tab-btn active" onclick="switchPatternMode('ring')">
-          <span class="tab-icon">⭕</span> Ring Repeating Group
-        </button>
-        <button id="tabShapes" class="tab-btn" onclick="switchPatternMode('shapes')">
-          <span class="tab-icon">🔷</span> Missing 2D Shapes
-        </button>
-        <button id="tabSolids" class="tab-btn" onclick="switchPatternMode('solids')">
-          <span class="tab-icon">🎲</span> Missing 3D Solids
-        </button>
-        <button id="tabQuiz" class="tab-btn" onclick="switchPatternMode('quiz')">
-          <span class="tab-icon">🏆</span> Pattern Quizzes
-        </button>
-      </nav>
-      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
-        🔊
-      </button>
-    </div>
-
-    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 768px) -->
-    <div class="mobile-nav-dropdowns">
-      <div class="mobile-select-wrap">
-        <label for="mobileLessonSelect" class="mobile-select-label">📚 Lesson:</label>
-        <select id="mobileLessonSelect" class="mobile-select" onchange="if(this.value) window.location.href=this.value;">
-          <option value="index.html#grade-2">← All Grade 2 Lessons</option>
-          <optgroup label="Chapter 4: Shapes &amp; Solids">
+    <div class="studio-header-right">
+      <div class="studio-lesson-picker">
+        <select class="studio-lesson-select" aria-label="Select Lesson" onchange="if(this.value) window.location.href=this.value;">
+          <optgroup label="Chapter 4: Spatial Geometry">
             <option value="shapes.html">📐 Lesson 1: 3D Shapes</option>
             <option value="symmetry.html">🪞 Lesson 2: Symmetry</option>
             <option value="patterns.html" selected>🧩 Lesson 3: Patterns</option>
@@ -67,21 +37,33 @@
             <option value="bonds-20.html">🔟 Lesson 1: Bonds to 20</option>
             <option value="pairs-tens.html">🧮 Lesson 2: Multiples of 10</option>
             <option value="add-2digit.html">🧱 Lesson 3: 2-Digit Addition</option>
+            <option value="tug-of-war.html">🏆 Battle Arena: Tug of War</option>
           </optgroup>
         </select>
+        <span class="studio-picker-arrow">▼</span>
       </div>
 
-      <div class="mobile-select-wrap">
-        <label for="mobileActivitySelect" class="mobile-select-label">🎮 Activity:</label>
-        <select id="mobileActivitySelect" class="mobile-select" onchange="switchPatternMode(this.value)">
-          <option value="ring" selected>⭕ Ring Repeating Group</option>
-          <option value="shapes">🔷 Missing 2D Shapes</option>
-          <option value="solids">🎲 Missing 3D Solids</option>
-          <option value="quiz">🏆 Pattern Quizzes</option>
-        </select>
-      </div>
+      <button id="soundToggle" class="studio-sound-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
     </div>
   </header>
+
+  <!-- Tier 2: Studio Mode Bar -->
+  <nav class="studio-mode-bar" aria-label="Activities">
+    <button id="tabRing" class="tab-btn active" onclick="switchPatternMode('ring')">
+      <span class="tab-icon">⭕</span> Repeating Group
+    </button>
+    <button id="tabShapes" class="tab-btn" onclick="switchPatternMode('shapes')">
+      <span class="tab-icon">🔷</span> Missing 2D Shapes
+    </button>
+    <button id="tabSolids" class="tab-btn" onclick="switchPatternMode('solids')">
+      <span class="tab-icon">🎲</span> Missing 3D Solids
+    </button>
+    <button id="tabQuiz" class="tab-btn" onclick="switchPatternMode('quiz')">
+      <span class="tab-icon">🏆</span> Quizzes
+    </button>
+  </nav>
 
   <!-- Main Application Body -->
   <main class="app-container" id="appContainer">
@@ -90,12 +72,13 @@
     <section id="ringView" class="view-panel active">
       <div class="pattern-card">
         <div class="pattern-card-header">
-          <h2 id="udTitle">Solve this! 1a: Square, Hexagon, Triangle & Diamond</h2>
-          <span class="source-tag" id="udSource">Worksheet: Draw a Ring</span>
+          <h2 id="udTitle">Solve this! 1a: Square, Hexagon, Triangle &amp; Diamond</h2>
+          <span class="studio-subtext" id="udSource">Worksheet: Draw a Ring</span>
         </div>
 
-        <div class="pattern-clue-banner" id="udTip">
-          💡 <strong>Detective Clue:</strong> Find where the pattern starts to repeat from the beginning!
+        <div class="tip-inline-clean" id="udTip" style="margin-bottom: 16px;">
+          <span aria-hidden="true">💡</span>
+          <span><strong>Detective Clue:</strong> Find where the pattern starts to repeat from the beginning!</span>
         </div>
 
         <!-- Pattern Sequence Track -->
@@ -116,10 +99,10 @@
           </div>
 
           <div class="actions-row">
-            <button id="udBtnTest" class="primary-btn" onclick="testRepeatingRing()">
+            <button id="udBtnTest" class="btn-primary" onclick="testRepeatingRing()">
               Test Repeating Ring 🔍
             </button>
-            <button id="udBtnNext" class="secondary-btn hidden" onclick="nextUnitChallenge()">
+            <button id="udBtnNext" class="btn-secondary hidden" onclick="nextUnitChallenge()">
               Next Challenge ➔
             </button>
           </div>
@@ -135,11 +118,12 @@
       <div class="pattern-card">
         <div class="pattern-card-header">
           <h2 id="msTitle">Worksheet 6, Ex 1: Missing Shapes in the Middle</h2>
-          <span class="source-tag" id="msSource">Worksheet 6: We can spot patterns! (1)</span>
+          <span class="studio-subtext" id="msSource">Worksheet 6: We can spot patterns! (1)</span>
         </div>
 
-        <div class="pattern-clue-banner" id="msPrompt">
-          Sketch and show the missing shapes in spaces A and B.
+        <div class="tip-inline-clean" id="msPrompt" style="margin-bottom: 16px;">
+          <span aria-hidden="true">💡</span>
+          <span>Sketch and show the missing shapes in spaces A and B.</span>
         </div>
 
         <!-- Track with Blanks A & B -->
@@ -160,16 +144,16 @@
         <!-- Action Controls -->
         <div class="pattern-controls-bar">
           <div class="actions-row">
-            <button class="secondary-btn" onclick="clearSlots()">
+            <button class="btn-secondary" onclick="clearSlots()">
               Clear Choices 🔄
             </button>
           </div>
 
           <div class="actions-row">
-            <button id="msBtnCheck" class="primary-btn" onclick="checkPattern()" disabled>
+            <button id="msBtnCheck" class="btn-primary" onclick="checkPattern()" disabled>
               Check Pattern 🚀
             </button>
-            <button id="msBtnNext" class="secondary-btn hidden" onclick="nextChallenge()">
+            <button id="msBtnNext" class="btn-secondary hidden" onclick="nextChallenge()">
               Next Challenge ➔
             </button>
           </div>
@@ -185,11 +169,12 @@
       <div class="pattern-card">
         <div class="pattern-card-header">
           <h2 id="solTitle">Worksheet 6, Ex 2: Missing Solids at the Start</h2>
-          <span class="source-tag" id="solSource">Worksheet 6: We can spot patterns! (2)</span>
+          <span class="studio-subtext" id="solSource">Worksheet 6: We can spot patterns! (2)</span>
         </div>
 
-        <div class="pattern-clue-banner" id="solPrompt">
-          What are solids A and B? Circle the correct solids to complete the pattern.
+        <div class="tip-inline-clean" id="solPrompt" style="margin-bottom: 16px;">
+          <span aria-hidden="true">💡</span>
+          <span>What are solids A and B? Circle the correct solids to complete the pattern.</span>
         </div>
 
         <!-- Track with Blanks A & B -->
@@ -210,16 +195,16 @@
         <!-- Action Controls -->
         <div class="pattern-controls-bar">
           <div class="actions-row">
-            <button class="secondary-btn" onclick="clearSlots()">
+            <button class="btn-secondary" onclick="clearSlots()">
               Clear Choices 🔄
             </button>
           </div>
 
           <div class="actions-row">
-            <button id="solBtnCheck" class="primary-btn" onclick="checkPattern()" disabled>
+            <button id="solBtnCheck" class="btn-primary" onclick="checkPattern()" disabled>
               Check Pattern 🚀
             </button>
-            <button id="solBtnNext" class="secondary-btn hidden" onclick="nextChallenge()">
+            <button id="solBtnNext" class="btn-secondary hidden" onclick="nextChallenge()">
               Next Challenge ➔
             </button>
           </div>
@@ -239,37 +224,37 @@
           <div class="level-icon">🔷</div>
           <h3>Level 1: Newly Learned 2D Polygons</h3>
           <p>Test pentagons (5 sides), hexagons (6 sides), and octagons (8 sides).</p>
-          <span class="level-badge">Polygons • 5 Questions</span>
+          <span class="metric-pill">5 Questions</span>
         </div>
 
         <div class="quiz-level-card" onclick="startPatternsQuizLevel(2)">
           <div class="level-icon">🎲</div>
-          <h3>Level 2: 3D Solids & Orientations</h3>
+          <h3>Level 2: 3D Solids &amp; Orientations</h3>
           <p>Solve sequences with cylinders, cones, cubes, and square pyramids.</p>
-          <span class="level-badge">3D Solids • 5 Questions</span>
+          <span class="metric-pill">5 Questions</span>
         </div>
 
         <div class="quiz-level-card" onclick="startPatternsQuizLevel(3)">
           <div class="level-icon">📐</div>
-          <h3>Level 3: Blanks at Start & Middle</h3>
-          <p>Identify missing items A & B when the blank is at the start or in the middle.</p>
-          <span class="level-badge">Blanks A & B • 5 Questions</span>
+          <h3>Level 3: Blanks at Start &amp; Middle</h3>
+          <p>Identify missing items A &amp; B when the blank is at the start or in the middle.</p>
+          <span class="metric-pill">5 Questions</span>
         </div>
 
         <div class="quiz-level-card" onclick="startPatternsQuizLevel(4)">
           <div class="level-icon">⭐</div>
           <h3>Level 4: Master Pattern Challenge</h3>
           <p>Test your pattern mastery with orientation and alternating cycles.</p>
-          <span class="level-badge">Grade 2 Honors • 5 Questions</span>
+          <span class="metric-pill gold">5 Questions</span>
         </div>
       </div>
 
       <!-- Active Quiz View -->
       <div id="patQuizActiveScreen" class="quiz-active-card hidden">
         <div class="quiz-header-bar">
-          <button class="secondary-btn" onclick="returnToQuizSelect()">⬅️ All Quizzes</button>
+          <button class="btn-secondary btn-compact" onclick="returnToQuizSelect()">⬅ All Quizzes</button>
           <h3 id="patQuizTitle">Level 1: Newly Learned 2D Polygons</h3>
-          <span id="patQuizCounter" style="font-weight: 800; color: var(--primary);">Question 1 / 5</span>
+          <span id="patQuizCounter" class="metric-pill">Question 1 / 5</span>
         </div>
 
         <div class="quiz-progress-bar">
@@ -288,10 +273,10 @@
         <div id="patQuizFeedback" class="quiz-feedback hidden"></div>
 
         <div class="pattern-controls-bar">
-          <span style="font-size: 0.9rem; font-weight: 700; color: #475569;">
-            ⭐ Score: <strong id="patQuizScore" style="color: var(--primary);">0</strong>
+          <span class="metric-pill gold">
+            ⭐ Score: <strong id="patQuizScore">0</strong>
           </span>
-          <button id="patBtnNext" class="primary-btn hidden" onclick="onNextQuizQuestion()">
+          <button id="patBtnNext" class="btn-primary hidden" onclick="onNextQuizQuestion()">
             Next Question ➔
           </button>
         </div>
@@ -299,18 +284,18 @@
 
       <!-- Quiz End Screen -->
       <div id="patQuizEndScreen" class="quiz-active-card quiz-end-card hidden">
-        <div class="trophy-bounce">🏆 ✨</div>
+        <div class="trophy-bounce">🏆</div>
         <h2 id="patQuizEndTitle">Outstanding Pattern Master!</h2>
-        <p id="patQuizEndMessage" style="color: var(--text-muted); font-size: 1rem;">You cracked the repeating rules!</p>
+        <p id="patQuizEndMessage" style="color: var(--color-text-secondary); font-size: 1rem;">You cracked the repeating rules!</p>
 
-        <div final class="final-score-box">
+        <div class="final-score-box">
           <div class="stars-row" id="patFinalStars">⭐⭐⭐⭐⭐</div>
           <div class="score-display">Score: <span id="patFinalScoreVal">100</span> / 100</div>
         </div>
 
         <div class="actions-row" style="margin-top: 14px;">
-          <button class="primary-btn" onclick="retryCurrentQuiz()">Play Again 🔄</button>
-          <button class="secondary-btn" onclick="returnToQuizSelect()">Choose Another Quiz 🏆</button>
+          <button class="btn-primary" onclick="retryCurrentQuiz()">Play Again 🔄</button>
+          <button class="btn-secondary" onclick="returnToQuizSelect()">Other Quizzes 🏆</button>
         </div>
       </div>
 
@@ -320,8 +305,8 @@
 
   <!-- Clean Studio Footer -->
   <footer class="main-footer">
-    <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary School Geometry & Pattern Learning</p>
-    <p class="copyright">© 2026 Alapakadala Studio • Zero-Build Educational Platform</p>
+    <p>Crafted by <strong>Alapakadala Studio</strong> for Elementary School Geometry &amp; Pattern Learning</p>
+    <p class="copyright">© 2026 Alapakadala Studio • Grade 2 Curriculum Aligned</p>
   </footer>
 
   <!-- Script Loading in Clean Dependency Order -->

@@ -6,7 +6,8 @@
   <title>Number Pairs & Bonds to 20 - Interactive Math Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="bonds-20.css">
   <link rel="stylesheet" href="ch5-studio.css">
   <!-- Canvas Confetti for Celebrations -->
@@ -14,58 +15,21 @@
 </head>
 <body>
 
-  <!-- Main Navigation Header -->
-  <header class="main-header" id="mainHeader">
-    <div class="brand">
-      <div class="brand-logo" aria-hidden="true">✨🔟🍒</div>
-      <div class="brand-text">
-        <h1>Number Pairs to 20 Studio</h1>
-        <span class="studio-badge">Chapter 5 • Lesson 1</span>
+  <!-- Tier 1: Unified Owl Green Studio Header -->
+  <header class="studio-header">
+    <div class="studio-header-left">
+      <a href="index.html#grade-2" class="studio-back-btn" title="Back to Grade 2 Lessons">⬅ Grade 2</a>
+      <div class="studio-brand-title">
+        <span class="studio-brand-icon">🔟</span>
+        <span class="studio-brand-name">Number Pairs to 20</span>
+        <span class="studio-chapter-badge">Chapter 5</span>
       </div>
     </div>
 
-    <!-- Navigation between Grade 2 lessons -->
-    <div class="lesson-switcher">
-      <a href="index.html#grade-2" class="lesson-chip home" title="Back to Grade 2 Lessons">← Grade 2 Lessons</a>
-      <span class="lesson-label">Lesson:</span>
-      <span class="lesson-chip active" title="Current Lesson">🔟 Bonds to 20</span>
-      <a href="pairs-tens.html" class="lesson-chip link" title="Go to Lesson 2: Multiples of 10">🧮 Multiples of 10</a>
-      <a href="add-2digit.html" class="lesson-chip link" title="Go to Lesson 3: 2-Digit Addition">🧱 2-Digit Addition</a>
-      <a href="tug-of-war.html" class="lesson-chip link" title="Battle Arena: Tug of War Duel">🏆 Tug of War Duel</a>
-    </div>
-
-    <div class="nav-controls">
-      <nav class="mode-tabs">
-        <button id="tabBtn_frames" class="tab-btn active" onclick="switchBondsMode('frames')">
-          <span class="tab-icon">🔟</span> Dual Ten-Frames
-        </button>
-        <button id="tabBtn_ppw" class="tab-btn" onclick="switchBondsMode('ppw')">
-          <span class="tab-icon">🍒</span> Part-Part-Whole
-        </button>
-        <button id="tabBtn_bridge" class="tab-btn" onclick="switchBondsMode('bridge')">
-          <span class="tab-icon">🌉</span> Bridge to 10
-        </button>
-        <button id="tabBtn_story" class="tab-btn" onclick="switchBondsMode('story')">
-          <span class="tab-icon">🔄</span> 4-in-1 Story
-        </button>
-        <button id="tabBtn_threepart" class="tab-btn" onclick="switchBondsMode('threepart')">
-          <span class="tab-icon">🧩</span> 3-Part Combiner
-        </button>
-        <button id="tabBtn_quiz" class="tab-btn" onclick="switchBondsMode('quiz')">
-          <span class="tab-icon">🏆</span> Mastery Quiz
-        </button>
-      </nav>
-      <button id="soundToggle" class="icon-toggle-btn" title="Toggle Sound" onclick="toggleAudio()">
-        🔊
-      </button>
-    </div>
-    <!-- Mobile Navigation Dropdowns (Only visible on mobile <= 768px) -->
-    <div class="mobile-nav-dropdowns">
-      <div class="mobile-select-wrap">
-        <label for="lessonSelect" class="mobile-select-label">📚 Lesson:</label>
-        <select id="lessonSelect" class="mobile-select" onchange="if(this.value) window.location.href=this.value;">
-          <option value="index.html#grade-2">← All Grade 2 Lessons</option>
-          <optgroup label="Chapter 4: Shapes &amp; Solids">
+    <div class="studio-header-right">
+      <div class="studio-lesson-picker">
+        <select class="studio-lesson-select" aria-label="Select Lesson" onchange="if(this.value) window.location.href=this.value;">
+          <optgroup label="Chapter 4: Spatial Geometry">
             <option value="shapes.html">📐 Lesson 1: 3D Shapes</option>
             <option value="symmetry.html">🪞 Lesson 2: Symmetry</option>
             <option value="patterns.html">🧩 Lesson 3: Patterns</option>
@@ -74,24 +38,39 @@
             <option value="bonds-20.html" selected>🔟 Lesson 1: Bonds to 20</option>
             <option value="pairs-tens.html">🧮 Lesson 2: Multiples of 10</option>
             <option value="add-2digit.html">🧱 Lesson 3: 2-Digit Addition</option>
-            <option value="tug-of-war.html">🏆 Tug of War Duel</option>
+            <option value="tug-of-war.html">🏆 Battle Arena: Tug of War</option>
           </optgroup>
         </select>
+        <span class="studio-picker-arrow">▼</span>
       </div>
 
-      <div class="mobile-select-wrap">
-        <label for="activitySelect" class="mobile-select-label">🎮 Activity:</label>
-        <select id="activitySelect" class="mobile-select" onchange="switchBondsMode(this.value)">
-          <option value="frames" selected>🔟 Dual Ten-Frames</option>
-          <option value="ppw">🍒 Part-Part-Whole</option>
-          <option value="bridge">🌉 Bridge to 10</option>
-          <option value="story">🔄 4-in-1 Story</option>
-          <option value="threepart">🧩 3-Part Combiner</option>
-          <option value="quiz">🏆 Mastery Quiz</option>
-        </select>
-      </div>
+      <button id="soundToggle" class="studio-sound-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
     </div>
   </header>
+
+  <!-- Tier 2: Studio Mode Bar -->
+  <nav class="studio-mode-bar" aria-label="Activities">
+    <button id="tabBtn_frames" class="tab-btn active" onclick="switchBondsMode('frames')">
+      <span class="tab-icon">🔟</span> Dual Ten-Frames
+    </button>
+    <button id="tabBtn_ppw" class="tab-btn" onclick="switchBondsMode('ppw')">
+      <span class="tab-icon">🍒</span> Part-Part-Whole
+    </button>
+    <button id="tabBtn_bridge" class="tab-btn" onclick="switchBondsMode('bridge')">
+      <span class="tab-icon">🌉</span> Bridge to 10
+    </button>
+    <button id="tabBtn_story" class="tab-btn" onclick="switchBondsMode('story')">
+      <span class="tab-icon">🔄</span> 4-in-1 Story
+    </button>
+    <button id="tabBtn_threepart" class="tab-btn" onclick="switchBondsMode('threepart')">
+      <span class="tab-icon">🧩</span> 3-Part Combiner
+    </button>
+    <button id="tabBtn_quiz" class="tab-btn" onclick="switchBondsMode('quiz')">
+      <span class="tab-icon">🏆</span> Mastery Quiz
+    </button>
+  </nav>
 
   <!-- Application Container -->
   <main class="app-container" id="appContainer">

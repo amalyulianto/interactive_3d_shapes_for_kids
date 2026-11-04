@@ -25,6 +25,8 @@ The codebase has been refactored from monolithic scripts into clean, decoupled d
 d:\coding\interactive_math\
 ├── index.html                  # Landing Hub (Grade listview -> Grade 2 lessons listview)
 ├── hub.css                     # Shared landing hub styles, grade listview, responsive layout
+├── css/
+│   └── theme.css               # Owl Green shared design system foundation (tokens, chunky buttons, typography)
 │
 ├── shapes.html                 # Lesson 1: 3D Solid Shapes Adventure
 ├── style.css                   # Lesson 1 stylesheet (3D canvas, HUD, color palette, Sorter Lab)
@@ -315,6 +317,8 @@ When modifying, extending, or maintaining this codebase, adhere strictly to the 
    - Keep geometric equations and data arrays in `*-data.js`.
    - Keep audio synthesizer in `sound.js`.
    - Keep DOM coordinators in `*-main.js`.
-6. **Strict Two-Tier Navigation Hierarchy**:
-   - From lesson-level pages (`shapes.html`, `symmetry.html`, `patterns.html`), back navigation must route to the grade's lesson list page (`index.html#grade-2`), NOT to the root grade selection screen.
+6. **Strict Two-Tier Navigation Hierarchy & Unified Studio Header**:
+   - Every lesson and arena page uses the unified 2-Tier header system (`.studio-header` for Tier 1 navigation + `.studio-mode-bar` for Tier 2 activity tabs).
+   - From lesson-level pages, the back button (`.studio-back-btn`) routes to the grade's lesson list page (`index.html#grade-2`), NOT to the root grade selection screen.
+   - The unified lesson dropdown (`.studio-lesson-select`) includes all Grade 2 lessons grouped by Chapter 4 (Geometry) and Chapter 5 (Addition & Subtraction), allowing instant cross-chapter navigation from any page.
    - From the grade's lesson list page (`#lessonsView` in `index.html`), provide explicit back navigation to the grades selection screen (`#gradesView` / `showGradesView()`).
