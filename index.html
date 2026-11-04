@@ -25,7 +25,7 @@
     <!-- Navigation Controls -->
     <div class="hub-header-actions">
       <button id="btnHeaderBackGrades" class="hub-nav-btn hidden" onclick="showGradesView()" title="Return to Grade Selection">
-        ⬅ All Grades
+        ⬅ Grades
       </button>
 
       <div class="hub-grade-chip" id="hubGradeChip">
@@ -84,17 +84,6 @@
 
     <!-- ================= VIEW 2: GRADE 2 LESSONS LIST ================= -->
     <section id="lessonsView" class="hub-view-panel hidden">
-
-      <!-- Breadcrumb Navigation Bar -->
-      <nav class="lessons-nav-bar" aria-label="Breadcrumb">
-        <button class="lessons-back-btn" onclick="showGradesView()" title="Back to Grade Selection">
-          ⬅ Back to Grade Selection
-        </button>
-        <div class="current-grade-badge">
-          <span>Current Level:</span>
-          <strong>Grade 2 Elementary Math</strong>
-        </div>
-      </nav>
 
       <!-- Clean Section Banner -->
       <section class="hub-hero">
@@ -345,7 +334,7 @@
       if (gradeId === 'grade-2') {
         document.getElementById('gradesView').classList.add('hidden');
         document.getElementById('lessonsView').classList.remove('hidden');
-        document.getElementById('hubGradeChip').innerHTML = '🎒 Grade 2 Active';
+        document.getElementById('hubGradeChip').innerHTML = '🎒 Grade 2';
         document.getElementById('btnHeaderBackGrades').classList.remove('hidden');
         window.location.hash = 'grade-2';
         window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -554,7 +554,7 @@ h3 { font-size: var(--font-size-h3); }
     max-width: 130px;
   }
   .studio-lesson-select {
-    max-width: 140px;
+    max-width: 150px;
     font-size: 12px;
     padding-left: 8px;
     padding-right: 24px;
@@ -562,5 +562,51 @@ h3 { font-size: var(--font-size-h3); }
   .studio-back-btn {
     padding: 0 10px;
     font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .studio-header {
+    padding: 0 8px;
+    gap: 6px;
+  }
+  .studio-header-left {
+    gap: 6px;
+  }
+  /* Icon-only round tactile back button on small mobile */
+  .studio-back-btn {
+    font-size: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+  }
+  .studio-back-btn::before {
+    content: "⬅";
+    font-size: 14px;
+    display: inline-block;
+  }
+  /* Hide text brand on <= 480px to leave full room for lesson selector */
+  .studio-brand-name {
+    display: none;
+  }
+  .studio-brand-icon {
+    font-size: 20px;
+  }
+  .studio-header-right {
+    gap: 6px;
+  }
+  .studio-lesson-select {
+    max-width: 160px;
+    font-size: 12px;
+    height: 36px;
+    padding-left: 8px;
+    padding-right: 22px;
+  }
+  .studio-sound-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
   }
 }
