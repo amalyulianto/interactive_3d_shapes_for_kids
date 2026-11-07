@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Length Studio (cm &amp; m) - Interactive Math Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="length.css">
+  <!-- Canvas Confetti for Celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Tier 1: Unified Owl Green Studio Header -->
+  <header class="studio-header">
+    <div class="studio-header-left">
+      <a href="index.html#grade-2" class="studio-back-btn" title="Back to Grade 2 Lessons">⬅ Grade 2</a>
+      <div class="studio-brand-title">
+        <span class="studio-brand-icon">📏</span>
+        <span class="studio-brand-name">Length Studio</span>
+        <span class="studio-chapter-badge ch6-badge">Chapter 6</span>
+      </div>
+    </div>
+
+    <div class="studio-header-right">
+      <div class="studio-lesson-picker">
+        <select class="studio-lesson-select" aria-label="Select Lesson" onchange="if(this.value) window.location.href=this.value;">
+          <optgroup label="Chapter 4: Spatial Geometry">
+            <option value="shapes.html">📐 Lesson 1: 3D Shapes</option>
+            <option value="symmetry.html">🪞 Lesson 2: Symmetry</option>
+            <option value="patterns.html">🧩 Lesson 3: Patterns</option>
+          </optgroup>
+          <optgroup label="Chapter 5: Addition &amp; Subtraction">
+            <option value="bonds-20.html">🔟 Lesson 1: Bonds to 20</option>
+            <option value="pairs-tens.html">🧮 Lesson 2: Multiples of 10</option>
+            <option value="add-2digit.html">🧱 Lesson 3: 2-Digit Addition</option>
+            <option value="tug-of-war.html">🏆 Battle Arena: Tug of War</option>
+          </optgroup>
+          <optgroup label="Chapter 6: Measurement">
+            <option value="length.html" selected>📏 Lesson 1: Length (cm &amp; m)</option>
+          </optgroup>
+        </select>
+        <span class="studio-picker-arrow">▼</span>
+      </div>
+
+      <button id="soundToggle" class="studio-sound-btn" title="Toggle Sound" onclick="toggleAudio()">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Tier 2: Studio Mode Bar -->
+  <nav class="studio-mode-bar" aria-label="Activities">
+    <button id="tabBtn_cm" class="tab-btn active" onclick="switchLengthMode('cm')">
+      <span class="tab-icon">📏</span> Measure in cm
+    </button>
+    <button id="tabBtn_metres" class="tab-btn" onclick="switchLengthMode('metres')">
+      <span class="tab-icon">🏫</span> Metres &amp; Units
+    </button>
+    <button id="tabBtn_draw" class="tab-btn" onclick="switchLengthMode('draw')">
+      <span class="tab-icon">✏️</span> Draw &amp; Momo's Path
+    </button>
+    <button id="tabBtn_compare" class="tab-btn" onclick="switchLengthMode('compare')">
+      <span class="tab-icon">⚖️</span> Compare Lengths
+    </button>
+    <button id="tabBtn_quiz" class="tab-btn" onclick="switchLengthMode('quiz')">
+      <span class="tab-icon">🏆</span> Mastery Quiz
+    </button>
+  </nav>
+
+  <!-- Main Studio Container -->
+  <main class="app-container" id="appContainer">
+
+    <!-- ================= VIEW 1: MEASURE IN CM ================= -->
+    <section id="view_cm" class="view-panel active">
+      <div class="len-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>📏 Measuring Length in Centimetres (cm)</h2>
+            <p>Read a 0–15 cm ruler like a number line, subtract non-zero starts, fix faulty rulers, and measure curves with string!</p>
+          </div>
+          <span class="badge-pill" id="cmHeaderBadge">Textbook pp. 84–86 • WS 1</span>
+        </div>
+
+        <!-- Sub-mode Selector -->
+        <div class="submode-pill-bar">
+          <button class="submode-pill active" id="cmSub_bench" onclick="setCmSubMode('bench')">
+            📏 Ruler Bench
+          </button>
+          <button class="submode-pill" id="cmSub_faulty" onclick="setCmSubMode('faulty')">
+            🕵️ Faulty Ruler (WS 1)
+          </button>
+          <button class="submode-pill" id="cmSub_curve" onclick="setCmSubMode('curve')">
+            🧵 Curved String Lab
+          </button>
+        </div>
+
+        <!-- Sub-view 1A: Ruler Bench -->
+        <div id="cmBenchSection" class="sub-section">
+          <div class="item-pill-strip" id="cmItemPills" role="tablist" aria-label="Objects to measure"></div>
+
+          <div class="character-speech-bar" id="cmCharacterBar"></div>
+
+          <div class="ruler-stage-box" id="cmRulerStage"></div>
+
+          <div class="ruler-tools-bar" id="cmToolsBar"></div>
+
+          <div class="answer-panel" id="cmAnswerPanel"></div>
+        </div>
+
+        <!-- Sub-view 1B: Faulty Ruler Detective -->
+        <div id="cmFaultySection" class="sub-section hidden">
+          <div class="character-speech-bar">
+            <span class="char-avatar">🐱</span>
+            <div class="char-text">
+              <strong>Coco the Detective (Workbook p. 63 Q3):</strong>
+              <span>This ruler has <strong>2 misprinted numbers</strong>! Tap the 2 wrong numbers on the ruler to cross them out (✗) and fix them, then find the length of the nail!</span>
+            </div>
+          </div>
+
+          <div class="ruler-stage-box" id="faultyRulerStage"></div>
+
+          <div class="answer-panel" id="faultyAnswerPanel"></div>
+        </div>
+
+        <!-- Sub-view 1C: Curved String Lab -->
+        <div id="cmCurveSection" class="sub-section hidden">
+          <div class="item-pill-strip" id="curveItemPills"></div>
+
+          <div class="character-speech-bar" id="curveSpeechBar"></div>
+
+          <div class="curve-step-controls" id="curveStepControls"></div>
+
+          <div class="ruler-stage-box" id="curveSvgStage"></div>
+
+          <div class="answer-panel" id="curveAnswerPanel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: METRES & SUITABLE UNITS ================= -->
+    <section id="view_metres" class="view-panel">
+      <div class="len-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🏫 Measuring in Metres (m) &amp; Choosing Units</h2>
+            <p>Compare everyday objects against 1 m metre rules and choose when to use cm or m!</p>
+          </div>
+          <span class="badge-pill">Textbook p. 87 • WS 1 p. 64</span>
+        </div>
+
+        <div class="submode-pill-bar">
+          <button class="submode-pill active" id="mSub_scenes" onclick="setMetresSubMode('scenes')">
+            📏 1 m Rule Inspector
+          </button>
+          <button class="submode-pill" id="mSub_units" onclick="setMetresSubMode('units')">
+            🎯 cm or m Unit Sorter
+          </button>
+        </div>
+
+        <!-- Sub-view 2A: Metre Rule Inspector -->
+        <div id="metresScenesSection" class="sub-section">
+          <div class="item-pill-strip" id="metreScenePills"></div>
+          <div class="metre-stage-box" id="metreSvgStage"></div>
+          <div class="answer-panel" id="metreAnswerPanel"></div>
+        </div>
+
+        <!-- Sub-view 2B: cm vs m Unit Sorter -->
+        <div id="metresUnitsSection" class="sub-section hidden">
+          <div class="sorter-top-bar">
+            <span class="tip-inline-clean">💡 <strong>Benchmark Tip:</strong> Finger width ≈ <strong>1 cm</strong> • Floor to doorknob ≈ <strong>1 m</strong>!</span>
+            <div class="sorter-score-group">
+              <span class="metric-pill blue" id="unitSorterScore">0 / 8 Solved</span>
+              <button class="btn-secondary btn-compact" onclick="resetUnitSorter()">🔄 Reset</button>
+            </div>
+          </div>
+          <div class="unit-cards-grid" id="unitSorterDeck"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: DRAW STRAIGHT LINES & MOMO'S PATH ================= -->
+    <section id="view_draw" class="view-panel">
+      <div class="len-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>✏️ Drawing Straight Lines &amp; Momo's Cheese Path</h2>
+            <p>Hold the ruler steady to draw exact cm lines, then connect A → H to guide Momo to the cheese!</p>
+          </div>
+          <span class="badge-pill">Textbook p. 88 • WS 2 p. 65</span>
+        </div>
+
+        <div class="submode-pill-bar">
+          <button class="submode-pill active" id="drawSub_lines" onclick="setDrawSubMode('lines')">
+            ✏️ Ruler Line Drawer
+          </button>
+          <button class="submode-pill" id="drawSub_momo" onclick="setDrawSubMode('momo')">
+            🐭 Momo's Path (A→H)
+          </button>
+        </div>
+
+        <!-- Sub-view 3A: Draw Straight Lines -->
+        <div id="drawLinesSection" class="sub-section">
+          <div class="item-pill-strip" id="drawChallengePills"></div>
+          <div class="character-speech-bar" id="drawInstructionBar"></div>
+          <div class="draw-canvas-box" id="drawCanvasContainer"></div>
+          <div class="answer-panel" id="drawFeedbackPanel"></div>
+        </div>
+
+        <!-- Sub-view 3B: Momo's Path to the Cheese -->
+        <div id="drawMomoSection" class="sub-section hidden">
+          <div class="character-speech-bar" id="momoSpeechBar"></div>
+          <div class="momo-stage-box" id="momoStageContainer"></div>
+          <div class="answer-panel" id="momoAnswerPanel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: COMPARE LENGTHS ================= -->
+    <section id="view_compare" class="view-panel">
+      <div class="len-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>⚖️ Comparing Lengths in cm &amp; m</h2>
+            <p>Compare objects aligned at 0 cm, offset items on horizontal &amp; vertical rulers, aeroplanes, and zoo giraffes!</p>
+          </div>
+          <span class="badge-pill">Textbook pp. 88–89 • WS 3 pp. 66–67</span>
+        </div>
+
+        <div class="submode-pill-bar">
+          <button class="submode-pill active" id="compSub_aligned" onclick="setCompareSubMode('aligned')">
+            ✏️ Aligned at 0 cm
+          </button>
+          <button class="submode-pill" id="compSub_flowers" onclick="setCompareSubMode('flowers')">
+            🌷 Vertical Flowers
+          </button>
+          <button class="submode-pill" id="compSub_bathroom" onclick="setCompareSubMode('bathroom')">
+            🪥 Non-Zero Shelf
+          </button>
+          <button class="submode-pill" id="compSub_giraffes" onclick="setCompareSubMode('giraffes')">
+            🦒 Planes &amp; Giraffes (m)
+          </button>
+        </div>
+
+        <div id="compareDynamicContainer" class="sub-section"></div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 5: MASTERY QUIZ ================= -->
+    <section id="view_quiz" class="view-panel">
+      <div class="len-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>🏆 Length Mastery Quiz</h2>
+            <p>Test your skills across 4 graded levels covering centimetres, metres, rulers, and length comparisons!</p>
+          </div>
+          <span class="metric-pill gold" id="quizScorePill">⭐ Score: 0 / 5</span>
+        </div>
+
+        <div class="submode-pill-bar" id="quizLevelPills">
+          <button class="submode-pill active" id="quizLvl_1" onclick="startLengthQuiz(1)">Level 1: cm Basics</button>
+          <button class="submode-pill" id="quizLvl_2" onclick="startLengthQuiz(2)">Level 2: Non-Zero &amp; Curves</button>
+          <button class="submode-pill" id="quizLvl_3" onclick="startLengthQuiz(3)">Level 3: Metres &amp; Units</button>
+          <button class="submode-pill" id="quizLvl_4" onclick="startLengthQuiz(4)">Level 4: Comparisons</button>
+        </div>
+
+        <div id="quizPlayArea" class="quiz-play-area"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Zero-Build Script Loading Order -->
+  <script src="js/common/sound.js"></script>
+  <script src="js/common/utils.js"></script>
+  <script src="js/ch6/length-data.js"></script>
+  <script src="js/ch6/length.js"></script>
+</body>
+</html>

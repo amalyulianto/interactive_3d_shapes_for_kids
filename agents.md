@@ -51,6 +51,9 @@ d:\coding\interactive_math\
 ├── tug-of-war.html             # Chapter 5 Battle Arena: Tug of War Math Duel
 ├── tug-of-war.css              # Chapter 5 Battle Arena stylesheet (rope physics, mud pit, mascots)
 │
+├── length.html                 # Chapter 6 Lesson 1: Length Studio (cm & m)
+├── length.css                  # Chapter 6 Lesson 1 stylesheet (rulers, metre sticks, curved string, giraffes)
+│
 ├── js/
 │   ├── common/
 │   │   ├── sound.js            # Unified Web Audio API synthesizer singleton (window.sound)
@@ -86,6 +89,10 @@ d:\coding\interactive_math\
 │       ├── pairs-tens.js       # Chapter 5 Lesson 2: 100-rods rack, next-ten hopper & quiz
 │       ├── add-2digit.js       # Chapter 5 Lesson 3: Base-10 regrouping mat, split strategy & quiz
 │       └── tug-of-war.js       # Chapter 5 Battle Arena: Turn-based Lions vs Wolves tug of war engine
+│   │
+│   └── ch6/
+│       ├── length-data.js      # Chapter 6 Lesson 1: Length SVGs, ruler/metre/giraffe datasets & quiz bank
+│       └── length.js           # Chapter 6 Lesson 1: Interactive cm/m rulers, string curves, Momo path & comparisons
 │
 └── agents.md                   # This architectural guide and developer manual
 ```
@@ -237,6 +244,14 @@ d:\coding\interactive_math\
      - **Match 4 (Lesson 3 2-Digit Addition Part 2)**: 10 rounds (20 questions) — Mr. Chan's chairs, farm animal stories, Workbook 5 column problems, and digit tile place value challenges.
      - **Shuffle All Mode**: Dynamically samples 10 questions from all 72 curated items across all 4 matches.
    - **Dynamic Tug Physics & Column Display**: Braided rope physics with knockout detection, custom vertical column addition layout, and timer/untimed options.
+
+### 4.8 Chapter 6 Measurement Activities (`js/ch6/`)
+1. **Lesson 1: Length Studio (`length-data.js` & `length.js`)**:
+   - **Measure in `cm` (Textbook pp. 84–86 & Workbook WS 1)**: `0–15 cm` ruler bench with aligned number line, `+1 cm` counting-on hops, non-zero start subtraction + slide-to-0 verifier, Faulty Ruler Detective (WS 1 Q3), and 3-step Curved String Lab (`S` & wavy lines).
+   - **Metres & Units (Textbook p. 87 & Workbook WS 1)**: 9 interactive `1 m` rule scenes (*more than / about / less than*) and 8-card `cm` vs `m` unit sorter.
+   - **Draw & Momo's Path (Textbook p. 88 & Workbook WS 2)**: Drag/tap straight-line ruler canvas with live zoom lens (including starting from `2 cm`) and Momo's `A → H` cheese path with `D–E` ruler measurement.
+   - **Compare Lengths (Textbook pp. 88–89 & Workbook WS 3)**: Aligned `0 cm` items, Vera's vertical `0–20 cm` flower ruler, non-zero bathroom shelf with slide-to-0 check, aeroplanes, and 5 zoo giraffes (`A–E`) height ordering.
+   - **Mastery Quiz**: 4 graded 5-question levels (20 questions total).
 
 ---
 

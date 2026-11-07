@@ -433,6 +433,12 @@
   border-color: var(--color-secondary);
 }
 
+.chapter-badge.chapter-6-badge {
+  background: #F3E8FF;
+  color: #6D28D9;
+  border-color: #8B5CF6;
+}
+
 .chapter-title-group {
   display: flex;
   flex-direction: column;
